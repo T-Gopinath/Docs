@@ -7,7 +7,7 @@ Write a query to select Nth maximum salary from EMP table
 we are getting the 5th highest salary without using the Analytical function.  
 
 select * from emp emp1 where (5-1) = ( select count(distinct(emp2.sal)) from 
-emp emp2 where emp2.sal > emp1.sal ) 
+emp emp2 where emp2.sal > emp1.sal )
 ____________________________________________________________________________________________
   In the below example we are getting the 5th highest salary by using the 
 Analytical function. 
