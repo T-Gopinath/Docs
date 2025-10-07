@@ -8,8 +8,7 @@ we are getting the 5th highest salary without using the Analytical function.
 
 select * from emp emp1 where (5-1) = ( select count(distinct(emp2.sal)) from 
 emp emp2 where emp2.sal > emp1.sal ) 
-
-
+____________________________________________________________________________________________
   In the below example we are getting the 5th highest salary by using the 
 Analytical function. 
 
@@ -26,6 +25,7 @@ below example we are getting the TOP 5 salaries from the EMP table.
 
 select * from ( select e.*, DENSE_RANK() over (order by sal DESC) RN from emp e ) 
 where RN <=5
+_________________________________________________________________________________________
 
 Select top N salaries from each Department of EMP table 
 Write a query to select top N salaries from each department of the EMP table 
@@ -38,8 +38,7 @@ the EMP table.
 
 select * from ( select e.*, DENSE_RANK() over (partition by deptno order by sal 
 DESC) RN from emp e ) where RN <=3 
-
-
+________________________________________________________________________________________
 
 Select/Delete duplicate rows from EMP table 
 select * from emp where rowid not in ( select min(rowid) from emp group by 
@@ -47,6 +46,7 @@ empno );
 delete from emp where rowid not in ( select min(rowid) from emp group by 
 empno ); 
 
+________________________________________________________________________________________
 Same salary query 
 
 
@@ -65,7 +65,7 @@ count(sal)>=2 )
 SELECT * FROM ( SELECT e.*, count(*) Over (Partition BY sal ORDER BY sal) cnt 
 FROM emp e ) WHERE cnt>=2; 
 
-
+__________________________________________________________________________________
 
 Odd/Even rows Question... 
 Write a query to display even/odd number rows from a table.  
@@ -73,7 +73,7 @@ We can achieve this by using the ROWNUM pseudo column.
 
 select * from (select empno, ename, sal, rownum rn from emp order by empno ) where 
 mod (rn, 2) <> 0 order by rn
-
+____________________________________________________________________________________
 
 More than 2 employees Question 
 
@@ -85,7 +85,7 @@ We can achieve this by using the COUNT analytical function.
 select * from ( SELECT e.*, count(mgr) over (partition by mgr) as cnt from emp 
 e ) where cnt >= 2 
 
-
+________________________________________________________________________________________
 Maximum salary without using functions
 
 
@@ -96,14 +96,14 @@ We can achieve this by using the SELF joins.
 
 select * from emp where sal not in ( select A.sal from emp A, emp B 
 where A.sal < B.sal ) 
-
+_____________________________________________________________________________________________
 Find the number of rows in a table without using COUNT function
 
 Write a query to find the number of rows in a table without using COUNT 
 function..  
 SELECT MAX(rn) FROM ( SELECT ROW_NUMBER() OVER(ORDER BY empno 
 DESC) as rn FROM emp ) 
-
+_____________________________________________________________________________________________
 
 Find the LAST inserted record in a table 
 
