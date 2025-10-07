@@ -55,14 +55,12 @@ same salary?
 Answer: We can achieve this in at least 3 ways… 
 
 1 st way 
-**select e1.* from emp e1,emp e2 where e1.sal=e2.sal and e1.ename <> 
-e2.ename **
+**select e1.* from emp e1,emp e2 where e1.sal=e2.sal and e1.ename <> e2.ename**
 2 nd way 
-**select * from emp where sal in (select sal from emp group by sal having 
-count(sal)>=2 ) **
+**select * from emp where sal in (select sal from emp group by sal having count(sal)>=2 );**
 3 rd way  
 **SELECT * FROM ( SELECT e.*, count(*) Over (Partition BY sal ORDER BY sal) cnt 
-FROM emp e ) WHERE cnt>=2; **
+FROM emp e ) WHERE cnt>=2;**
 
 __________________________________________________________________________________
 
