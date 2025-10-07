@@ -37,7 +37,7 @@ Answer: We can achieve this by using the DENSE_RANK Analytical function. In
 the below example we are getting the TOP 3 salaries for each department of 
 the EMP table. 
 
-** select * from ( select e.*, DENSE_RANK() over (partition by deptno order by sal 
+**select * from ( select e.*, DENSE_RANK() over (partition by deptno order by sal 
 DESC) RN from emp e ) where RN <=3** 
 ________________________________________________________________________________________
 
@@ -108,22 +108,19 @@ If you want the last record inserted, you need to have a timestamp or
 sequence number assigned to each record as they are inserted and then you 
 can use the below query…
 
-**select * from t where TIMESTAMP_COLUMN = (select max(timestamp_column) from T) and rownum = 1; 
-**____________________________________________________________________________________________
+**select * from t where TIMESTAMP_COLUMN = (select max(timestamp_column) from T) and rownum = 1;**____________________________________________________________________________________________
 
 Select LAST n records from a table
 
 Write a query to select the last N records from a table… 
 Or Explain the below query…
 
-**select * from emp minus select * from emp where rownum <= (select count(*) - &n from emp); 
-**__________________________________________________________________________________________
+**select * from emp minus select * from emp where rownum <= (select count(*) - &n from emp);**__________________________________________________________________________________________
 Write a query to find the employees who are working in the company for the 
 past 5 years. 
 Answer: We can achieve this using the ADD_MONTHS function.  
 
-**select * from emp where hiredate < add_months(sysdate,-60)
-**__________________________________________________________________________________________
+**select * from emp where hiredate < add_months(sysdate,-60)**__________________________________________________________________________________________
 
 
 
