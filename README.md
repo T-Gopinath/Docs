@@ -315,8 +315,65 @@ Q) What is Trigger ?
             END
           END
     **
-
+_______________________________________________________________________________________
+**What is StoredProcedure**
+  + A StoredProcedur is like a function that contains set of operatios compoled toghather.
+  + It contains set of operation that are commonly used in an application to do some common database taks.
   
+  **
+    PL/SQL Store Procedure
+    
+    CREATE/REPLACE
+    PROCEDURE Procedure_name[(parameter1,parameter2)]
+    is
+    [declaration-secion]
+    Begin
+      [execution-Section]
+      [EXCEPTION]
+    END
+
+    CREATE OR REPLACE PROCEDURE  insertuser(id IN NUMBER,name IN VARCHAR)
+    IS
+    BEGING
+      INSERT INTO USER VALUES(id,name);
+    END  
+
+  PL/SQL Store Procedure
+
+  CREATE OR REPLACE FUNCTION ADD(n1 in Number, n2 in number)
+  return number
+
+  IS N3 NUMBER(8);
+  BEGIN
+    n3=n1+n2;
+  END;
+  
+  **
+  
+  #### Difference between S.P and Triggers
+
+  +Triggers can't be called directly.
+  + They can only associate d with queries.
+_______________________________________________________________________________________
+
+#### INDEX
+  + Is a data structure that improves the speed of data retrival operations on a data base
+  **Create Index Index_name ON Tablename(coloumn1,column2, column2)**
+
+##### What are clustered and non-clustered index ?
+  **Cluster** Clustered index is the index according to which data physically stored on disk. therefore, only one clustered index can e created on agiven database table.
+ **Non-clustered index**  Don't define physical ordiering of data, but logical ordering. Typically, a tree is created whose leaf point to disk records
+      B-Tree or B+ Tree are used for this purpose
+
+   **Types of indexes**
+       + Clustered
+       + Nonclustered
+       + Unique
+       + Full_text
+  
+       
+    
+ 
   
   
 
