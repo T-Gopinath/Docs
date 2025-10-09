@@ -211,11 +211,11 @@ Thomas | lingaya|C++|
 
 |Book_Id| Genre_ID|Price|                           
 :------- | :---------- |:----------:
-
+1|1|25|
 
 |Genre_ID| Genre_Type|
 :------- | :---------- :
-
+3|gardning
 
     
 
