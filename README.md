@@ -422,14 +422,14 @@ ________________________________________________________________________________
 
   _________________________________________________________________________________________________________
 
-  ###CHAR and VARCHAR
+  ### CHAR and VARCHAR
   
-  CHAR and VARCHAR are differ in storage and retrival.
-    **char** length is fixed
-    **varchar** length is variable
-    **char** is 50% fastter than VARCHAR
-    **char** uses static memory allocation
-    **varchar** is a dynameic memory allocation
+   + CHAR and VARCHAR are differ in storage and retrival.
+   + **char** length is fixed
+   + **varchar** length is variable
+   + **char** is 50% fastter than VARCHAR
+   + **char** uses static memory allocation
+   + **varchar** is a dynameic memory allocation
     
 
   
