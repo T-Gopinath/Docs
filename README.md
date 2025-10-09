@@ -418,7 +418,7 @@ ________________________________________________________________________________
           SELECT AVG(salary)
           FROM employees AS inner_emp
           WHERE inner_emp.department_id = outer_emp.department_id
-      );      **
+      );**
   
   
 
