@@ -214,8 +214,8 @@ Thomas | lingaya|C++|
 1|1|25|
 
 |Genre_ID| Genre_Type|
-:------- | :---------- :
-3|gardning
+|:------- |:---------- :
+|3|gardning
 
     
 
