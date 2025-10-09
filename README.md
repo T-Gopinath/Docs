@@ -240,13 +240,39 @@ DCL - Data Control Language (TCL)
 
 ______________________________________________________________________________________
 
-Defference between ** having** and **WHERE** clause
+Defference between **Having** and **WHERE** clause
 
 Having works on groupby
 Where class works on table's (before groupby)
 
+**SELECT NAME,SECTION ON FROM TABLE GROUP BY NAME, SECTION hAVING COUNT(*) > 1**
 ________________________________________________________________________________________
 
+#### JOIN
+
+  An SQL join is Used to combine data from two or more tables, based on a common field between them.
+
+##### Student_Table
+  
+|Enroll_No| Student_Name| Adress|
+:------- | :---------- |:----------:
+100 | geek1|geeksqaz1|
+
+##### Student_Course
+
+|CourseID| ENROLLNO|
+:------- |:----------:
+|1|100|
+
+
+**SELECT StudentCouse.CourseID, Student.Student_Name from Student 
+  INNER join STUDENT_COURSE ON Student_Course.EnrollmetNo == Student.EnrollNo
+  ORDERby StudentCours.CoursID**
+
+___________________________________________________________________________________________________________
+
+
+  
 
 
 
