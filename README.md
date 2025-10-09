@@ -144,6 +144,18 @@ Primary_key| Unique-Key|
 |Primary key can't have Null Values | Unique key allows NULL values
 |Only one P.K in a table | Having multiple U.K
 
+__________________________________________________________________________________________
+<h2>Normalization</h2>
+
+  + The process of removing the **redundent data**, by **spliting up the table** in to well defined fashion is called normalization.
+  + To reduce redundancy
+  + Minimizing the insertion, Deletion and Update Anomalies.
+
+  -FirstNormal Form
+  -Second Normat form
+  -Third Normal Form
+
+  
                                                                                
 
 
