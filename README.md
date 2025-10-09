@@ -447,6 +447,7 @@ ________________________________________________________________________________
 
 
 ________________________________________________________________________________________________________________
+
 ### Transaction
   + DB tx is a set of database operations that must be treated as whole means either all operations are executed or none of them.
 
