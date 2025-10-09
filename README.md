@@ -407,8 +407,7 @@ ________________________________________________________________________________
    +  Correlated subqueries are used to compare data across rows, such as finding employees whose salary is higher than their department's average 
 
     
- **
- SELECT
+ **SELECT
       employee_id,
       salary,
       department_id
@@ -419,8 +418,7 @@ ________________________________________________________________________________
           SELECT AVG(salary)
           FROM employees AS inner_emp
           WHERE inner_emp.department_id = outer_emp.department_id
-      );
-      **
+      );      **
   
   
 
