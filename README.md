@@ -221,7 +221,35 @@ Thomas | lingaya|C++|
 :------- | :----------:
 |3|gardning|
 
-    
+________________________________________________________________________________
+DDL - Data Definition Language.
+  +  Create
+  +  ALTER
+  +  DROP
+  +  RENAME
+
+DML - Data Manipulation Language
+  + Select
+  + Insert 
+  + Update
+  + Delete
+
+DCL - Data Control Language (TCL)
+  + Grant
+  + Revoke
+
+______________________________________________________________________________________
+
+Defference between ** having** and **WHERE** clause
+
+Having works on groupby
+Where class works on table's (before groupby)
+
+________________________________________________________________________________________
+
+
+
+
 
 
 
