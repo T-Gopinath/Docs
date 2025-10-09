@@ -155,7 +155,7 @@ ________________________________________________________________________________
   ### Second Normat form
   ### Third Normal Form
 
-  ### FirstNormal Form
+  #### FirstNormal Form
     A relation is in ** 1st normal ** form if it does not contain any multi-valued or composite attribures.
     By 1st normal form, if underlaying domains contans atomic values only.
     
@@ -164,16 +164,49 @@ ________________________________________________________________________________
 Thomas | lingaya|java,c++,PHP
 
 
-After 1NCF
+##### After 1NCF
 |First_name| Last_name| Knowledge|
 :------- | :---------- |:----------:
 Thomas | lingaya|java|
 Thomas | lingaya|PHP|
 Thomas | lingaya|C++|
 
-  
-                                                                               
+### Second Normal Form
+  + if a relation does not contain any partial dependency.
+  + if every monkey values fully depends on P.K.
 
+|Id| Last_name| IDProff|Profession|
+:------- | :---------- |:----------|:----------:
+1 | Muller|3|Professior-1
+2 | Meier|2|Professior-1
+3 | Tobler|1|Professior-1
+
+#### After 2NF
+
+##### Student Table
+|Id| Last_name| 
+|:----------|:----------:
+1 | Muller|
+2 | Meier|
+3 | Tobler|
+
+##### Professior Table
+|IdProf| Professor| 
+|:----------|:----------:
+1 | Schmid|
+2 | Borner|
+3 | Bornasconi|
+                                                                               
+### Third Normal Form
+  + Removing transitive dependency.
+  + A relation is in the third normal form, if it does not contain any transitive dependency.
+  + If every non-key attribures is non-transtivity dependds on the P.K.
+  + A is functionally depends on B, B is functionally depends on C, C is transitively depends on A via B.
+
+|Book_Id| Genre_ID| Genre Type|Price|
+:------- | :---------- |:----------|:----------:
+1 | 1|3|gardning|25-99
+    
 
 
 
