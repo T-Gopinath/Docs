@@ -387,6 +387,12 @@ ________________________________________________________________________________
             FETCH NEXT CURSOR_NAME INTO VAR1,VAR2;
           END
       CLOSE CURSOR_NAME
+
+
+      DECLARE employee_cursor CUROSR STATIC FOR
+        SELECT * FROM EMP_TABLE
+          OPEN employee_cursor        
+          FETCH LAST/NEXT FROM employee_cursor;
     **
 ______________________________________________________________________________________________________________________________
 ### SUBQUERY
@@ -431,8 +437,13 @@ ________________________________________________________________________________
    + **char** uses static memory allocation
    + **varchar** is a dynameic memory allocation
     
+____________________________________________________________________________________________________________
 
-  
+**Locking** Locking occurs when a connection needs access to a piece of data in database and it lock for certain use so that no other transations is able to access it.
+
+**BLOCKING** Blocking accurs when a traction tries to acquire an imcompatable lick on a resource that another transation already locked.
+________________________________________________________________________________________________________________
+
 
 
 
