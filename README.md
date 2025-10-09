@@ -444,11 +444,47 @@ ________________________________________________________________________________
 **Locking** Locking occurs when a connection needs access to a piece of data in database and it lock for certain use so that no other transations is able to access it.
 
 **BLOCKING** Blocking accurs when a traction tries to acquire an imcompatable lick on a resource that another transation already locked.
+
+
 ________________________________________________________________________________________________________________
+### Transaction
+  + DB tx is a set of database operations that must be treated as whole means either all operations are executed or none of them.
 
+### ACID Properties
 
+    + Atomicity
+    + Consistency
+    + Isolation
+    + Durability
 
+   **Atomicity** 
+     Each transation is "all or nothing"
+     Either all opertions of the transaction are properly reflected in the database or none are.
+      
+   **Consistency** 
+     The db must be consistent before/after the tx.
+     Data should be valied.
+     Accouding to all defined rules.
+     
+    **Durability**
+      Commited data should not be lost, even after power failure.
 
+  #### How to achive ACID Properties
+    Atomicity &&  Consistency
+      Begin Transaction
+        ----
+        ----
+      commit transaction
+
+     + ACID transation done via Locks.
+     + Data is Locked ( not accessible by another tx) until a tx completes or fails, to guarantee atomicity, isolation and consistency.
+     + Durabilitys: to guarantee durabilitye, databases after implemnts ""Write-ahaed Log.
+     
+________________________________________________________________________________________________________________________________________      
+      
+
+      
+     
 
 
 
