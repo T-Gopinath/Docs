@@ -162,6 +162,15 @@ ________________________________________________________________________________
 |First_name| Last_name| Knowledge|
 :------- | :---------- |:----------:
 Thomas | lingaya|java,c++,PHP
+
+
+After 1NCF
+|First_name| Last_name| Knowledge|
+:------- | :---------- |:----------:
+Thomas | lingaya|java|
+Thomas | lingaya|PHP|
+Thomas | lingaya|C++|
+
   
                                                                                
 
