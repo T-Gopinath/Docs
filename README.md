@@ -206,6 +206,17 @@ Thomas | lingaya|C++|
 |Book_Id| Genre_ID| Genre Type|Price|
 :------- | :---------- |:----------|:----------:
 1 | 1|3|gardning|25-99
+
++ Here book_id determines Genre_ID and Genre_ID determines Genre_Type. So BookID determine Genere_ID
+
+|Book_Id| Genre_ID|Price|                           
+:------- | :---------- |:----------:
+
+
+|Genre_ID| Genre_Type|
+:------- | :---------- :
+
+
     
 
 
