@@ -139,9 +139,10 @@ Q) Find student whose marks are greater than average marks.
   ** SELECT student_name,marks from Student WHERE marks > (select avg(marks) FROM student **
 _________________________________________________________________________________________
 
-Primary_key| Unique-Key
-Primary key can't have Null Values | Unique key allows NULL values
-Only one P.K in a table | Having multiple U.K
+Primary_key| Unique-Key|
+:------- | :----------: 
+|Primary key can't have Null Values | Unique key allows NULL values
+|Only one P.K in a table | Having multiple U.K
 
                                                                                
 
