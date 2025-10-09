@@ -389,7 +389,8 @@ ________________________________________________________________________________
           END
       CLOSE CURSOR_NAME
 
-
+      Example
+      
       DECLARE employee_cursor CUROSR STATIC FOR
         SELECT * FROM EMP_TABLE
           OPEN employee_cursor        
@@ -407,7 +408,7 @@ ________________________________________________________________________________
       + The exists operator returns true if subquery return one or more reqcords.
 __________________________________________________________________________________________________________________________________
 
-### correlated subquery
+### co-related subquery
    
    + A correlated subquery is a subquery in SQL that references columns from its containing (outer) query, causing it to be evaluated once for each row processed by the outer query.
    +  Because it uses values from the outer query, the subquery's results can change for each row, and this repeated execution can significantly impact query performance.
