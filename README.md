@@ -145,16 +145,23 @@ Primary_key| Unique-Key|
 |Only one P.K in a table | Having multiple U.K
 
 __________________________________________________________________________________________
-<h2>Normalization</h2>
+## Normalization
 
   + The process of removing the **redundent data**, by **spliting up the table** in to well defined fashion is called normalization.
   + To reduce redundancy
   + Minimizing the insertion, Deletion and Update Anomalies.
 
-  -FirstNormal Form
-  -Second Normat form
-  -Third Normal Form
+  ### FirstNormal Form
+  ### Second Normat form
+  ### Third Normal Form
 
+  ### FirstNormal Form
+    A relation is in ** 1st normal ** form if it does not contain any multi-valued or composite attribures.
+    By 1st normal form, if underlaying domains contans atomic values only.
+    
+|First_name| Last_name| Knowledge|
+:------- | :---------- |:----------:
+Thomas | lingaya|java,c++,PHP
   
                                                                                
 
