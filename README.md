@@ -371,7 +371,24 @@ ________________________________________________________________________________
        + Nonclustered
        + Unique
        + Full_text
-  
+  ___________________________________________________________________________________________________________________
+
+  ###CURSOR
+    + Cursors are database objects used to maniplate data in aset on a row-by-row basis.
+    + We can also fetch cursor rows and perform operation on them in a loop just like using looping mechanisam.
+
+    **
+      DECLEARE cussor_name CURSOR FOR
+        SELECT COLOUMN1,COLOUMN1,....  FROM TABLE_NAME WHERE CONDITION
+      OPEN CURSOR_NAME (i.e cursor1)
+        FETCH NEXT FROM Cursor1 INTO var1,var2,
+         WHILE @@ FETCH_STATUS = 0
+          BEGING
+            FETCH NEXT CURSOR_NAME INTO VAR1,VAR2;
+          END
+      CLOSE CURSOR_NAME
+    **
+    
        
     
  
