@@ -366,10 +366,10 @@ ________________________________________________________________________________
       B-Tree or B+ Tree are used for this purpose
 
    **Types of indexes**
-       + Clustered
-       + Nonclustered
-       + Unique
-       + Full_text
+       +Clustered
+       +Nonclustered
+       +Unique
+       +Full_text
   
        
     
