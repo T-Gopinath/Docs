@@ -373,7 +373,8 @@ ________________________________________________________________________________
        + Full_text
   ___________________________________________________________________________________________________________________
 
-  ###CURSOR
+  ### CURSOR
+  
     + Cursors are database objects used to maniplate data in aset on a row-by-row basis.
     + We can also fetch cursor rows and perform operation on them in a loop just like using looping mechanisam.
 
