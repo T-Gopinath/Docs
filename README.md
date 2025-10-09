@@ -130,5 +130,13 @@ Answer: We can achieve this using the ADD_MONTHS function.
 **select * from emp where hiredate < add_months(sysdate,-60)**
 __________________________________________________________________________________________
 
+Find duplicate record in a table 
+
+SELECT name, section from tbl GROUP BY name , section Having count(*) > 1
+
+__________________________________________________________________________________________
+
+
+
 
 
