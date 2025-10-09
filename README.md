@@ -380,18 +380,46 @@ ________________________________________________________________________________
     **
       DECLEARE cussor_name CURSOR FOR
         SELECT COLOUMN1,COLOUMN1,....  FROM TABLE_NAME WHERE CONDITION
-      OPEN CURSOR_NAME (i.e cursor1)
-        FETCH NEXT FROM Cursor1 INTO var1,var2,
+      OPEN CURSOR_NAME 
+        FETCH NEXT FROM CURSOR_NAME INTO var1,var2,
          WHILE @@ FETCH_STATUS = 0
           BEGING
             FETCH NEXT CURSOR_NAME INTO VAR1,VAR2;
           END
       CLOSE CURSOR_NAME
     **
+______________________________________________________________________________________________________________________________
+### SUBQUERY
+  + is a query with in another query, also known as a nested query
+  + A subquery is used to return data that will be used in the main query as a conditionto further restrict the data to be restricted.
+  + Subqueries are used with the SELECT,INSERT,UPDATE,DELETE.
+
+    #### EXISS
     
-       
+      + Operator is used to test for the existance of any record in a subquery.
+      + The exists operator returns true if subquery return one or more reqcords.
+__________________________________________________________________________________________________________________________________
+
+### correlated subquery
+   
+   + A correlated subquery is a subquery in SQL that references columns from its containing (outer) query, causing it to be evaluated once for each row processed by the outer query.
+   +  Because it uses values from the outer query, the subquery's results can change for each row, and this repeated execution can significantly impact query performance.
+   +  Correlated subqueries are used to compare data across rows, such as finding employees whose salary is higher than their department's average 
     
- 
+ **
+   SELECT
+      employee_id,
+      salary,
+      department_id
+  FROM
+      employees AS outer_emp
+  WHERE
+      salary > (
+          SELECT AVG(salary)
+          FROM employees AS inner_emp
+          WHERE inner_emp.department_id = outer_emp.department_id
+      );
+ **
   
   
 
