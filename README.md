@@ -271,7 +271,53 @@ ________________________________________________________________________________
 
 ___________________________________________________________________________________________________________
 
+Q) WHAT is identity
+  Identity is a column that automatically generates numaric values
+___________________________________________________________________________________________________________
 
+Q) What is a view in SQL ? how to create one.
+
++ A View is a virtual table based on the result of an SQL Statment 
++ We can create using Create view syntax
+
+   **_ CREATE VIEW view_name AS_ SELECT Column_name(s) from table where condition**
+
++ View take very little space to store the data base conditions only the definition of a view, not a copy of
+  all the data which is present in a table.
+
++ Views can represent a subset of the data contained in a table. Consequently, a view limit the degree of expose of the underlaying tables to the outer world.
++ A given user many have permission to query the view, While dened access to the rest of the base table.
++ Views can join and simplify multiple table into a Single Virtual tables
++ The view can be used to hide some of the coloumn from the table.
+_______________________________________________________________________________________________________________________________
+
+Q) What is Trigger ? 
+
+  + Trigger is a code that associated with Insert,Update or Delete Operations. The code is executed automatically whenever the associated query is executed on table.
+  + Triggers can be useful to maintain integrity in database.
+    
+   ##### PL/SQL on Triggers
+    + Update Emp table such that if an updation is done in Dept_table then salary of all employee of the departments should be incremented by same amount
+
+    **CREATE TRIGGER update_trig
+      AFTER UPDATE ON Dept
+      for EACH ROW
+        DECLARE
+          CUROSR emp_cur IS SELECT * FROM EMP;
+          BEGIN
+            FOR i IN emp_cur loop
+              IF i.dept.No new.dept_no then
+                DBMS_OUTPUT.PUT - LINE(i.emp_no)
+                update emp
+                  SET sal = i.sal + 100;
+                  where emp-no=i-emp-no;
+              ENDif
+            END
+          END
+    **
+
+  
+  
   
 
 
