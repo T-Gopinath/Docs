@@ -419,9 +419,20 @@ ________________________________________________________________________________
           FROM employees AS inner_emp
           WHERE inner_emp.department_id = outer_emp.department_id
       );**
-  
-  
 
+  _________________________________________________________________________________________________________
+
+  ###CHAR and VARCHAR
+  
+  CHAR and VARCHAR are differ in storage and retrival.
+    **char** length is fixed
+    **varchar** length is variable
+    **char** is 50% fastter than VARCHAR
+    **char** uses static memory allocation
+    **varchar** is a dynameic memory allocation
+    
+
+  
 
 
 
