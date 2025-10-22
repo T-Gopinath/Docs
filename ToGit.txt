@@ -1,0 +1,15 @@
+1) how to change default Persistet JPA in Spring Boot.
+https://www.google.com/search?q=how+to+chage+default+persistent+ORM+in+spring+boot+%3F&rlz=1C1CHBD_enIN1184IN1184&oq=how+to+chage+default+persistent+ORM+in+spring+boot+%3F&gs_lcrp=EgZjaHJvbWUyBggAEEUYOdIBCjI2MTYxajBqMTWoAgiwAgHxBW0HE5S9DsVr&sourceid=chrome&ie=UTF-8&sei=rjTvaMOaKuGNseMPsd3VsQU
+
+2) how to migrate from one. versio to other. like Angular, React...
+3) Respose UI Questions.
+
+4)  how to configure two differet database servers in Spring boot
+	https://www.google.com/search?q=ecample+on+how+to+configure+two+differet+database+servers+in+Spring+boot&sca_esv=dd9115a17757454c&rlz=1C1CHBD_enIN1184IN1184&ei=vD_vaLuwC7Lz4-EPmPPykQU&ved=0ahUKEwi7_pSyyqWQAxWy-TgGHZi5PFIQ4dUDCBA&uact=5&oq=ecample+on+how+to+configure+two+differet+database+servers+in+Spring+boot&gs_lp=Egxnd3Mtd2l6LXNlcnAiSGVjYW1wbGUgb24gaG93IHRvIGNvbmZpZ3VyZSB0d28gZGlmZmVyZXQgZGF0YWJhc2Ugc2VydmVycyBpbiBTcHJpbmcgYm9vdEiAQlD4GFiZQHABeACQAQCYAb8DoAH1FKoBCDItMTAuMC4xuAEDyAEA-AEBmAIBoAIKwgIKEAAYsAMY1gQYR5gDAOIDBRIBMSBAiAYBkAYIkgcBMaAHqymyBwC4BwDCBwMyLTHIBwY&sclient=gws-wiz-serp
+	https://www.youtube.com/watch?v=z65J3JPbs9A  (2 Hrs)
+	https://www.youtube.com/watch?v=k-1OboD7X5w  (40minutes)
+
+5)  how to convert single tenent to multi tenent application.
+
+6)
+
