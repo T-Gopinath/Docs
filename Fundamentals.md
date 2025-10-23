@@ -1,2 +1,2 @@
 
-/** Testing ReadMe File **/
+** Testing ReadMe File **
