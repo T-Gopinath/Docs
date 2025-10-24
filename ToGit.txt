@@ -1,7 +1,7 @@
 1) how to change default Persistet JPA in Spring Boot.
 https://www.google.com/search?q=how+to+chage+default+persistent+ORM+in+spring+boot+%3F&rlz=1C1CHBD_enIN1184IN1184&oq=how+to+chage+default+persistent+ORM+in+spring+boot+%3F&gs_lcrp=EgZjaHJvbWUyBggAEEUYOdIBCjI2MTYxajBqMTWoAgiwAgHxBW0HE5S9DsVr&sourceid=chrome&ie=UTF-8&sei=rjTvaMOaKuGNseMPsd3VsQU
 
-2) how to migrate from one. versio to other. like Angular, React...
+2) how to migrate from one. version to other. like Angular, React...  (things to keepin mind.)
 3) Respose UI Questions.
 
 4)  how to configure two differet database servers in Spring boot
