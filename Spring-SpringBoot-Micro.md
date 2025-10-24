@@ -672,13 +672,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
 __________________________________________________________________________________________________________________________________
 #### Q) What are the steps to detect and resolve performance issues in a Spring Boot application?
 
-
 1. Identify the Symptoms
-     *Start by understanding how the application is performing:
-     *High response times or latency.
-     *Increased CPU or memory usage.
-     *Slow database queries or high I/O wait.
-     *Frequent timeouts or thread pool exhaustion.
+     * Start by understanding how the application is performing:
+     * High response times or latency.
+     * Increased CPU or memory usage.
+     * Slow database queries or high I/O wait.
+     * Frequent timeouts or thread pool exhaustion.
 
 2. Enable Monitoring and Metrics
      * Use Spring Boot’s built-in and external monitoring tools:
@@ -724,8 +723,168 @@ ________________________________________________________________________________
      * Set up alerts for CPU, memory, or response time thresholds.
      * Review logs for errors and warnings regularly.
 
-!<img width="1024" height="1536" alt="a2c74fe0-89d2-41e6-b96a-ef4e4464a699" src="https://github.com/user-attachments/assets/c72f17b1-cb76-4cc6-948c-36752eed7593" />
-
-
 __________________________________________________________________________________________________________________________________
+#### Q) What are some recommended approaches for versioning REST APIs in Spring Boot?
 
+1. URI Path Versioning (Most Common)
+
+Example:
+
+```
+GET /api/v1/customers
+GET /api/v2/customers
+```
+Implementation:
+
+```
+@RestController
+@RequestMapping("/api/v1/customers")
+public class CustomerControllerV1 {
+    @GetMapping
+    public String getCustomersV1() { return "Customer data v1"; }
+}
+
+@RestController
+@RequestMapping("/api/v2/customers")
+public class CustomerControllerV2 {
+    @GetMapping
+    public String getCustomersV2() { return "Customer data v2"; }
+}
+```
+
+Pros:
+     * imple and intuitivev
+     * Easy for clients to switch between versions
+     * Clear separation of versions
+cons:
+     * URL clutter     
+     * Might duplicate controllers for each version
+
+
+2. Request Parameter Versioning
+
+     Example:
+          ```
+          GET /api/customers?version=1  
+          GET /api/customers?version=2
+          ```
+     Implementation:
+          ```
+               @RestController
+               @RequestMapping("/api/customers")
+               public class CustomerController {
+                   @GetMapping(params = "version=1")
+                   public String getCustomersV1() { return "Customer data v1"; }
+
+                   @GetMapping(params = "version=2")
+                   public String getCustomersV2() { return "Customer data v2"; }
+} ```
+
+
+Pros:
+
+     * Cleaner URLs
+     * Easy for clients to specify version dynamically
+
+Cons:
+
+     * Versioning logic tied to query parameters
+     * Can make caching less efficient
+
+
+3. Header-Based Versioning (a.k.a. Custom Header or Accept Header Versioning)
+
+    Example:
+         ``` GET /api/customers  
+             Headers: X-API-VERSION=1
+         ```
+
+    or using Accept Header:
+        ```
+               Accept: application/vnd.example.v1+json
+     ```
+
+     Implementation:
+     ```
+        @RestController
+          @RequestMapping("/api/customers")
+          public class CustomerHeaderController {
+              @GetMapping(headers = "X-API-VERSION=1")
+              public String getCustomersV1()
+               { return "Customer data v1"; }
+
+              @GetMapping(headers = "X-API-VERSION=2")
+              public String getCustomersV2()
+                { return "Customer data v2"; }
+} ```   
+
+Pros:
+
+     * Keeps URLs clean
+     * Supports content negotiation
+
+Cons:
+
+     * Harder to test/debug in browsers
+     * Clients must handle headers properly
+
+
+4. Media Type (Content Negotiation) Versioning
+
+Example:
+
+     ```
+     GET /api/customers
+     Accept: application/vnd.example.v1+json
+     ```
+Implementat
+```
+     @RestController
+     @RequestMapping("/api/customers")
+     public class CustomerMediaTypeController {
+         @GetMapping(produces = "application/vnd.example.v1+json")
+         public String getCustomersV1() { return "Customer data v1"; }
+
+         @GetMapping(produces = "application/vnd.example.v2+json")
+         public String getCustomersV2() { return "Customer data v2"; }
+     } ```
+
+Pros:
+
+     * RESTful and aligns with HTTP standards
+     * Good for advanced API clients
+
+Cons:
+
+     * Complex setup
+     * Difficult for simple clients to use
+     
+5. Versioning via Subdomain or Hostname (Less Common)
+     Example:
+        ```
+        https://v1.api.example.com/customers
+        https://v2.api.example.com/customers
+   ```     
+   Pros:
+
+     * Useful for major version upgrades or isolated deployments
+
+Cons:
+
+     * Requires DNS and infrastructure support
+     * Overhead in deployment and maintenance  
+
+   <br/>
+
+   ✅ Best Practice Recommendations
+
+**For internal APIs, use URI path versioning — it’s easiest to maintain.**
+For **public or enterprise-grade APIs, use header-based or media type versioning to maintain cleaner URLs**.
+
+Always document versions clearly using **OpenAPI/Swagger**.
+
+Use semantic versioning (e.g., v1.1, v2.0) and **deprecate old versions** with proper notice.
+
+
+
+   
