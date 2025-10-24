@@ -1,5 +1,7 @@
-### Interservice communication between Microservices using spring boot ###
-##### In Spring Boot, several mechanisms are available to achieve interservice communication, depending on the architecture style (synchronous or asynchronous) and reliability needs.
+### Q) Interservice communication between Microservices using spring boot 
+
+In Spring Boot, several mechanisms are available to achieve interservice communication, depending on the architecture style (synchronous or asynchronous) and reliability needs.
+
 1. Synchronous Communication (Request-Response Style)
      one service directly calls another and waits for the response.
      Simple, blocking, and synchronous.
@@ -724,20 +726,19 @@ ________________________________________________________________________________
      * Review logs for errors and warnings regularly.
 
 __________________________________________________________________________________________________________________________________
-#### Q) What are some recommended approaches for versioning REST APIs in Spring Boot?
+### Q) What are some recommended approaches for versioning REST APIs in Spring Boot?
 
 1. URI Path Versioning (Most Common)
 
 Example:
 
-```
-GET /api/v1/customers
-GET /api/v2/customers
-```
+``` GET /api/v1/customers
+    GET /api/v2/customers ```
+
+
 Implementation:
 
-```
-@RestController
+``` @RestController
 @RequestMapping("/api/v1/customers")
 public class CustomerControllerV1 {
     @GetMapping
@@ -749,36 +750,36 @@ public class CustomerControllerV1 {
 public class CustomerControllerV2 {
     @GetMapping
     public String getCustomersV2() { return "Customer data v2"; }
-}
-```
+} ```
+
 
 Pros:
-     * imple and intuitivev
+     * Simple and intuitive
      * Easy for clients to switch between versions
      * Clear separation of versions
 cons:
      * URL clutter     
-     * Might duplicate controllers for each version
+     * **Might duplicate controllers for each version**
 
 
 2. Request Parameter Versioning
 
      Example:
-          ```
-          GET /api/customers?version=1  
-          GET /api/customers?version=2
-          ```
-     Implementation:
-          ```
-               @RestController
-               @RequestMapping("/api/customers")
-               public class CustomerController {
-                   @GetMapping(params = "version=1")
-                   public String getCustomersV1() { return "Customer data v1"; }
+          ``` GET /api/customers?version=1  
+               GET /api/customers?version=2 ```
 
-                   @GetMapping(params = "version=2")
-                   public String getCustomersV2() { return "Customer data v2"; }
-} ```
+Implementation:
+
+
+     ``` @RestController
+          @RequestMapping("/api/customers")
+          public class CustomerController {
+              @GetMapping(params = "version=1")
+              public String getCustomersV1() { return "Customer data v1"; }
+     
+              @GetMapping(params = "version=2")
+              public String getCustomersV2() { return "Customer data v2"; }
+          } ```
 
 
 Pros:
@@ -795,18 +796,20 @@ Cons:
 3. Header-Based Versioning (a.k.a. Custom Header or Accept Header Versioning)
 
     Example:
+
          ``` GET /api/customers  
-             Headers: X-API-VERSION=1
-         ```
+             Headers: X-API-VERSION=1 ```
 
     or using Accept Header:
-        ```
-               Accept: application/vnd.example.v1+json
-     ```
+
+
+        ``` Accept: application/vnd.example.v1+json ```
+
 
      Implementation:
-     ```
-        @RestController
+
+
+     ``` @RestController
           @RequestMapping("/api/customers")
           public class CustomerHeaderController {
               @GetMapping(headers = "X-API-VERSION=1")
@@ -816,7 +819,8 @@ Cons:
               @GetMapping(headers = "X-API-VERSION=2")
               public String getCustomersV2()
                 { return "Customer data v2"; }
-} ```   
+          } ```   
+
 
 Pros:
 
@@ -833,13 +837,14 @@ Cons:
 
 Example:
 
-     ```
-     GET /api/customers
-     Accept: application/vnd.example.v1+json
-     ```
-Implementat
-```
-     @RestController
+     ``` GET /api/customers
+          Accept: application/vnd.example.v1+json ```
+
+
+
+Implementation
+
+     ``` @RestController
      @RequestMapping("/api/customers")
      public class CustomerMediaTypeController {
          @GetMapping(produces = "application/vnd.example.v1+json")
@@ -848,6 +853,7 @@ Implementat
          @GetMapping(produces = "application/vnd.example.v2+json")
          public String getCustomersV2() { return "Customer data v2"; }
      } ```
+
 
 Pros:
 
@@ -861,18 +867,18 @@ Cons:
      
 5. Versioning via Subdomain or Hostname (Less Common)
      Example:
-        ```
-        https://v1.api.example.com/customers
-        https://v2.api.example.com/customers
-   ```     
-   Pros:
+        
+        ``` https://v1.api.example.com/customers
+        https://v2.api.example.com/customers ```  
+      
+        Pros:
 
-     * Useful for major version upgrades or isolated deployments
+          * Useful for major version upgrades or isolated deployments
 
-Cons:
+     Cons:
 
-     * Requires DNS and infrastructure support
-     * Overhead in deployment and maintenance  
+          * Requires DNS and infrastructure support
+          * Overhead in deployment and maintenance  
 
    <br/>
 
@@ -885,6 +891,6 @@ Always document versions clearly using **OpenAPI/Swagger**.
 
 Use semantic versioning (e.g., v1.1, v2.0) and **deprecate old versions** with proper notice.
 
-
+____________________________________________________________________________________________________________________________
 
    
