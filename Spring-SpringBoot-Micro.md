@@ -433,14 +433,15 @@ ________________________________________________________________________________
      | **ItemWriter**    | Writes the processed data to a destination.                   |
 
 <br/>
+
 🔹 Chunk-Oriented Processing <br/>
-     A key feature of Spring Batch.
-     -Data is processed in chunks (e.g., 100 records at a time).
-     -Each chunk is read–processed–written as a transaction.
+     A key feature of Spring Batch. <br/>
+     * Data is processed in chunks (e.g., 100 records at a time). <br/>
+     * Each chunk is read–processed–written as a transaction. <br/>
 
      Example:
 
-     ```<chunk reader="itemReader" processor="itemProcessor" writer="itemWriter" commit-interval="100"/>```
+     <chunk reader="itemReader" processor="itemProcessor" writer="itemWriter" commit-interval="100"/>
 
 <br/>
 🔹 Spring Batch Architecture <br/>
