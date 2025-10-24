@@ -580,9 +580,98 @@ Let’s assume we have:
           ```
           <br/> <br/> <br/> <br/>
           
-     3. Create DataSource configuration
+3. Create DataSource configuration
+
      
-     
+     @Configuration
+     @EnableTransactionManagement
+     @EnableJpaRepositories(
+                             basePackages = "com.example.mysql.repository",
+                             entityManagerFactoryRef = "mysqlEntityManagerFactory",
+                             transactionManagerRef = "mysqlTransactionManager"
+                          )
+public class MysqlDataSourceConfig {
+
+    @Bean
+    @Primary
+    @ConfigurationProperties(
+                                 prefix = "spring.datasource.mysql"
+                             )
+    public DataSource mysqlDataSource() {
+        return DataSourceBuilder.create().build();
+    }
+
+    @Bean
+    @Primary
+    public LocalContainerEntityManagerFactoryBean mysqlEntityManagerFactory(
+            EntityManagerFactoryBuilder builder) {
+        return builder
+                .dataSource(mysqlDataSource())
+                .packages("com.example.mysql.entity")
+                .persistenceUnit("mysqlPU")
+                .build();
+    }
+
+    @Bean
+    @Primary
+    public PlatformTransactionManager mysqlTransactionManager(
+            @Qualifier("mysqlEntityManagerFactory") EntityManagerFactory emf) {
+        return new JpaTransactionManager(emf);
+    }
+}
+
+PostGres sql
+
+@Configuration
+@EnableTransactionManagement
+@EnableJpaRepositories(
+    basePackages = "com.example.postgres.repository",
+    entityManagerFactoryRef = "postgresEntityManagerFactory",
+    transactionManagerRef = "postgresTransactionManager"
+)
+public class PostgresDataSourceConfig {
+
+    @Bean
+    @ConfigurationProperties(prefix = "spring.datasource.postgres")
+    public DataSource postgresDataSource() {
+        return DataSourceBuilder.create().build();
+    }
+
+    @Bean
+    public LocalContainerEntityManagerFactoryBean postgresEntityManagerFactory(
+            EntityManagerFactoryBuilder builder) {
+        return builder
+                .dataSource(postgresDataSource())
+                .packages("com.example.postgres.entity")
+                .persistenceUnit("postgresPU")
+                .build();
+    }
+
+    @Bean
+    public PlatformTransactionManager postgresTransactionManager(
+            @Qualifier("postgresEntityManagerFactory") EntityManagerFactory emf) {
+        return new JpaTransactionManager(emf);
+    }
+}
+
+4. Define Entities & Repositories
+     * MySQL entities in com.example.mysql.entity
+     * PostgreSQL entities in com.example.postgres.entity
+
+Repositories in corresponding packages as specified in @EnableJpaRepositories.
+
+```@Repository
+public interface UserRepository extends JpaRepository<User, Long> {
+}```
+<br/>
+
+✅ Now your Spring Boot app can interact with both databases simultaneously, each with its own entities, repositories, and transactions.
+
+
+
+
+
+
 
           
 
