@@ -1195,3 +1195,139 @@ Here are some key strategies to optimize a Spring Boot application for better pe
      * Combine serialization with compression (GZIP) for large payloads sent over network.
      * Don’t serialize heavy objects like database connections, file handles, or large in-memory caches.
 _____________________________________________________________________________________________________________________________
+### Q) What are the best practices for managing transactions in a Spring Boot application?
+
+Spring Boot leverages Spring’s powerful transaction management framework, which can be declarative or programmatic.
+Following these practices ensures consistency, performance, and maintainability.
+
+#### 01. Prefer Declarative Transaction Management
+
+
+     * Use <b>@Transactional</b> annotations on service layer methods rather than managing transactions manually.
+     * Advantages
+          * Less boilerplate code.
+          * Easier to maintain and test.
+          * Clear separation of business logic from transaction handling.
+
+
+     ``` @Service
+          public class UserService {
+          
+              @Transactional
+              public void createUser(User user) {
+                  userRepository.save(user);
+                  // Additional logic
+              }
+          } ```
+
+
+#### 02. Apply Transactions at the Service Layer
+
+     * Avoid annotating repository or DAO methods directly.
+     * Service layer ensures that all business logic in a single operation is atomic.
+     * Keeps transaction boundaries clear and consistent.
+
+
+#### 03. Use Proper Propagation Settings
+
+     * Understand and use transaction propagation wisely:
+          * REQUIRED (default) – join existing transaction or create new one.
+          * REQUIRES_NEW – always start a new transaction, suspending any existing one.
+          * MANDATORY – must run within an existing transaction
+
+
+          ``` @Transactional(propagation = Propagation.REQUIRES_NEW)
+               public void auditAction(Audit audit) {
+                   auditRepository.save(audit);
+               } ```
+     
+
+
+#### 04. Set Appropriate Isolation Levels
+
+     * Prevent data anomalies by choosing the correct isolation level:
+          * READ_COMMITTED – default, prevents dirty reads.
+          * REPEATABLE_READ – prevents non-repeatable reads.
+          * SERIALIZABLE – strictest, avoids phantom reads but reduces concurrency.
+          
+     * Don’t use overly strict isolation unless required—it impacts performance.
+
+          ``` @Transactional(isolation = Isolation.READ_COMMITTED)
+               public void updateAccountBalance(Account account) {
+                   // update logic
+               } ```
+
+               
+
+#### 05. Handle Exceptions Correctly
+
+
+     * Only unchecked exceptions (RuntimeException) trigger automatic rollback by default.
+     * For checked exceptions, explicitly configure rollback:
+
+
+          ``` @Transactional(rollbackFor = Exception.class)
+               public void processPayment(Payment payment) throws PaymentException {
+                   // business logic
+               } ```
+          
+        
+#### 06. Keep Transactions Short
+
+     * Long-running transactions can lock resources and degrade performance.
+     * Break complex operations into smaller, manageable units when possible.
+
+
+#### 07. Avoid Transactional Annotations on Private Methods
+
+     * Spring’s proxy-based AOP doesn’t intercept calls to private methods, so @Transactional won’t work there.
+     * Always annotate public methods that are called from outside the bean.
+
+#### 08. Consider Read-Only Transactions
+
+     * For methods that only read data, mark them as readOnly = true.
+     * Optimizes database access and avoids unnecessary locks.
+
+
+     ``` @Transactional(readOnly = true)
+          public List<User> getAllUsers() {
+              return userRepository.findAll();
+          }
+ ```
+     
+
+
+#### 09. Integrate with Proper Database Connection Pooling
+
+     * Use connection pools (HikariCP, default in Spring Boot) to efficiently manage transactional connections.
+     * Ensure the transaction manager is properly configured to work with the datasource.
+
+#### 10. Use Programmatic Transactions Only When Necessary
+
+     * Use TransactionTemplate or PlatformTransactionManager for fine-grained control when needed.
+     * Useful in special cases like multiple datasources or conditional rollback.
+
+     ```transactionTemplate.execute(status -> {
+              // transactional code
+              return result;
+          });
+  ```
+
+<br/>
+
+
+✅ Summary
+
+
+* Prefer declarative transactions (@Transactional) at service layer.
+* Use proper propagation, isolation, and rollback settings.
+* Keep transactions short and read-only where possible.
+* Avoid transactions on private methods.
+* Integrate with a connection pool for efficiency.
+
+
+
+
+
+
+_____________________________________________________________________________________________________________________________
