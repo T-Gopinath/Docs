@@ -674,11 +674,11 @@ ________________________________________________________________________________
 
 
 1. Identify the Symptoms
-     * Start by understanding how the application is performing:
-     * High response times or latency.
-     * Increased CPU or memory usage.
-     * Slow database queries or high I/O wait.
-     * Frequent timeouts or thread pool exhaustion.
+     *Start by understanding how the application is performing:
+     *High response times or latency.
+     *Increased CPU or memory usage.
+     *Slow database queries or high I/O wait.
+     *Frequent timeouts or thread pool exhaustion.
 
 2. Enable Monitoring and Metrics
      * Use Spring Boot’s built-in and external monitoring tools:
