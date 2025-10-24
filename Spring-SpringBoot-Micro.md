@@ -578,6 +578,8 @@ Let’s assume we have:
                spring.jpa.postgres.hibernate.ddl-auto=update
                spring.jpa.postgres.show-sql=true
           ```
+
+          
      3. Create DataSource configuration
      
      
