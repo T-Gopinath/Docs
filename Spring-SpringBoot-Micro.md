@@ -246,9 +246,9 @@ Summary
 | **Standard API** | JCache (JSR-107)                        | Pluggable Providers    |
 
 ___________________________________________________________________________________________________________________________________
-##### cron scheduler in springboot. #####
+#### cron scheduler in springboot. ####
 
-<b> Step-by-Step Setup for Cron Scheduler <b>
+<b> Step-by-Step Setup for Cron Scheduler </b>
 
 1. Enable Scheduling
      Add the **@EnableScheduling** annotation to your main Spring Boot application class (or a configuration class).
@@ -287,18 +287,19 @@ ________________________________________________________________________________
       
 3. Understanding the Cron Expression
    Spring’s cron format has 6 fields (not 7 like Unix)
-        ┌───────────── second (0–59)
- │ ┌───────────── minute (0–59)
- │ │ ┌───────────── hour (0–23)
- │ │ │ ┌───────────── day of month (1–31)
- │ │ │ │ ┌───────────── month (1–12 or JAN–DEC)
- │ │ │ │ │ ┌───────────── day of week (0–7 or SUN–SAT)
- │ │ │ │ │ │
- * * * * * *
+      ┌───────────── second (0–59) <br/>
+      │ ┌───────────── minute (0–59)  <br/>
+      │ │ ┌───────────── hour (0–23)  <br/>
+      │ │ │ ┌───────────── day of month (1–31)  <br/>
+      │ │ │ │ ┌───────────── month (1–12 or JAN–DEC)  <br/>
+      │ │ │ │ │ ┌───────────── day of week (0–7 or SUN–SAT)  <br/>
+      │ │ │ │ │ │  <br/>
+      * * * * * *
  
 <br/>
 
 ✅ Examples:
+<br/>
      | Expression       | Description              |
      | ---------------- | ------------------------ |
      | `0 0 * * * *`    | Every hour at 00 minutes |
