@@ -621,7 +621,7 @@ public class MysqlDataSourceConfig {
 }
 
 PostGres sql
-
+```
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(
@@ -652,7 +652,7 @@ public class PostgresDataSourceConfig {
             @Qualifier("postgresEntityManagerFactory") EntityManagerFactory emf) {
         return new JpaTransactionManager(emf);
     }
-}
+} ```
 
 4. Define Entities & Repositories
      * MySQL entities in com.example.mysql.entity
@@ -660,22 +660,12 @@ public class PostgresDataSourceConfig {
 
 Repositories in corresponding packages as specified in @EnableJpaRepositories.
 
-```@Repository
+``` @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-}```
+} ```
 <br/>
 
-✅ Now your Spring Boot app can interact with both databases simultaneously, each with its own entities, repositories, and transactions.
-
-
-
-
-
-
-
-          
-
-
+✅ Now your Spring Boot app can interact with both databases simultaneously, each with its own entities, repositories, and transactions.<br/>
 __________________________________________________________________________________________________________________________________
 
 
