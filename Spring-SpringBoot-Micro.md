@@ -667,7 +667,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 } ```
 <br/>
 
-✅ Now your Spring Boot app can interact with both databases simultaneously, each with its own entities, repositories, and transactions.<br/>
+✅ Now your Spring Boot app can interact with both databases simultaneously,
+ each with its own entities, repositories, and transactions.<br/>
 __________________________________________________________________________________________________________________________________
 
 
