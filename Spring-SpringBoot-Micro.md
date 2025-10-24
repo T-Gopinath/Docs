@@ -410,12 +410,13 @@ ________________________________________________________________________________
           -Payroll, billing, or reconciliation jobs <br/> 
 
 🔹 Spring Batch Overview <br/>
+
      Spring Batch provides: <br/>
-          -Transaction management
-          -Chunk-based processing
-          -Retry/restart capabilities
-          -Job scheduling and monitoring
-          -Scalability (parallel or partitioned steps)
+          -Transaction management<br/> 
+          -Chunk-based processing<br/> 
+          -Retry/restart capabilities<br/> 
+          -Job scheduling and monitoring<br/> 
+          -Scalability (parallel or partitioned steps)<br/> 
 <br/>
 
 🔹 Core Components <br/>
@@ -465,7 +466,8 @@ ________________________________________________________________________________
 
 🔹 Example: Java Config <br/>
 
-     ```@Configuration
+     ```
+     @Configuration
      @EnableBatchProcessing
      public class BatchConfig {
      
@@ -511,18 +513,18 @@ ________________________________________________________________________________
 
      <br/>
      🔹 Advanced Features </br>
-          1. **Job Parameters** – pass dynamic data into a job (e.g., date or file name).
-          2. **Job Scheduling** – integrate with Spring Scheduler or Quartz.
-          3. **Error Handling & Retry** – skip, retry, or rollback failed records
-          4. ** Parallel Processing** – using partitioning, multi-threading, or remote chunking.
-          5. **Integration with Spring Boot** – auto-configured setup and monitoring via Actuator.
+          1. ** Job Parameters ** – pass dynamic data into a job (e.g., date or file name).
+          2. ** Job Scheduling ** – integrate with Spring Scheduler or Quartz.
+          3. ** Error Handling & Retry ** – skip, retry, or rollback failed records
+          4. ** Parallel Processing ** – using partitioning, multi-threading, or remote chunking.
+          5. ** Integration with Spring Boot ** – auto-configured setup and monitoring via Actuator.
           
 </br>
 🔹 Spring Boot + Spring Batch </br>
 
      Spring Boot simplifies configuration with:
-          1 Auto-configuration of JobLauncher, JobRepository, etc.
-          2 Running jobs automatically on startup (spring.batch.job.enabled=true).
+          1. Auto-configuration of JobLauncher, JobRepository, etc.
+          2. Running jobs automatically on startup (spring.batch.job.enabled=true).
           3 YAML/properties-based customization.
 
 __________________________________________________________________________________________________________________________________  
