@@ -91,6 +91,7 @@ public class OrderEventProducer {
         kafkaTemplate.send("order-topic", orderJson);
     }
 }
+
 Consumer Service:
 
 @Service
@@ -108,10 +109,33 @@ Benefits:
      Services can continue functioning even if other services are down.
      Better for scalability and eventual consistency.
 
-     
+  3. Service Discovery   
 
+     When services run dynamically (e.g., in containers), static URLs are unreliable.
+     ✅ Spring Cloud Netflix Eureka or Consul
+     Example:
+
+          Register each microservice with Eureka.
+
+          Use @LoadBalanced RestTemplate or Feign client with the service name (e.g., http://ORDER-SERVICE).
+
+  4. API Gateway
+       Often, an API Gateway (like Spring Cloud Gateway) is used:
+          Routes requests to the correct service.
+          Handles cross-cutting concerns like authentication, rate limiting, and logging.
      
-        
+     Example:
+          spring:
+  cloud:
+    gateway:
+      routes:
+        - id: order_route
+          uri: lb://ORDER-SERVICE
+          predicates:
+            - Path=/orders/**
+
+5. Security Between Services
+   Use OAuth2 / JWT / mTLS for secure service-to-service communication.   
    ```
 | Approach         | Type  | Tool/Library           | Pros                       | Use Case                   |
 | ---------------- | ----- | ---------------------- | -------------------------- | -------------------------- |
