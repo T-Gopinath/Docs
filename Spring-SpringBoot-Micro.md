@@ -299,7 +299,7 @@ ________________________________________________________________________________
 <br/>
 
 ✅ Examples:
-<br/>
+
      | Expression       | Description              |
      | ---------------- | ------------------------ |
      | `0 0 * * * *`    | Every hour at 00 minutes |
@@ -355,7 +355,7 @@ ________________________________________________________________________________
      To allow concurrent scheduling, configure a **TaskScheduler** bean:
 
    ```
-      import org.springframework.context.annotation.Configuration;
+     import org.springframework.context.annotation.Configuration;
      import org.springframework.scheduling.annotation.EnableScheduling;
      import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
      import org.springframework.context.annotation.Bean;
