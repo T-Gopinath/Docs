@@ -723,5 +723,8 @@ ________________________________________________________________________________
      * Keep monitoring live application metrics.
      * Set up alerts for CPU, memory, or response time thresholds.
      * Review logs for errors and warnings regularly.
+
+![](https://chatgpt.com/c/68fb5377-aaac-8324-9da5-ce343cedef62)
+
 __________________________________________________________________________________________________________________________________
 
