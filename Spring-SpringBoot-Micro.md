@@ -578,11 +578,11 @@ Let’s assume we have:
                spring.jpa.postgres.hibernate.ddl-auto=update
                spring.jpa.postgres.show-sql=true
           ```
-          <br/> <br/> <br/> <br/>
+          <br/>
           
 3. Create DataSource configuration
 
-     
+    ``` 
      @Configuration
      @EnableTransactionManagement
      @EnableJpaRepositories(
@@ -618,7 +618,7 @@ public class MysqlDataSourceConfig {
             @Qualifier("mysqlEntityManagerFactory") EntityManagerFactory emf) {
         return new JpaTransactionManager(emf);
     }
-}
+} ```
 
 PostGres sql
 ```
