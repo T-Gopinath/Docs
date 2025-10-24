@@ -528,4 +528,38 @@ ________________________________________________________________________________
           2. Running jobs automatically on startup (spring.batch.job.enabled=true).
           3 YAML/properties-based customization.
 
-__________________________________________________________________________________________________________________________________  
+__________________________________________________________________________________________________________________________________
+#### configuring Spring Boot to connect to and use two different database servers? ####
+
+Let’s assume we have:
+     Database 1: MySQL
+     Database 2: PostgreSQL
+
+     We’ll use Spring Data JPA for both.
+
+     1. Add dependencies
+     In your pom.xml (Maven) or build.gradle (Gradle):
+
+     ```
+     <!-- MySQL and PostgreSQL drivers -->
+<dependency>
+    <groupId>mysql</groupId>
+    <artifactId>mysql-connector-java</artifactId>
+</dependency>
+
+<dependency>
+    <groupId>org.postgresql</groupId>
+    <artifactId>postgresql</artifactId>
+</dependency>
+
+<!-- Spring Data JPA -->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-data-jpa</artifactId>
+</dependency>
+
+```
+
+__________________________________________________________________________________________________________________________________
+
+
