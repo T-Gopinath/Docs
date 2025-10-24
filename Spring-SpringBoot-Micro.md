@@ -1322,10 +1322,32 @@ Following these practices ensures consistency, performance, and maintainability.
 * Keep transactions short and read-only where possible.
 * Avoid transactions on private methods.
 * Integrate with a connection pool for efficiency.
+  
+_____________________________________________________________________________________________________________________________
+### Q) How do you approach testing in springboot application ?
+
+#### 01. Define the Scope and Layers
+
+     ```ruby
+require 'redcarpet'
+markdown = Redcarpet.new("Hello World!")
+puts markdown.to_html
+```
+     
+#### 02. Unit Testing
+#### 03. Integration Testing
+#### 04. Controller / Web Layer Testing
+#### 05. End-to-End Testing
+#### 06. Test Data Management
+#### 07. Testing Aspects Specific to Spring Boot
+#### 08. Continuous Integration
 
 
+✅ Summary:
 
-
-
+Approach testing in Spring Boot by layering your tests (unit → integration → end-to-end), 
+use Spring-specific testing annotations to simplify setup, and ensure repeatable, isolated, 
+and fast tests wherever possible.
 
 _____________________________________________________________________________________________________________________________
+
