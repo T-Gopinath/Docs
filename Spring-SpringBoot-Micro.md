@@ -670,5 +670,58 @@ public interface UserRepository extends JpaRepository<User, Long> {
 ✅ Now your Spring Boot app can interact with both databases simultaneously,
  each with its own entities, repositories, and transactions.<br/>
 __________________________________________________________________________________________________________________________________
+#### Q) What are the steps to detect and resolve performance issues in a Spring Boot application?
 
+
+1. Identify the Symptoms
+     * Start by understanding how the application is performing:
+     * High response times or latency.
+     * Increased CPU or memory usage.
+     * Slow database queries or high I/O wait.
+     * Frequent timeouts or thread pool exhaustion.
+
+2. Enable Monitoring and Metrics
+     * Use Spring Boot’s built-in and external monitoring tools:
+     * Spring Boot Actuator: Provides health checks, metrics, and endpoints like /actuator/metrics.
+     * Micrometer: Integrates with monitoring systems like Prometheus, Grafana.
+     * Monitor JVM metrics: CPU, memory, garbage collection, thread counts.
+
+3. Profile the Application
+     * Identify where the bottlenecks are:
+     * Use Java profilers: VisualVM, YourKit, JProfiler.
+     * Analyze heap dumps and thread dumps.
+     * Look for slow methods, excessive object creation, or thread contention.
+
+4. Analyze Database Performance
+     * Database issues are often the root cause:
+     * Enable SQL logging to see slow queries.
+     * Use tools like Spring Data JPA statistics or Hibernate metrics.
+     * Optimize queries, indexes, and consider caching.
+
+5. Check Application Configuration
+     * Review Spring Boot and system configurations:
+     * Thread pools (for async operations, web requests) may need tuning.
+     * Connection pool settings (HikariCP, Tomcat, etc.).
+     * Caching: Use @Cacheable for frequently accessed data.
+     * Compression and HTTP keep-alive for web performance.
+
+6. Optimize Code
+     * Common code-level improvements:
+     * Reduce redundant object creation.
+     * Avoid unnecessary blocking operations.
+     * Optimize loops, streams, and collection usage.
+     * Use asynchronous processing (@Async) where applicable.
+
+7. Test and Benchmark
+     * Validate changes with proper testing:
+     * Use load testing tools: JMeter, Gatling, or Locust.
+     * Measure before-and-after performance metrics.
+     * Monitor for regression issues.
+
+8. Implement Continuous Monitoring
+     * After fixes:
+     * Keep monitoring live application metrics.
+     * Set up alerts for CPU, memory, or response time thresholds.
+     * Review logs for errors and warnings regularly.
+__________________________________________________________________________________________________________________________________
 
