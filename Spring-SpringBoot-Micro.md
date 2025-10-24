@@ -1210,7 +1210,7 @@ Following these practices ensures consistency, performance, and maintainability.
           * Clear separation of business logic from transaction handling.
 
 
-     ``` @Service
+     ```@Service
           public class UserService {
           
               @Transactional
@@ -1218,7 +1218,7 @@ Following these practices ensures consistency, performance, and maintainability.
                   userRepository.save(user);
                   // Additional logic
               }
-          } ```
+          }```
 
 
 #### 02. Apply Transactions at the Service Layer
@@ -1236,10 +1236,10 @@ Following these practices ensures consistency, performance, and maintainability.
           * MANDATORY – must run within an existing transaction
 
 
-          ``` @Transactional(propagation = Propagation.REQUIRES_NEW)
+          ```@Transactional(propagation = Propagation.REQUIRES_NEW)
                public void auditAction(Audit audit) {
                    auditRepository.save(audit);
-               } ```
+               }```
      
 
 
@@ -1252,10 +1252,10 @@ Following these practices ensures consistency, performance, and maintainability.
           
      * Don’t use overly strict isolation unless required—it impacts performance.
 
-          ``` @Transactional(isolation = Isolation.READ_COMMITTED)
+          ```@Transactional(isolation = Isolation.READ_COMMITTED)
                public void updateAccountBalance(Account account) {
                    // update logic
-               } ```
+               }```
 
                
 
@@ -1266,10 +1266,10 @@ Following these practices ensures consistency, performance, and maintainability.
      * For checked exceptions, explicitly configure rollback:
 
 
-          ``` @Transactional(rollbackFor = Exception.class)
+          ```@Transactional(rollbackFor = Exception.class)
                public void processPayment(Payment payment) throws PaymentException {
                    // business logic
-               } ```
+               }```
           
         
 #### 06. Keep Transactions Short
@@ -1289,11 +1289,10 @@ Following these practices ensures consistency, performance, and maintainability.
      * Optimizes database access and avoids unnecessary locks.
 
 
-     ``` @Transactional(readOnly = true)
+     ```@Transactional(readOnly = true)
           public List<User> getAllUsers() {
               return userRepository.findAll();
-          }
- ```
+          }```
      
 
 
@@ -1310,8 +1309,7 @@ Following these practices ensures consistency, performance, and maintainability.
      ```transactionTemplate.execute(status -> {
               // transactional code
               return result;
-          });
-  ```
+          });```
 
 <br/>
 
