@@ -246,5 +246,150 @@ Summary
 | **Standard API** | JCache (JSR-107)                        | Pluggable Providers    |
 
 ___________________________________________________________________________________________________________________________________
+##### cron scheduler in springboot. #####
+
+<b> Step-by-Step Setup for Cron Scheduler <b>
+
+1. Enable Scheduling
+     Add the **@EnableScheduling** annotation to your main Spring Boot application class (or a configuration class).
+   ```
+     import org.springframework.boot.SpringApplication;
+     import org.springframework.boot.autoconfigure.SpringBootApplication;
+     import org.springframework.scheduling.annotation.EnableScheduling;
+
+     @SpringBootApplication
+     @EnableScheduling
+     public class SchedulerApplication {
+         public static void main(String[] args) {
+             SpringApplication.run(SchedulerApplication.class, args);
+         }
+     }
+
+   ```
+            
+2. Create a Scheduled Task
+     Use the **@Scheduled** annotation on any method inside a **@Component** or **@Service** class.
+     ```
+          import org.springframework.scheduling.annotation.Scheduled;
+          import org.springframework.stereotype.Component;
+
+          @Component
+          public class CronJobScheduler {
+          
+              // Runs every 10 seconds
+              @Scheduled(cron = "*/10 * * * * *")
+              public void runJob() {
+                  System.out.println("Running scheduled job at " + java.time.LocalDateTime.now());
+              }
+          }
+     ```
+
+      
+3. Understanding the Cron Expression
+   Spring’s cron format has 6 fields (not 7 like Unix)
+        ┌───────────── second (0–59)
+ │ ┌───────────── minute (0–59)
+ │ │ ┌───────────── hour (0–23)
+ │ │ │ ┌───────────── day of month (1–31)
+ │ │ │ │ ┌───────────── month (1–12 or JAN–DEC)
+ │ │ │ │ │ ┌───────────── day of week (0–7 or SUN–SAT)
+ │ │ │ │ │ │
+ * * * * * *
+ 
+<br/>
+
+✅ Examples:
+     | Expression       | Description              |
+     | ---------------- | ------------------------ |
+     | `0 0 * * * *`    | Every hour at 00 minutes |
+     | `0 0 9 * * *`    | Every day at 9:00 AM     |
+     | `0 */5 * * * *`  | Every 5 minutes          |
+     | `0 0 0 * * MON`  | Every Monday at midnight |
+     | `*/10 * * * * *` | Every 10 seconds         |
+
+   
+   
+4. Using Externalized Cron from application.properties
+     You can define the cron expression in a property file for flexibility:
+     ```
+     app.cron.expression=*/15 * * * * *
+     ``` 
+     Then use it in your code:
+
+     ```
+      import org.springframework.beans.factory.annotation.Value;
+     import org.springframework.scheduling.annotation.Scheduled;
+     import org.springframework.stereotype.Component;
+
+     @Component
+     public class PropertyBasedScheduler {
+     
+     @Value("${app.cron.expression}")
+     private String cronExpression;
+     
+     @Scheduled(cron = "${app.cron.expression}")
+          public void runTask() {
+             System.out.println("Running job as per cron: " + cronExpression);
+          }
+     }    
+     ```
+   
+   
+5. Fixed Delay / Fixed Rate (Alternate Options)
+    If you don’t need cron but want fixed intervals:
+   ```
+     @Scheduled(fixedRate = 5000)  // Runs every 5 seconds (measured from start)
+     public void runFixedRateTask() { ... }
+
+     @Scheduled(fixedDelay = 5000) // Runs 5 seconds after previous completion
+     public void runFixedDelayTask() { ... }
+
+     @Scheduled(initialDelay = 10000, fixedRate = 5000)
+     public void runDelayedTask() { ... }
+
+   ```
+     
+6. Enable Concurrent or Sequential Execution
+     By default, scheduled methods run in a **single thread**.
+     To allow concurrent scheduling, configure a **TaskScheduler** bean:
+
+   ```
+      import org.springframework.context.annotation.Configuration;
+     import org.springframework.scheduling.annotation.EnableScheduling;
+     import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
+     import org.springframework.context.annotation.Bean;
+
+     @Configuration
+     @EnableScheduling
+     public class SchedulerConfig {
+     
+         @Bean
+         public ThreadPoolTaskScheduler taskScheduler() {
+             ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
+             scheduler.setPoolSize(5);
+             scheduler.setThreadNamePrefix("cron-task-");
+             scheduler.initialize();
+             return scheduler;
+         }
+     }
+       
+   ```
+
+<br/>
+
+✅ Summary
+
+<br/>
+
+| Type        | Annotation                    | Example                            |
+| ----------- | ----------------------------- | ---------------------------------- |
+| Cron-based  | `@Scheduled(cron="...")`      | `@Scheduled(cron="0 0/5 * * * *")` |
+| Fixed Rate  | `@Scheduled(fixedRate=5000)`  | every 5 seconds                    |
+| Fixed Delay | `@Scheduled(fixedDelay=5000)` | after 5 sec of previous run        |
+
+
+
+
+___________________________________________________________________________________________________________________________________
 
   
