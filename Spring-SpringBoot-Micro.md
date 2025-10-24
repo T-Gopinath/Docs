@@ -892,5 +892,306 @@ Always document versions clearly using **OpenAPI/Swagger**.
 Use semantic versioning (e.g., v1.1, v2.0) and **deprecate old versions** with proper notice.
 
 ____________________________________________________________________________________________________________________________
+### Q) How to secure Spring Boot Actuator endpoints?
 
-   
+To secure Spring Boot Actuator endpoints, you can combine Spring Security with Actuator configuration.
+Below are the recommended steps and approaches for protecting sensitive management endpoints like
+/actuator/health, /actuator/metrics, etc
+
+1. Add Required Dependencies
+     If you don’t already have Spring Security, add it:
+
+     Maven:
+
+     ``` <dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-security</artifactId>
+     </dependency> ```
+
+
+2. Configure Actuator Endpoint Exposure 
+
+application.yml
+
+
+``` management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, metrics, env ```
+
+
+3. Secure Endpoints Using Spring Security
+     Approach 1: Basic Authentication (Most Common)
+       application.yml
+
+     ``` spring:
+            security:
+              user:
+                name: admin
+                password: secret
+          
+          management:
+            endpoints:
+              web:
+                exposure:
+                  include: "*"
+            endpoint:
+              health:
+                show-details: when_authorized ```   
+
+          Now, only authenticated users can access the endpoints
+
+          ``` GET /actuator/metrics
+                    Authorization: Basic base64(admin:secret) ```
+     
+
+     Approach 2: Custom Security Configuration
+
+     Use a dedicated **SecurityFilterChain** to restrict access to Actuator endpoints.
+
+     Example:
+
+      ``` import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
+          import org.springframework.context.annotation.Bean;
+          import org.springframework.context.annotation.Configuration;
+          import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+          import org.springframework.security.web.SecurityFilterChain;
+          
+          @Configuration
+          public class ActuatorSecurityConfig {
+          
+              @Bean
+              public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+                  http
+                      .authorizeHttpRequests(authorize -> authorize
+                          .requestMatchers(EndpointRequest.to("health", "info")).permitAll()
+                          .requestMatchers(EndpointRequest.toAnyEndpoint()).hasRole("ADMIN")
+                          .anyRequest().authenticated()
+                      )
+                      .httpBasic(); // or .formLogin()
+                  return http.build();
+              }
+          } ```
+
+
+          How this works:
+
+               * /actuator/health and /actuator/info are public.
+               * Other Actuator endpoints require authentication with role ADMIN.
+
+
+     Approach 3: Limit Access to Internal Network
+
+          If Actuator is used for monitoring tools (e.g., Prometheus), you can restrict access by IP.
+
+
+          ``` .authorizeHttpRequests(auth -> auth
+          .requestMatchers(EndpointRequest.toAnyEndpoint())
+          .hasIpAddress("192.168.1.0/24") ```
+
+     Approach 4: Use Separate Management Port (Optional)
+
+          You can serve Actuator endpoints on a different port for better isolation:
+
+          application.yml
+
+          
+          ``` management:
+                 server:
+                   port: 9090
+                 endpoints:
+                   web:
+                     exposure:
+                       include: "*" ```
+ 
+<br/>
+
+✅ Best Practices
+     Never expose Actuator endpoints publicly **without authentication**.
+     Restrict sensitive endpoints like **/actuator/env**, **/actuator/beans**, **/actuator/configprops**.
+     Use **HTTPS** for all Actuator traffic.
+     **Integrate with your organization’s centralized monitoring and authentication system (e.g., OAuth2, LDAP).**
+____________________________________________________________________________________________________________________________ 
+### Q) how to create connetion pool in SpringBoot applicaiton.
+
+In Spring Boot, connection pooling is automatically configured when you include a database dependency (like H2, MySQL, PostgreSQL, etc.). However, you can also explicitly configure it for better performance and control.
+
+#### 1. Understanding Connection Pooling
+
+     A connection pool maintains a cache of database connections that can be reused, avoiding the overhead of creating new connections for each request.
+     Spring Boot typically uses HikariCP as the default connection pool.
+
+#### 2. Default Behavior
+
+     When you include a JDBC driver dependency (e.g., spring-boot-starter-data-jpa or spring-boot-starter-jdbc),
+     Spring Boot automatically sets up HikariCP.
+
+     Example:
+
+          ``` <!-- pom.xml -->
+               <dependency>
+                   <groupId>org.springframework.boot</groupId>
+                   <artifactId>spring-boot-starter-data-jpa</artifactId>
+               </dependency>
+               <dependency>
+                   <groupId>mysql</groupId>
+                   <artifactId>mysql-connector-j</artifactId>
+               </dependency> ```
+     
+
+#### 3. Basic Configuration (application.properties)
+
+     ``` spring.datasource.url=jdbc:mysql://localhost:3306/mydb
+          spring.datasource.username=root
+          spring.datasource.password=secret
+          spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+          
+          # HikariCP specific settings
+          spring.datasource.hikari.maximum-pool-size=10
+          spring.datasource.hikari.minimum-idle=5
+          spring.datasource.hikari.idle-timeout=30000
+          spring.datasource.hikari.max-lifetime=1800000
+          spring.datasource.hikari.connection-timeout=20000
+          spring.datasource.hikari.pool-name=MyHikariCP ```
+
+
+#### 4. Using application.yml (alternative)
+
+     ``` spring:
+            datasource:
+              url: jdbc:mysql://localhost:3306/mydb
+              username: root
+              password: secret
+              driver-class-name: com.mysql.cj.jdbc.Driver
+              hikari:
+                maximum-pool-size: 10
+                minimum-idle: 5
+                idle-timeout: 30000
+                max-lifetime: 1800000
+                connection-timeout: 20000
+                pool-name: MyHikariCP ```
+
+
+#### 5. Custom Configuration via Java Code (Optional)
+          If you want to programmatically configure a pool:
+
+          ``` import com.zaxxer.hikari.HikariConfig;
+          import com.zaxxer.hikari.HikariDataSource;
+          import org.springframework.context.annotation.Bean;
+          import org.springframework.context.annotation.Configuration;
+          
+          import javax.sql.DataSource;
+          
+          @Configuration
+          public class DataSourceConfig {
+          
+              @Bean
+              public DataSource dataSource() {
+                  HikariConfig config = new HikariConfig();
+                  config.setJdbcUrl("jdbc:mysql://localhost:3306/mydb");
+                  config.setUsername("root");
+                  config.setPassword("secret");
+                  config.setMaximumPoolSize(10);
+                  config.setMinimumIdle(5);
+                  config.setPoolName("CustomHikariPool");
+                  return new HikariDataSource(config);
+              }
+          }
+ ```
+
+
+#### 6. Monitoring the Connection Pool
+
+          You can monitor connection pool metrics through:
+
+               1. Spring Boot Actuator (/actuator/metrics/hikaricp.connections.*)
+               2. JMX (Java Management Extensions)
+               3. Custom logging
+          
+#### 7. Using Other Connection Pools (Optional)
+
+     If you don’t want to use HikariCP, you can switch to:
+
+          1. Apache Commons DBCP2
+          2. Tomcat JDBC Pool
+
+
+<br/>
+
+✅ Summary </br>
+
+| Feature             | Default Pool                          | Configurable via               |
+| ------------------- | ------------------------------------- | ------------------------------ |
+| Pool Implementation | HikariCP                              | application.properties / @Bean |
+| Auto-configured     | Yes                                   | When JDBC driver present       |
+| Key Properties      | maxPoolSize, idleTimeout, maxLifetime | spring.datasource.hikari.*     |
+
+_____________________________________________________________________________________________________________________________
+### Q) What strategies we use to optimize Spring boot application.
+
+Here are some key strategies to optimize a Spring Boot application for better performance, scalability, and resource efficiency:
+
+#### 01. Optimize Application Startup
+
+     * **Lazy Initialization:** Enable lazy bean loading (spring.main.lazy-initialization=true) to reduce startup time.
+     * **Exclude Unused Auto-configurations**: Use @SpringBootApplication(exclude = {...}) or spring.autoconfigure.exclude to skip unnecessary modules.
+     * **Profile-based Configuration**: Load only required beans/configurations using @Profile
+     
+#### 02. Tune JVM and Memory
+
+     * Configure JVM heap size and garbage collector (GC) for your environment (-Xms, -Xmx, -XX:+UseG1GC, etc.).
+     * Use tools like VisualVM, JConsole, or Micrometer metrics to monitor memory usage
+          
+#### 03. Optimize Database Access
+
+    * Use connection pooling (HikariCP — default in Spring Boot).
+    * Optimize JPA/Hibernate:
+         * Enable batch fetching and lazy loading.
+         * **Avoid N+1** query problems using **@EntityGraph** or JOIN FETCH.
+         * Use DTO projections for read-heavy queries
+     * Indexing and query tuning: 
+          Ensure DB queries are indexed properly and optimized.
+     
+#### 04. Use Efficient Caching
+
+     * Use Spring Cache abstraction: Cache frequently accessed data (Redis, Ehcache, etc.).
+     * Avoid unnecessary recomputation: Cache expensive calculations or DB fetches.
+     
+#### 05. Optimize REST APIs
+
+     * Enable HTTP/2: Reduces latency for multiple requests.
+     * Use content compression: Enable GZIP compression (server.compression.enabled=true).
+     * Limit request payload: Validate input and avoid loading large unnecessary data.
+     
+#### 06. Reduce I/O and Logging Overhead
+
+     I/O operations include disk reads/writes, network calls, database queries, and file access. 
+     These are typically slower than in-memory operations. Optimization strategies:
+
+#### 07. Profile and Monitor Regularly
+          
+     * Spring Boot Actuator: Monitor metrics, health, and traces.
+     * Profiling tools: Use VisualVM, YourKit, or JFR to identify bottlenecks.
+     * Log efficiently: Avoid excessive logging in production; use appropriate log levels.
+          
+#### 08. Optimize Deployment
+
+    * Spring Boot layered jars: Use layered jars to speed up container builds.
+    * Remove unused dependencies: Reduce application size and startup time.
+    * Ahead-of-Time (AOT) compilation: With GraalVM native images for fast startup
+
+
+#### 09. Implement Asynchronous and Non-blocking Processing 
+
+    * @Async methods: For tasks that don’t need to block the main thread.
+    * Messaging queues: Offload heavy processing to Kafka, RabbitMQ, or similar.    
+    
+      
+#### 10. Use Proper Data Serialization
+
+
+     * Messaging (Kafka, RabbitMQ): Use Protobuf or Avro for better performance than JSON.
+     * Combine serialization with compression (GZIP) for large payloads sent over network.
+     * Don’t serialize heavy objects like database connections, file handles, or large in-memory caches.
+_____________________________________________________________________________________________________________________________
