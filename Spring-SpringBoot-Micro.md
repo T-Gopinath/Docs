@@ -724,7 +724,8 @@ ________________________________________________________________________________
      * Set up alerts for CPU, memory, or response time thresholds.
      * Review logs for errors and warnings regularly.
 
-![](https://chatgpt.com/c/68fb5377-aaac-8324-9da5-ce343cedef62)
+!<img width="1024" height="1536" alt="a2c74fe0-89d2-41e6-b96a-ef4e4464a699" src="https://github.com/user-attachments/assets/c72f17b1-cb76-4cc6-948c-36752eed7593" />
+
 
 __________________________________________________________________________________________________________________________________
 
