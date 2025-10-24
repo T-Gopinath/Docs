@@ -590,37 +590,39 @@ Let’s assume we have:
                              entityManagerFactoryRef = "mysqlEntityManagerFactory",
                              transactionManagerRef = "mysqlTransactionManager"
                           )
-public class MysqlDataSourceConfig {
+     public class MysqlDataSourceConfig {
 
-    @Bean
-    @Primary
-    @ConfigurationProperties(
-                                 prefix = "spring.datasource.mysql"
-                             )
-    public DataSource mysqlDataSource() {
-        return DataSourceBuilder.create().build();
-    }
+         @Bean
+         @Primary
+         @ConfigurationProperties(
+                                      prefix = "spring.datasource.mysql"
+                                  )
+         public DataSource mysqlDataSource() {
+             return DataSourceBuilder.create().build();
+         }
+     
+         @Bean
+         @Primary
+         public LocalContainerEntityManagerFactoryBean mysqlEntityManagerFactory(
+                 EntityManagerFactoryBuilder builder) {
+             return builder
+                     .dataSource(mysqlDataSource())
+                     .packages("com.example.mysql.entity")
+                     .persistenceUnit("mysqlPU")
+                     .build();
+         }
+     
+         @Bean
+         @Primary
+         public PlatformTransactionManager mysqlTransactionManager(
+                 @Qualifier("mysqlEntityManagerFactory") EntityManagerFactory emf) {
+             return new JpaTransactionManager(emf);
+         }
+     }
+    ```
 
-    @Bean
-    @Primary
-    public LocalContainerEntityManagerFactoryBean mysqlEntityManagerFactory(
-            EntityManagerFactoryBuilder builder) {
-        return builder
-                .dataSource(mysqlDataSource())
-                .packages("com.example.mysql.entity")
-                .persistenceUnit("mysqlPU")
-                .build();
-    }
+<b>PostGres sql</b>
 
-    @Bean
-    @Primary
-    public PlatformTransactionManager mysqlTransactionManager(
-            @Qualifier("mysqlEntityManagerFactory") EntityManagerFactory emf) {
-        return new JpaTransactionManager(emf);
-    }
-} ```
-
-PostGres sql
 ```
 @Configuration
 @EnableTransactionManagement
