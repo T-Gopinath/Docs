@@ -391,34 +391,33 @@ ________________________________________________________________________________
 __________________________________________________________________________________________________________________________________
 
 <br/>
-### Spring Batching Processing ###
+####Spring Batching Processing####
 <br/>
 <p>Spring Batch Processing is a lightweight, comprehensive framework designed for batch processing — i.e., executing a series of jobs or tasks without user interaction, often dealing with large volumes of data efficiently and reliably.</p>
 
 <br/>
-🔹 What is Batch Processing?
-<br/>
-     Batch processing means executing a sequence of operations on a large dataset, typically:
+🔹 What is Batch Processing ?  <br/>
 
-          * Reading data from a source (DB, file, queue)
-          * Processing/transformation logic
-          * Writing the processed data to a target (DB, file, API, etc.) <br/>
+     Batch processing means executing a sequence of operations on a large dataset, typically: <br/>
+          -Reading data from a source (DB, file, queue)
+          -Processing/transformation logic
+          -Writing the processed data to a target (DB, file, API, etc.) <br/>
 
-     It’s commonly used for:
-
-          * ETL (Extract, Transform, Load)
-          * Report generation
-          * Data migration
-          * Payroll, billing, or reconciliation jobs <br/>
+     It’s commonly used for: <br/>
+          -ETL (Extract, Transform, Load)
+          -Report generation
+          -Data migration
+          -Payroll, billing, or reconciliation jobs <br/> 
 
 🔹 Spring Batch Overview <br/>
-     Spring Batch provides:
-          * Transaction management
-          * Chunk-based processing
-          * Retry/restart capabilities
-          * Job scheduling and monitoring
-          * Scalability (parallel or partitioned steps)
+     Spring Batch provides: <br/>
+          -Transaction management
+          -Chunk-based processing
+          -Retry/restart capabilities
+          -Job scheduling and monitoring
+          -Scalability (parallel or partitioned steps)
 <br/>
+
 🔹 Core Components <br/>
 
      | Component         | Description                                                   |
@@ -435,19 +434,17 @@ ________________________________________________________________________________
 <br/>
 🔹 Chunk-Oriented Processing <br/>
      A key feature of Spring Batch.
-     * Data is processed in chunks (e.g., 100 records at a time).
-     * Each chunk is read–processed–written as a transaction.
+     -Data is processed in chunks (e.g., 100 records at a time).
+     -Each chunk is read–processed–written as a transaction.
 
      Example:
 
-     ```
-          <chunk reader="itemReader" processor="itemProcessor" writer="itemWriter" commit-interval="100"/>
-     ```
+     ```<chunk reader="itemReader" processor="itemProcessor" writer="itemWriter" commit-interval="100"/>```
 
 <br/>
 🔹 Spring Batch Architecture <br/>
 
-             +----------------------+
+        +----------------------+
         |     JobLauncher      |
         +----------+-----------+
                    |
@@ -461,14 +458,14 @@ ________________________________________________________________________________
         |        Step          |
         +----------+-----------+
                    |
-         +---------+---------+
+        +---------+---------+
          | Reader  |Processor|Writer|
 
 <br/>
+
 🔹 Example: Java Config <br/>
 
-     ```
-     @Configuration
+     ```@Configuration
      @EnableBatchProcessing
      public class BatchConfig {
      
@@ -510,17 +507,15 @@ ________________________________________________________________________________
                      .start(step)
                      .build();
          }
-     }
-
-     ```
+     }```
 
      <br/>
      🔹 Advanced Features </br>
-          1 **Job Parameters** – pass dynamic data into a job (e.g., date or file name).
-          2 **Job Scheduling** – integrate with Spring Scheduler or Quartz.
-          3 **Error Handling & Retry** – skip, retry, or rollback failed records
-          4 ** Parallel Processing** – using partitioning, multi-threading, or remote chunking.
-          5 **Integration with Spring Boot** – auto-configured setup and monitoring via Actuator.
+          1. **Job Parameters** – pass dynamic data into a job (e.g., date or file name).
+          2. **Job Scheduling** – integrate with Spring Scheduler or Quartz.
+          3. **Error Handling & Retry** – skip, retry, or rollback failed records
+          4. ** Parallel Processing** – using partitioning, multi-threading, or remote chunking.
+          5. **Integration with Spring Boot** – auto-configured setup and monitoring via Actuator.
           
 </br>
 🔹 Spring Boot + Spring Batch </br>
@@ -529,8 +524,5 @@ ________________________________________________________________________________
           1 Auto-configuration of JobLauncher, JobRepository, etc.
           2 Running jobs automatically on startup (spring.batch.job.enabled=true).
           3 YAML/properties-based customization.
-
-          
-     
 
 __________________________________________________________________________________________________________________________________  
