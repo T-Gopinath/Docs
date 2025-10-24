@@ -559,6 +559,30 @@ Let’s assume we have:
          <artifactId>spring-boot-starter-data-jpa</artifactId>
      </dependency> ```
 
+
+     2. Configure application.properties / application.yml
+     ```
+     # MySQL datasource
+spring.datasource.mysql.url=jdbc:mysql://localhost:3306/db1
+spring.datasource.mysql.username=root
+spring.datasource.mysql.password=root
+spring.datasource.mysql.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.jpa.mysql.hibernate.ddl-auto=update
+spring.jpa.mysql.show-sql=true
+
+# PostgreSQL datasource
+spring.datasource.postgres.url=jdbc:postgresql://localhost:5432/db2
+spring.datasource.postgres.username=postgres
+spring.datasource.postgres.password=postgres
+spring.datasource.postgres.driver-class-name=org.postgresql.Driver
+spring.jpa.postgres.hibernate.ddl-auto=update
+spring.jpa.postgres.show-sql=true
+```
+
+
+          
+
+
 __________________________________________________________________________________________________________________________________
 
 
