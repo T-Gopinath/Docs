@@ -1252,10 +1252,12 @@ Following these practices ensures consistency, performance, and maintainability.
           
      * Don’t use overly strict isolation unless required—it impacts performance.
 
-          ```@Transactional(isolation = Isolation.READ_COMMITTED)
+```
+          @Transactional(isolation = Isolation.READ_COMMITTED)
                public void updateAccountBalance(Account account) {
                    // update logic
-               }```
+          }
+```
 
                
 
@@ -1266,10 +1268,12 @@ Following these practices ensures consistency, performance, and maintainability.
      * For checked exceptions, explicitly configure rollback:
 
 
-          ```@Transactional(rollbackFor = Exception.class)
+```
+@Transactional(rollbackFor = Exception.class)
                public void processPayment(Payment payment) throws PaymentException {
                    // business logic
-               }```
+}
+```
           
         
 #### 06. Keep Transactions Short
