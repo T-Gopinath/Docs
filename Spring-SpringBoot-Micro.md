@@ -1306,11 +1306,11 @@ Following these practices ensures consistency, performance, and maintainability.
      * Use TransactionTemplate or PlatformTransactionManager for fine-grained control when needed.
      * Useful in special cases like multiple datasources or conditional rollback.
 
-     ```transactionTemplate.execute(status -> {
+```transactionTemplate.execute(status -> {
               // transactional code
               return result;
           });
-          ```
+```
 
 <br/>
 
