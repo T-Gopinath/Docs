@@ -914,18 +914,21 @@ Below are the recommended steps and approaches for protecting sensitive manageme
 application.yml
 
 
-``` management:
-  endpoints:
-    web:
-      exposure:
-        include: health, info, metrics, env ```
+```
+     management:
+       endpoints:
+         web:
+           exposure:
+             include: health, info, metrics, env
+```
 
 
 3. Secure Endpoints Using Spring Security
      Approach 1: Basic Authentication (Most Common)
        application.yml
 
-     ``` spring:
+     ```
+          spring:
             security:
               user:
                 name: admin
@@ -938,12 +941,15 @@ application.yml
                   include: "*"
             endpoint:
               health:
-                show-details: when_authorized ```   
+                show-details: when_authorized
+```   
 
           Now, only authenticated users can access the endpoints
 
-          ``` GET /actuator/metrics
-                    Authorization: Basic base64(admin:secret) ```
+```
+          GET /actuator/metrics
+          Authorization: Basic base64(admin:secret)
+```
      
 
      Approach 2: Custom Security Configuration
@@ -952,7 +958,8 @@ application.yml
 
      Example:
 
-      ``` import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
+      ```
+          import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
           import org.springframework.context.annotation.Bean;
           import org.springframework.context.annotation.Configuration;
           import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -972,7 +979,8 @@ application.yml
                       .httpBasic(); // or .formLogin()
                   return http.build();
               }
-          } ```
+          }
+```
 
 
           How this works:
@@ -986,24 +994,27 @@ application.yml
           If Actuator is used for monitoring tools (e.g., Prometheus), you can restrict access by IP.
 
 
-          ``` .authorizeHttpRequests(auth -> auth
+```
+           .authorizeHttpRequests(auth -> auth
           .requestMatchers(EndpointRequest.toAnyEndpoint())
-          .hasIpAddress("192.168.1.0/24") ```
+          .hasIpAddress("192.168.1.0/24")
+```
 
      Approach 4: Use Separate Management Port (Optional)
 
           You can serve Actuator endpoints on a different port for better isolation:
 
           application.yml
-
-          
-          ``` management:
-                 server:
-                   port: 9090
-                 endpoints:
-                   web:
-                     exposure:
-                       include: "*" ```
+         
+```
+          management:
+            server:
+              port: 9090
+            endpoints:
+              web:
+                exposure:
+                  include: "*"
+```
  
 <br/>
 
@@ -1029,20 +1040,23 @@ In Spring Boot, connection pooling is automatically configured when you include 
 
      Example:
 
-          ``` <!-- pom.xml -->
-               <dependency>
-                   <groupId>org.springframework.boot</groupId>
-                   <artifactId>spring-boot-starter-data-jpa</artifactId>
-               </dependency>
-               <dependency>
-                   <groupId>mysql</groupId>
-                   <artifactId>mysql-connector-j</artifactId>
-               </dependency> ```
+```
+          <!-- pom.xml -->
+          <dependency>
+              <groupId>org.springframework.boot</groupId>
+              <artifactId>spring-boot-starter-data-jpa</artifactId>
+          </dependency>
+          <dependency>
+              <groupId>mysql</groupId>
+              <artifactId>mysql-connector-j</artifactId>
+          </dependency>
+```
      
 
 #### 3. Basic Configuration (application.properties)
 
-     ``` spring.datasource.url=jdbc:mysql://localhost:3306/mydb
+```
+          spring.datasource.url=jdbc:mysql://localhost:3306/mydb
           spring.datasource.username=root
           spring.datasource.password=secret
           spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
@@ -1053,52 +1067,56 @@ In Spring Boot, connection pooling is automatically configured when you include 
           spring.datasource.hikari.idle-timeout=30000
           spring.datasource.hikari.max-lifetime=1800000
           spring.datasource.hikari.connection-timeout=20000
-          spring.datasource.hikari.pool-name=MyHikariCP ```
+          spring.datasource.hikari.pool-name=MyHikariCP
+```
 
 
 #### 4. Using application.yml (alternative)
 
-     ``` spring:
-            datasource:
-              url: jdbc:mysql://localhost:3306/mydb
-              username: root
-              password: secret
-              driver-class-name: com.mysql.cj.jdbc.Driver
-              hikari:
-                maximum-pool-size: 10
-                minimum-idle: 5
-                idle-timeout: 30000
-                max-lifetime: 1800000
-                connection-timeout: 20000
-                pool-name: MyHikariCP ```
+```
+     spring:
+       datasource:
+         url: jdbc:mysql://localhost:3306/mydb
+         username: root
+         password: secret
+         driver-class-name: com.mysql.cj.jdbc.Driver
+         hikari:
+           maximum-pool-size: 10
+           minimum-idle: 5
+           idle-timeout: 30000
+           max-lifetime: 1800000
+           connection-timeout: 20000
+           pool-name: MyHikariCP
+```
 
 
 #### 5. Custom Configuration via Java Code (Optional)
           If you want to programmatically configure a pool:
 
-          ``` import com.zaxxer.hikari.HikariConfig;
-          import com.zaxxer.hikari.HikariDataSource;
-          import org.springframework.context.annotation.Bean;
-          import org.springframework.context.annotation.Configuration;
-          
-          import javax.sql.DataSource;
-          
-          @Configuration
-          public class DataSourceConfig {
-          
-              @Bean
-              public DataSource dataSource() {
-                  HikariConfig config = new HikariConfig();
-                  config.setJdbcUrl("jdbc:mysql://localhost:3306/mydb");
-                  config.setUsername("root");
-                  config.setPassword("secret");
-                  config.setMaximumPoolSize(10);
-                  config.setMinimumIdle(5);
-                  config.setPoolName("CustomHikariPool");
-                  return new HikariDataSource(config);
-              }
-          }
- ```
+```
+               import com.zaxxer.hikari.HikariConfig;
+               import com.zaxxer.hikari.HikariDataSource;
+               import org.springframework.context.annotation.Bean;
+               import org.springframework.context.annotation.Configuration;
+               
+               import javax.sql.DataSource;
+               
+               @Configuration
+               public class DataSourceConfig {
+               
+                   @Bean
+                   public DataSource dataSource() {
+                       HikariConfig config = new HikariConfig();
+                       config.setJdbcUrl("jdbc:mysql://localhost:3306/mydb");
+                       config.setUsername("root");
+                       config.setPassword("secret");
+                       config.setMaximumPoolSize(10);
+                       config.setMinimumIdle(5);
+                       config.setPoolName("CustomHikariPool");
+                       return new HikariDataSource(config);
+                   }
+               }
+```
 
 
 #### 6. Monitoring the Connection Pool
@@ -1209,8 +1227,8 @@ Following these practices ensures consistency, performance, and maintainability.
           * Easier to maintain and test.
           * Clear separation of business logic from transaction handling.
 
-
-     ```@Service
+```
+          @Service
           public class UserService {
           
               @Transactional
@@ -1218,7 +1236,8 @@ Following these practices ensures consistency, performance, and maintainability.
                   userRepository.save(user);
                   // Additional logic
               }
-          }```
+          }
+```
 
 
 #### 02. Apply Transactions at the Service Layer
@@ -1236,10 +1255,12 @@ Following these practices ensures consistency, performance, and maintainability.
           * MANDATORY – must run within an existing transaction
 
 
-          ```@Transactional(propagation = Propagation.REQUIRES_NEW)
+```
+          @Transactional(propagation = Propagation.REQUIRES_NEW)
                public void auditAction(Audit audit) {
-                   auditRepository.save(audit);
-               }```
+               auditRepository.save(audit);
+          }
+```
      
 
 
