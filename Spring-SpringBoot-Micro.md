@@ -1353,18 +1353,110 @@ Following these practices ensures consistency, performance, and maintainability.
 * Integrate with a connection pool for efficiency.
   
 _____________________________________________________________________________________________________________________________
+
 ### Q) How do you approach testing in springboot application ?
 
-#### 01. Define the Scope and Layers
-     
-#### 02. Unit Testing
-#### 03. Integration Testing
-#### 04. Controller / Web Layer Testing
-#### 05. End-to-End Testing
-#### 06. Test Data Management
-#### 07. Testing Aspects Specific to Spring Boot
-#### 08. Continuous Integration
+Testing in a Spring Boot application is a critical part of ensuring the application works correctly and reliably.
+The approach generally involves a combination of unit testing,
+integration testing, and end-to-end testing. Here’s a structured way to approach it:
 
+#### 01. Define the Scope and Layers
+
+Spring Boot applications typically have multiple layers:
+     1. Controller layer: Handles HTTP requests.
+     2. Service layer: Contains business logic.
+     3. Repository layer: Handles data persistence.
+     4. Configuration/Integration layer: External services, messaging, or APIs.
+
+Your testing approach should target each layer appropriately.
+
+#### 02. Unit Testing.
+1. Purpose: Test individual components in isolation.
+2. Tools: JUnit 5, Mockito, AssertJ.
+3. Best Practices:
+     * Test service classes without depending on the database.
+     * Mock dependencies like repositories or external APIs using @Mock or @MockBean.
+     * Focus on small, deterministic tests.
+
+Example:
+          ```
+               @ExtendWith(MockitoExtension.class)
+               class UserServiceTest {
+
+              @Mock
+              private UserRepository userRepository;
+          
+              @InjectMocks
+              private UserService userService;
+          
+              @Test
+              void testGetUserById() {
+                  User user = new User(1L, "John");
+                  when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+          
+                  User result = userService.getUserById(1L);
+          
+                  assertEquals("John", result.getName());
+              }
+          }
+```
+
+#### 03. Integration Testing
+1. Purpose: Test the interaction between components and with the real database or external systems.
+2. Tools: @SpringBootTest, Testcontainers, H2 in-memory database.
+3. **Best Practices:**
+    * Use @SpringBootTest with webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT for full context loading
+    * Use @DataJpaTest for repository testing.
+    * Use Testcontainers for integration with external databases or services.
+     
+Example
+     
+```
+     @SpringBootTest
+     @AutoConfigureMockMvc
+     class UserControllerIntegrationTest {
+     
+     @Autowired
+     private MockMvc mockMvc;
+     
+    @Test
+    void testGetUserEndpoint() throws Exception {
+        mockMvc.perform(get("/users/1"))
+               .andExpect(status().isOk())
+               .andExpect(jsonPath("$.name").value("John"));
+     }
+}
+```
+   
+#### 04. Controller / Web Layer Testing
+1. Purpose: Verify request handling, validation, and response formatting.
+2. Tools: MockMvc or WebTestClient (for reactive apps).
+3. Best Practices:
+     * Test error responses, validation, and edge cases.
+     * Use @WebMvcTest to test only the controller layer.          
+               
+#### 05. End-to-End Testing
+1. Purpose: Test the application as a whole in a realistic environment.
+2. Tools: Selenium, RestAssured, or Postman.
+3. Best Practices:
+     * Run against a staging environment or with Docker Compose.
+     * Focus on critical user journeys
+  
+#### 06. Test Data Management
+   1. Use in-memory databases (H2) for unit/integration tests.
+   2. Seed data for predictable results
+   3. Clean up after tests to maintain isolation      
+
+#### 07. Testing Aspects Specific to Spring Boot
+1. Configuration testing: @TestConfiguration and property overrides.
+2. Profiles: Use @ActiveProfiles("test") for test-specific configurations.
+3. Transactional tests: @Transactional ensures rollback after each test.
+4. Mocking external services: @MockBean or WireMock.
+
+#### 08. Continuous Integration
+1. Run tests automatically on every commit or pull request.
+2. Use code coverage tools (JaCoCo) to ensure adequate testing.
+3. Keep unit tests fast; integration tests can be slower but should also run reliably.
 
 ✅ Summary:
 
