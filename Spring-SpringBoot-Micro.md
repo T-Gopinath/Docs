@@ -1309,7 +1309,8 @@ Following these practices ensures consistency, performance, and maintainability.
      ```transactionTemplate.execute(status -> {
               // transactional code
               return result;
-          });```
+          });
+          ```
 
 <br/>
 
