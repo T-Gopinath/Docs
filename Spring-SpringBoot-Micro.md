@@ -1289,10 +1289,12 @@ Following these practices ensures consistency, performance, and maintainability.
      * Optimizes database access and avoids unnecessary locks.
 
 
-     ```@Transactional(readOnly = true)
+```
+@Transactional(readOnly = true)
           public List<User> getAllUsers() {
               return userRepository.findAll();
-          }```
+          }
+```
      
 
 
