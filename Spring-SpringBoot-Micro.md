@@ -1327,12 +1327,6 @@ ________________________________________________________________________________
 ### Q) How do you approach testing in springboot application ?
 
 #### 01. Define the Scope and Layers
-
-```ruby
-require 'redcarpet'
-markdown = Redcarpet.new("Hello World!")
-puts markdown.to_html
-```
      
 #### 02. Unit Testing
 #### 03. Integration Testing
