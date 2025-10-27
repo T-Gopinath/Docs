@@ -1780,7 +1780,7 @@ spring:
 
 🛡️ 2. Java Security Configuration (ActuatorSecurityConfig.java)
 
-``package com.example.config;
+`` package com.example.config;
 
 import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
 import org.springframework.context.annotation.Bean;
