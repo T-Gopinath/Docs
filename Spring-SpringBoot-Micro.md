@@ -1526,3 +1526,62 @@ Spring Boot simplifies the data access layer by automating configuration, elimin
 and providing repository abstractions — letting you focus purely on business logic rather than infrastructure code.
 
 ________________________________________________________________________________________________________________________________________
+### Q) Explain the concept and purpose of conditional annotations in Spring Boot ?
+
+**_Concept of Conditional Annotations in Spring Boot:_**
+Conditional annotations in Spring Boot are used to control when a particular bean or configuration should be loaded into the Spring application context. They allow developers to enable or disable components automatically based on certain conditions, such as the presence of a class, property value, or bean.
+
+Spring Boot’s auto-configuration mechanism relies heavily on these conditional annotations to configure components only when certain prerequisites are met—ensuring that the application context remains lightweight and flexible.
+
+
+_**Common Conditional Annotations**_
+     1. @ConditionalOnProperty
+     2. @ConditionalOnClass / @ConditionalOnMissingClass
+     3. @ConditionalOnBean / @ConditionalOnMissingBean
+     4. @ConditionalOnExpression
+
+_**Purpose of Conditional Annotations**_ 
+     **Enable Auto-Configuration:**
+          * They allow Spring Boot to dynamically configure components only when needed, supporting the
+               “convention over configuration” principle.
+               
+               ``@Configuration
+                    @ConditionalOnProperty(name = "feature.enabled", havingValue = "true")
+                    public class FeatureConfig { ... }
+                    ``
+                    
+     **Improve Flexibility:**
+          * Developers can define optional features or modules that load conditionally—helpful for modular applications.
+
+          ``@Configuration
+          @ConditionalOnClass(name = "com.example.ExternalLib")
+          public class ExternalLibConfig { ... }
+``
+
+     **Reduce Configuration Conflicts:**
+          * Prevents duplicate or conflicting bean definitions by activating configurations only under the right conditions.
+
+          ``@Service
+          @ConditionalOnMissingBean(MyService.class)
+          public class DefaultMyService implements MyService { ... }
+          ``
+          
+     **Enhance Performance:**
+          * Loads only necessary beans, reducing startup time and memory usage.
+
+          Example:
+
+          
+          ``@Configuration
+@ConditionalOnExpression("${cache.enabled}==true")
+public class CacheConfig { ... }
+``
+
+In summary:
+     Conditional annotations in Spring Boot make configurations context-aware and adaptive, supporting modular, flexible, and efficient application setup.
+
+     
+     
+
+
+
