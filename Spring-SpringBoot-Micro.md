@@ -1572,7 +1572,7 @@ _**Purpose of Conditional Annotations**_
           Example:
 
           
-          ``@Configuration
+``@Configuration
 @ConditionalOnExpression("${cache.enabled}==true")
 public class CacheConfig { ... }
 ``
