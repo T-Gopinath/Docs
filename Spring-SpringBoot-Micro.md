@@ -1485,11 +1485,10 @@ Spring Boot simplifies the data access layer by building on top of Spring Data, 
           
      * You just define an interface:
      
-          ``
-          public interface EmployeeRepository extends JpaRepository<Employee, Long> {
+          ``public interface EmployeeRepository extends JpaRepository<Employee, Long> {
             List<Employee> findByDepartment(String department);
           }
-          ``
+``
 
           Spring automatically generates the implementation at runtime. 
           Result: No boilerplate DAO implementations.
@@ -1508,12 +1507,11 @@ Spring Boot simplifies the data access layer by building on top of Spring Data, 
 🔹 6. Database Configuration via Properties
      * Simple configuration in application.properties or application.yml:
      
-       ``
-          spring.datasource.url=jdbc:mysql://localhost:3306/mydb
+       ``spring.datasource.url=jdbc:mysql://localhost:3306/mydb
           spring.datasource.username=root
           spring.datasource.password=secret
           spring.jpa.hibernate.ddl-auto=update
-          ``
+``
           
      No need for XML or Java-based bean setup.
      
