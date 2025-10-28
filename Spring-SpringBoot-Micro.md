@@ -1976,16 +1976,16 @@ ____________________________________________________________________________
  ### Q) Your are tasked with building a non-blocking , reactive REST API that can handle a high volume of concurrent requests efficiently. Describe how would use spring webFlux to achieve this ?
 
 ____________________________________________________________________________
- ### Q)  What is blue and Green deployments ?
+ ### Q) Can you explain the Blue-Green deployment strategy ?
 
 ____________________________________________________________________________
- ### Q) 
+ ### Q) How do you optimize memory management when designing Java application ? 
 
 ____________________________________________________________________________
- ### Q) 
+ ### Q)  What are the ways to adjust JVM memory settings during runtime in a Java application?
 
 ____________________________________________________________________________
- ### Q) 
+ ### Q) How to apply Testcontainers in TDD and BDD test development?
 
 ____________________________________________________________________________
  ### Q) 
