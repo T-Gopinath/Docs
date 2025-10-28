@@ -1811,4 +1811,193 @@ public class ActuatorSecurityConfig {
     }
 }
 ``
-______________________________________________________________________
+_____________________________________________________________________________
+### Q) What strategies would you use to optimize the performance of a spring boot application ? 
+ ____________________________________________________________________________
+
+ ### Q) how can we handle multiple beans of the same type ?
+
+____________________________________________________________________________
+
+ ### Q) what are some best practices for managing transactions in Spring Boot application ? 
+
+____________________________________________________________________________
+ ### Q) Discuss the use of @SpringBootTest and @MockBean annotations ?
+
+____________________________________________________________________________
+ ### Q) What advantage does YAML offer over properties files in SpringBoot ? are there limitations when using YAML FOR configuration ?
+
+____________________________________________________________________________
+ ### Q) Explain how spring boot profiles work.
+
+____________________________________________________________________________
+ ### Q) What is aspect-oriented programming in the spring framework ? 
+
+____________________________________________________________________________
+ ### Q) what is spring cloud and how it is useful for building microservices ?
+
+____________________________________________________________________________
+ ### Q) How does spring boot make the decision on which server to use ? 
+
+____________________________________________________________________________
+ ### Q) How to get the list of all the beans in ur spring boot application ? 
+
+____________________________________________________________________________
+ ### Q) Explain concept of spring boot embedded servlet containers.
+
+____________________________________________________________________________
+ ### Q) How does Spring Boot make DI esier compared to traditional Spring ? 
+
+____________________________________________________________________________
+ ### Q) How does spring boot simplify the management of application secrets and sensitive conigurations, especially when deployed in different environments ?
+
+____________________________________________________________________________
+ ### Q) Explain spring boot's approach to handle asynchronous operations.
+
+____________________________________________________________________________
+ ### Q) How can you enable and use asynchrounous method in a spring boot app ? 
+
+____________________________________________________________________________
+ ### Q) Describe how you would secure sensitive data in a Spring Boot application that is accessed by multiple users with different roles ? 
+ 
+
+____________________________________________________________________________
+ ### Q) you are creating an endpoint in a Spring boot application that allows
+ users to upload files. Explain how you would handle the file upload and where you would store the files.
+
+____________________________________________________________________________
+ ### Q) After successful registration, your spring boot application needs to send a welcome email to the user. Describe how would you send the emails to the registered users.
+
+____________________________________________________________________________
+ ### Q) What is spring boot CLI and how to execute the Spring Boot project using boot CLI ? 
+
+____________________________________________________________________________
+ ### Q) HOW IS SPRING Security Implemented In a Spring Boot Application ? 
+
+____________________________________________________________________________
+ ### Q) how to disable a specific Auto-Configuration ? 
+
+____________________________________________________________________________
+ ### Q) explain the difference between cache eviction and cache expiration.
+
+____________________________________________________________________________
+ ### Q) If you had to scale a Spring Boot application to handle high traffic, what strategies would you use ? 
+
+____________________________________________________________________________
+ ### Q) Describe how to implement security in a microservices architecture using spring boot and spring security.
+
+____________________________________________________________________________
+ ### Q) In Spring boot how is session management configured and handled, especially in distributed systems. ? 
+
+____________________________________________________________________________
+ ### Q) Imagine you are designing a spring boot application that interfaces with multiple external APIs . How would you handle API rate limits and failures ? 
+
+____________________________________________________________________________
+ ### Q) Imagine you are designing a Spring Boot application that interfaces with multiple external APIs. How would you handle API rate limits and failures ?
+
+____________________________________________________________________________
+ ### Q) How you would manage externalized configuration and secure sensitive configuration properties in a microservices architecture ? 
+
+____________________________________________________________________________
+ ### Q) how does spring boot support internationalization (i18n) ? 
+
+____________________________________________________________________________
+ ### Q) What is spring boot DevTools used for ?
+
+____________________________________________________________________________
+ ### Q) How can you mock external services in a SpringBoot test ? 
+ 
+
+____________________________________________________________________________
+ ### Q) how do you mock microservices during testing ?
+
+____________________________________________________________________________
+ ### Q) Explain the process of creating a Docker image for a Spring Boot application.
+
+____________________________________________________________________________
+ ### Q) Discuss the configuration of Spring security to address common security concerns.
+
+____________________________________________________________________________
+ ### Q) Discuss how would you secure a Spring Boot application using JSON Web Token (JWT) ? 
+
+____________________________________________________________________________
+ ### Q)  How can Spring Boot applications be made more resilient to failures, especially in Microservices architectures ? 
+
+____________________________________________________________________________
+ ### Q) Explain the conversion fo business logic into serverless functions with Spring Cloud Functions.
+
+____________________________________________________________________________
+ ### Q) How can spring cloud gateway be configured for routing, security and monitoring ? 
+
+____________________________________________________________________________
+ ### Q) how would you manage and monitor asynchronous tasks in spring boot application, ensuring that you can track task progress and handle failures ?
+
+____________________________________________________________________________
+ ### Q) You application needs to process notifications asynchronously using a message queue. Explain how you would setup integration and send message from your spring boot application.
+
+____________________________________________________________________________
+ ### Q) You need to secure a spring boot app, to ensure that only authenticated users can access certain endpoints. Describe how you would configure spring security to set up a basic for-based authentication.
+
+____________________________________________________________________________
+ ### Q) How to tell an Auto-Configuration to Back Away When a Bean Exists ? 
+
+____________________________________________________________________________
+ ### Q) How to deploy spring boot web applications as jar and war files ? 
+
+____________________________________________________________________________
+ ### Q) What Does It Mean Spring Boot Supports Relaxed Binding ? 
+     
+____________________________________________________________________________
+ ### Q) Discuss the integration of Spring Boot applications with CI/CD pipelines.
+
+____________________________________________________________________________
+ ### Q) How to resolve whitelabel error page in the spring boot applications ?
+
+____________________________________________________________________________
+ ### Q) how can we implement pagination in springboot application ?
+
+____________________________________________________________________________
+ ### Q) how to handle 404 error in spring boot application ? 
+
+____________________________________________________________________________
+ ### Q) How can spring boot be used to implement event-driven architectures ?
+
+____________________________________________________________________________
+ ### Q) Discuss the integration and use of distributed tracing in spring boot applications for monitoring and troubleshooting.
+     - Spring cloud sleut
+     - Zipkin
+____________________________________________________________________________
+ ### Q) Your app need to store and retrieve files from a cloud storage service. Describe how you would integrate this functionality into a Spring Boot App ?
+
+____________________________________________________________________________
+ ### Q) To protect ur application from abuse and ensure fair usage, you decide to implement rate limiting on ur API endpoints. Describe a simple approach to achieve this in Spring Boot.
+
+____________________________________________________________________________
+ ### Q) Your are tasked with building a non-blocking , reactive REST API that can handle a high volume of concurrent requests efficiently. Describe how would use spring webFlux to achieve this ?
+
+____________________________________________________________________________
+ ### Q)  What is blue and Green deployments ?
+
+____________________________________________________________________________
+ ### Q) 
+
+____________________________________________________________________________
+ ### Q) 
+
+____________________________________________________________________________
+ ### Q) 
+
+____________________________________________________________________________
+ ### Q) 
+
+____________________________________________________________________________
+ ### Q) 
+
+____________________________________________________________________________
+ ### Q) 
+
+____________________________________________________________________________
+ ### Q) 
+
+____________________________________________________________________________
+
