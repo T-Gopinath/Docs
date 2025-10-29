@@ -1879,7 +1879,120 @@ _____________________________________________________________________________
 ____________________________________________________________________________
 
  ### Q) what are some best practices for managing transactions in Spring Boot application ? 
+ 
+      1. Use Declarative Transaction Management (@Transactional)
+           * Prefer declarative over programmatic transaction managemen
+           * Apply @Transactional at the service layer, not at the controller or repository level.
 
+           ``@Service
+               public class OrderService {
+               
+                   @Transactional
+                   public void placeOrder(Order order) {
+                       // business logic: save order, update inventory, process payment
+                   }
+               }
+``     
+     2. Keep Transactions Short-Lived
+          * Minimize the duration of a transaction — avoid holding database locks for long.
+          * Don’t perform slow operations (like network calls or file I/O) inside a transaction.
+          
+          Example (❌ Bad):
+
+          ``@Transactional
+               public void updateOrder() {
+                   callExternalAPI();  // Slow call
+                   orderRepository.save(order);
+               }
+``
+     
+     3. Use Proper Transaction Propagation
+         *  Control how transactions behave across multiple service calls using propagation levels.
+
+          | Propagation Type     | Behavior                                    |
+          | -------------------- | ------------------------------------------- |
+          | `REQUIRED` (default) | Joins existing or creates a new transaction |
+          | `REQUIRES_NEW`       | Always starts a new transaction             |
+          | `NESTED`             | Creates a nested transaction (if supported) |
+          | `MANDATORY`          | Requires an existing transaction            |
+          | `SUPPORTS`           | Runs within existing transaction if present |
+          | `NEVER`              | Fails if a transaction exists               |
+
+
+     Example:
+
+          ``@Transactional(propagation = Propagation.REQUIRES_NEW)
+               public void auditLog() {
+               // independent transaction for logging
+               }
+``
+    4. Handle Rollbacks Carefully
+         * By default, only unchecked (Runtime) exceptions trigger rollbacks.
+         * To rollback for checked exceptions, specify explicitly:
+
+         ``@Transactional(rollbackFor = Exception.class)
+          public void processOrder() throws Exception {
+              // logic
+          }
+``
+     5. Choose Appropriate Isolation Levels
+          * Control how concurrent transactions interact with each other.
+          
+               | Isolation Level    | Prevents                     | Use Case                               |
+               | ------------------ | ---------------------------- | -------------------------------------- |
+               | `READ_UNCOMMITTED` | —                            | Rarely used                            |
+               | `READ_COMMITTED`   | Dirty reads                  | Default in most DBs                    |
+               | `REPEATABLE_READ`  | Dirty + non-repeatable reads | Data consistency critical              |
+               | `SERIALIZABLE`     | All anomalies                | Highest isolation, slowest performance |
+
+     Example:
+          ``@Transactional(isolation = Isolation.REPEATABLE_READ)
+               public void getAccountDetails() {
+                   // ensures repeatable reads
+               }
+``
+   6. Avoid Mixing Transactions and Asynchronous Calls       
+        * Asynchronous methods (@Async) run in a different thread, so they don’t share the parent transaction.
+        * If async execution is required, handle transaction boundaries separately.
+
+   7. Use Read-Only Transactions for Queries
+       * For queries that don’t modify data, use:
+              ``@Transactional(readOnly = true)
+                    public List<Customer> findAll() {
+                        return customerRepository.findAll();
+                    }
+`` 
+✅ Optimizes performance by disabling dirty checking in Hibernate.
+
+   8. Handle Nested Transactions Properly
+      * Use Propagation.NESTED carefully — it relies on DB savepoints.
+      * If your DB doesn’t support savepoints, use REQUIRES_NEW instead.     
+
+  9. Monitor and Debug Transactions
+       * Enable SQL logging and transaction traces for debugging:
+
+               ``spring.jpa.show-sql=true
+                 logging.level.org.springframework.transaction=DEBUG
+``
+   Use tools like Actuator, Micrometer, or p6spy to track transaction metrics.
+
+   10. Consistency in Distributed Systems
+       * For microservices, use saga patterns, event-driven transactions, or outbox patterns instead of distributed transactions.
+       * Tools like Debezium, Kafka, or Axon Framework can help ensure data consistency.
+
+
+       ✅ Summary
+
+          | Practice                              | Key Benefit                           |
+          | ------------------------------------- | ------------------------------------- |
+          | Use `@Transactional` at service layer | Clean and maintainable code           |
+          | Keep transactions short               | Avoid locking and contention          |
+          | Use correct propagation and isolation | Ensure correct transactional behavior |
+          | Explicit rollback rules               | Control rollback precisely            |
+          | Use read-only for queries             | Better performance                    |
+          | Monitor transactions                  | Easier debugging and optimization     |
+
+   
 ____________________________________________________________________________
  ### Q) Discuss the use of @SpringBootTest and @MockBean annotations ?
 
