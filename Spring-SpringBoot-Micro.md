@@ -2129,7 +2129,21 @@ ____________________________________________________________________________
  ### Q) What advantage does YAML offer over properties files in SpringBoot ? are there limitations when using YAML FOR configuration ?
       
       ✅ Advantages of YAML over .properties files
-
+            1. Hierarchical Structure (Better Readability & Organization)
+            2. Support for Lists and Arrays
+            3. Improved Maintainability
+            4. Cleaner Multi-Profile Configuration
+            5. More Readable and Less Redundant
+            
+     ⚠️ Limitations / Disadvantages of YAML
+          1. Indentation Sensitivity
+          2. Difficult Debugging for Large Files
+          3. Less Friendly for Simple Configurations
+          4. Lacks Explicit Key Flattening
+          5. Merging Across Files Can Be Confusing
+          
+          
+     
 ____________________________________________________________________________
  ### Q) Explain how spring boot profiles work.
 
