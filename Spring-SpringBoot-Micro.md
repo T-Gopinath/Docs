@@ -2146,6 +2146,39 @@ ____________________________________________________________________________
      
 ____________________________________________________________________________
  ### Q) Explain how spring boot profiles work.
+      1. Defining Profiles
+           You can define profiles using the @Profile annotation:
+      2. Activating Profiles
+           You can activate profiles in several ways
+                application.properties:
+                     spring.profiles.active=dev
+                 application.yml:
+                         spring:
+                           profiles:
+                             active: dev
+                 Command line:
+                      java -jar app.jar --spring.profiles.active=prod
+                 Environment variable:
+                      SPRING_PROFILES_ACTIVE=prod
+                  Programmatically:
+                       ``SpringApplication app = new SpringApplication(MyApplication.class);
+                         app.setAdditionalProfiles("test");
+                         app.run(args);
+
+                           ``
+     3. Profile-Specific Configuration Files
+               Spring Boot automatically looks for profile-specific property files:
+                    * application.properties → base configuration (common to all)
+                    * application-dev.properties → applies when dev profile is active
+                    * application-prod.yml → applies when prod profile is active
+                    
+                    
+      4. Multiple Active Profiles 
+           spring.profiles.active=dev,logging
+
+     ⚠️ Best Practices
+               * Keep environment-specific credentials out of source code; use environment variables or externalized configuration.
+               * Use Spring Cloud Config for managing profiles in distributed microservices.
 
 ____________________________________________________________________________
  ### Q) What is aspect-oriented programming in the spring framework ? 
