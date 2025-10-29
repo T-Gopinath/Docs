@@ -1893,6 +1893,7 @@ ____________________________________________________________________________
                    }
                }
 ``     
+
      2. Keep Transactions Short-Lived
           * Minimize the duration of a transaction — avoid holding database locks for long.
           * Don’t perform slow operations (like network calls or file I/O) inside a transaction.
@@ -1908,6 +1909,7 @@ ____________________________________________________________________________
      
      3. Use Proper Transaction Propagation
          *  Control how transactions behave across multiple service calls using propagation levels.
+         
 
           | Propagation Type     | Behavior                                    |
           | -------------------- | ------------------------------------------- |
@@ -1926,6 +1928,7 @@ ____________________________________________________________________________
                // independent transaction for logging
                }
 ``
+
     4. Handle Rollbacks Carefully
          * By default, only unchecked (Runtime) exceptions trigger rollbacks.
          * To rollback for checked exceptions, specify explicitly:
@@ -1935,8 +1938,10 @@ ____________________________________________________________________________
               // logic
           }
 ``
+
      5. Choose Appropriate Isolation Levels
           * Control how concurrent transactions interact with each other.
+          
           
                | Isolation Level    | Prevents                     | Use Case                               |
                | ------------------ | ---------------------------- | -------------------------------------- |
@@ -1946,22 +1951,26 @@ ____________________________________________________________________________
                | `SERIALIZABLE`     | All anomalies                | Highest isolation, slowest performance |
 
      Example:
+     
           ``@Transactional(isolation = Isolation.REPEATABLE_READ)
                public void getAccountDetails() {
                    // ensures repeatable reads
                }
 ``
+
    6. Avoid Mixing Transactions and Asynchronous Calls       
         * Asynchronous methods (@Async) run in a different thread, so they don’t share the parent transaction.
         * If async execution is required, handle transaction boundaries separately.
 
    7. Use Read-Only Transactions for Queries
        * For queries that don’t modify data, use:
+       * 
               ``@Transactional(readOnly = true)
                     public List<Customer> findAll() {
                         return customerRepository.findAll();
                     }
 `` 
+
 ✅ Optimizes performance by disabling dirty checking in Hibernate.
 
    8. Handle Nested Transactions Properly
@@ -1974,6 +1983,7 @@ ____________________________________________________________________________
                ``spring.jpa.show-sql=true
                  logging.level.org.springframework.transaction=DEBUG
 ``
+
    Use tools like Actuator, Micrometer, or p6spy to track transaction metrics.
 
    10. Consistency in Distributed Systems
@@ -1996,8 +2006,129 @@ ____________________________________________________________________________
 ____________________________________________________________________________
  ### Q) Discuss the use of @SpringBootTest and @MockBean annotations ?
 
+      @SpringBootTest and @MockBean are core testing annotations in Spring Boot, 
+           commonly used together to create integration tests that load the Spring context 
+           while isolating certain dependencies.
+
+      1. @SpringBootTest
+          Purpose: Used to bootstrap the entire Spring ApplicationContext for integration testing
+               ✅ Key Features:
+                    * Loads the full Spring Boot context, similar to how the application runs in production.
+                    * Enables testing of multiple layers — controller, service, and repository.    
+                    * Automatically configures environment (e.g., application.properties).
+                    * Can start an embedded web server (when testing web apps).
+                   
+              Common Usage:
+
+                    ``@SpringBootTest
+                         class UserServiceIntegrationTest {
+                         
+                             @Autowired
+                             private UserService userService;
+                         
+                             @Test
+                             void testCreateUser() {
+                                 User user = new User("John", "john@example.com");
+                                 User savedUser = userService.save(user);
+                                 assertNotNull(savedUser.getId());
+                             }
+                         }
+                         ``
+
+          ⚙️ Configuration Options:
+
+                    ``@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+                    ``
+                         * MOCK: Default. Loads a mock servlet environment without a server.
+                         * RANDOM_PORT: Starts a real web server on a random port.
+                         * DEFINED_PORT: Uses the port from application.properties.
+                         * NONE: No web environment at all.    
+                         
+                    When to Use:
+                         * When you want to test the full application flow (e.g., service → repository → DB).
+                         * For verifying configurations, component scanning, or application startup.
+                        
+      
+      2. @MockBean
+                    Purpose: Used to mock a specific Spring bean within the application context — useful for isolating the component under test.
+
+                    ✅ Key Features:
+
+                          * Replaces a real bean in the Spring context with a Mockito mock.
+                          * Allows you to focus testing on one layer (e.g., testing a controller while mocking the service layer).
+                          * Works seamlessly with @SpringBootTest, @WebMvcTest, and other test slices.
+                         
+                    Common Usage:
+                    
+                         ``@SpringBootTest
+                              class UserControllerTest {
+                              
+                                  @Autowired
+                                  private MockMvc mockMvc;
+                              
+                                  @MockBean
+                                  private UserService userService; // Mocked dependency
+                              
+                                  @Test
+                                  void testGetUser() throws Exception {
+                                      when(userService.getUserById(1L)).thenReturn(new User("John", "john@example.com"));
+                              
+                                      mockMvc.perform(get("/users/1"))
+                                             .andExpect(status().isOk())
+                                             .andExpect(jsonPath("$.name").value("John"));
+                                  }
+                              }
+                              ``
+
+               When to use
+                     * To avoid calling external systems (databases, APIs).
+                     * When you want to test a controller or service independently.
+                     * To provide controlled behavior for dependencies
+                   
+
+       3. Combined Usage Example
+
+                 ``@SpringBootTest
+                    class OrderServiceTest {
+                    
+                        @Autowired
+                        private OrderService orderService;
+                    
+                        @MockBean
+                        private PaymentGateway paymentGateway; // External dependency mocked
+                    
+                        @Test
+                        void testPlaceOrder() {
+                            when(paymentGateway.charge(any())).thenReturn("TXN123");
+                    
+                            String transactionId = orderService.placeOrder(new Order());
+                            assertEquals("TXN123", transactionId);
+                        }
+                    }
+                    
+                 ``
+          Here:
+                * @SpringBootTest loads the full Spring context.
+                * @MockBean replaces the actual PaymentGateway bean, preventing real API calls.
+     
+          Summary Table
+          
+               | Annotation        | Purpose                    | Loads Context      | Uses Real Beans | Mock Integration |
+               | ----------------- | -------------------------- | ------------------ | --------------- | ---------------- |
+               | `@SpringBootTest` | Full integration test      | ✅ Yes              | ✅ Yes           | ❌ No             |
+               | `@MockBean`       | Mock specific dependencies | Depends on context | ❌ No            | ✅ Yes            |
+          
+               
+      Best Practice Tips
+          * Use @SpringBootTest sparingly — it’s heavy; for lighter tests, prefer @WebMvcTest, @DataJpaTest, etc
+          * Use @MockBean to isolate and control dependencies in integration tests.
+          * Combine both when you want realistic integration tests without external side effects.
+      
+
 ____________________________________________________________________________
  ### Q) What advantage does YAML offer over properties files in SpringBoot ? are there limitations when using YAML FOR configuration ?
+      
+      ✅ Advantages of YAML over .properties files
 
 ____________________________________________________________________________
  ### Q) Explain how spring boot profiles work.
