@@ -1872,6 +1872,10 @@ _____________________________________________________________________________
 
  ### Q) how can we handle multiple beans of the same type ?
 
+      1. Using @Primary
+      2. Using @Qualifier
+      3. Using @Resource (from JSR-250)  // Not @Repository
+
 ____________________________________________________________________________
 
  ### Q) what are some best practices for managing transactions in Spring Boot application ? 
