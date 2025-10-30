@@ -2161,11 +2161,12 @@ ____________________________________________________________________________
                  Environment variable:
                       SPRING_PROFILES_ACTIVE=prod
                   Programmatically:
+                  
                        ``SpringApplication app = new SpringApplication(MyApplication.class);
                          app.setAdditionalProfiles("test");
                          app.run(args);
-
-                           ``
+                         ``
+                         
      3. Profile-Specific Configuration Files
                Spring Boot automatically looks for profile-specific property files:
                     * application.properties → base configuration (common to all)
@@ -2182,22 +2183,200 @@ ____________________________________________________________________________
 
 ____________________________________________________________________________
  ### Q) What is aspect-oriented programming in the spring framework ? 
+ 
+      Aspect-Oriented Programming (AOP) in the Spring Framework is a programming paradigm that allows you to separate cross-cutting concerns — logic that is common across multiple parts of an application but not central to the business logic.
+
+      🧩 Concept Overview
+
+           In typical applications, certain functionalities such as:
+                Logging
+                Transaction management
+                Security checks
+                Performance monitoring
+                Exception handling
+
+
+      ⚙️ Core AOP Concepts in Spring
+
+                    | Term           | Description                                                                                                 |
+                    | -------------- | ----------------------------------------------------------------------------------------------------------- |
+                    | **Aspect**     | A module that encapsulates a cross-cutting concern (e.g., logging, transaction).                            |
+                    | **Join Point** | A point during program execution, such as a method call or exception throw, where an aspect can be applied. |
+                    | **Advice**     | The action taken by an aspect at a particular join point (e.g., before a method executes).                  |
+                    | **Pointcut**   | An expression that matches join points; determines where advice should be applied.                          |
+                    | **Weaving**    | The process of linking aspects with other application types or objects — done at runtime in Spring.         |
+
+
+     🔧 Types of Advice in Spring AOP
+
+
+          | Advice Type         | Description                                                                            |
+          | ------------------- | -------------------------------------------------------------------------------------- |
+          | **@Before**         | Runs before the method execution.                                                      |
+          | **@After**          | Runs after the method completes (regardless of outcome).                               |
+          | **@AfterReturning** | Runs only if the method returns successfully.                                          |
+          | **@AfterThrowing**  | Runs if the method throws an exception.                                                |
+          | **@Around**         | Runs before and after the method execution; allows custom control of method execution. |
+
+
+
+     🧠 Example: Logging Aspect
+
+          ``
+          @Aspect
+          @Component
+          public class LoggingAspect {
+          
+              @Before("execution(* com.example.service.*.*(..))")
+              public void logBefore(JoinPoint joinPoint) {
+                  System.out.println("Executing method: " + joinPoint.getSignature().getName());
+              }
+          
+              @AfterReturning(pointcut = "execution(* com.example.service.*.*(..))", returning = "result")
+              public void logAfterReturning(JoinPoint joinPoint, Object result) {
+                  System.out.println("Method executed successfully: " + joinPoint.getSignature().getName());
+                  System.out.println("Returned: " + result);
+              }
+          }
+``
+
+     Here:
+
+          * The aspect intercepts every method call in the com.example.service package.
+          * The @Before and @AfterReturning advices log method activity automatically.
+
+     🧵 How Spring Implements AOP
+     
+          * Spring AOP is proxy-based — it creates a proxy object that wraps the target bean.
+          * When a method on the target is invoked, the proxy intercepts it and applies the aspect logic.
+          * It uses JDK dynamic proxies (for interfaces) or CGLIB proxies (for classes without interfaces).
+
+      ✅ Benefits
+           * Promotes separation of concerns.
+           * Reduces code duplication.
+           * Simplifies maintenance and testing.
+           * Allows declarative application of behaviors.
+
+      ⚠️ Limitations
+           * Works only with Spring-managed beans.
+           * Cannot apply aspects to private methods.
+           * Runtime proxying has a small performance overhead.
+           
 
 ____________________________________________________________________________
  ### Q) what is spring cloud and how it is useful for building microservices ?
 
+ 🔹 Key Features of Spring Cloud
+
+      1. Centralized Configuration Management
+           * Managed through Spring Cloud Config Server. 
+           * Allows all microservices to read configuration from a central source (e.g., Git repository).
+           * Enables dynamic refresh of configurations without restarting services.
+      2. Service Discovery
+           * Managed using Eureka, Consul, or Zookeeper.
+           * Services can automatically register and discover each other dynamically without hardcoding URLs.
+      3. Load Balancing
+           * Spring Cloud LoadBalancer or Netflix Ribbon provides client-side load balancing among service instances.
+           *      
+      4. Circuit Breakers / Fault Tolerance
+           * Integrated with Resilience4j or Hystrix to handle service failures gracefully and prevent cascading failures.
+      5. API Gateway / Routing
+           * Spring Cloud Gateway acts as a single entry point for all microservices.
+           * Handles routing, rate limiting, authentication, and monitoring.      
+      6. Distributed Tracing and Monitoring
+           * Spring Cloud Sleuth and Zipkin provide tracing across multiple services to track requests and diagnose latency issues.
+      7. Messaging and Event-Driven Communication
+           * Spring Cloud Stream supports asynchronous communication using message brokers like Kafka or RabbitMQ
+
+
+     🔹 How Spring Cloud Helps in Building Microservices
+
+          | Challenge                                         | Spring Cloud Solution                      |
+          | ------------------------------------------------- | ------------------------------------------ |
+          | Managing configurations across many services      | **Spring Cloud Config Server**             |
+          | Locating and connecting microservices dynamically | **Eureka / Consul Discovery**              |
+          | Handling load balancing                           |_ **Spring Cloud LoadBalancer** _           |
+          | Preventing cascading failures                     | **Resilience4j / Hystrix Circuit Breaker** |
+          | Centralized API routing and security              | **Spring Cloud Gateway**                   |
+          | Observability (tracing, metrics, logs)            |_ **Sleuth + Zipkin**   _                   |
+          | Messaging and event-driven communication          | **Spring Cloud Stream**                    |
+
 ____________________________________________________________________________
  ### Q) How does spring boot make the decision on which server to use ? 
-
+  Dependes on starter included in pom.xml file.
 ____________________________________________________________________________
  ### Q) How to get the list of all the beans in ur spring boot application ? 
 
+ 
+
+``import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
+
+@Component
+public class BeanLister implements CommandLineRunner {
+
+    @Autowired
+    private ApplicationContext applicationContext;
+
+    @Override
+    public void run(String... args) {
+        String[] beanNames = applicationContext.getBeanDefinitionNames();
+        System.out.println("Total Beans: " + beanNames.length);
+        for (String beanName : beanNames) {
+            System.out.println(beanName);
+        }
+    }
+}
+``
+
+
 ____________________________________________________________________________
  ### Q) Explain concept of spring boot embedded servlet containers.
+ 
+🔹 4. Benefits of Embedded Servlet Containers
+
+✅ Simplified Deployment:
+No need for an external server — just run the JAR.
+
+✅ Consistent Environment:
+Every deployment includes the same server version, avoiding “works on my machine” issues.
+
+✅ Fast Startup:
+Bootstraps quickly without complex server startup scripts.
+
+✅ Microservice Friendly:
+Ideal for microservice architectures where each service runs independently.
+
+✅ Custom Configuration:
+You can customize port, context path, threads, etc., in application.properties:
 
 ____________________________________________________________________________
  ### Q) How does Spring Boot make DI esier compared to traditional Spring ? 
 
+           Spring Boot makes Dependency Injection (DI) much easier and faster to use than traditional Spring by automating
+      configuration, reducing boilerplate, and using smart defaults. Let’s break it down clearly:
+
+       ⚙️ 2. Auto-Configuration
+           Spring Boot introduces @EnableAutoConfiguration, which automatically configures beans based on classpath dependencies and environment.
+For example:
+               * If spring-boot-starter-data-jpa is on the classpath, Boot auto-configures EntityManager, DataSource, and TransactionManager beans.
+               
+        🪄 3. Simplified Configuration via Starters
+
+            * Spring Boot Starters (e.g., spring-boot-starter-web, spring-boot-starter-data-jpa) automatically pull in
+             required dependencies and configurations — no need to manage individual library versions or bean definitions
+             
+        🧰 4. Profiles and Configuration Properties
+        
+             * Spring Boot supports @ConfigurationProperties and profiles to inject configuration values easily from application.yml or        application.properties, making DI for environment-specific setups straightforward.
+
+       In short:      
+       
+       Spring Boot removes the need for manual bean declarations, configuration files, and repetitive setup, 
+       letting you focus on application logic — not wiring dependencies.         
+                          
 ____________________________________________________________________________
  ### Q) How does spring boot simplify the management of application secrets and sensitive conigurations, especially when deployed in different environments ?
 
