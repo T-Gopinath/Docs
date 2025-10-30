@@ -2453,10 +2453,123 @@ db.password: ${DB_PASSWORD}
 
           ✅ Benefit: Secure by design in cloud-native deployments.
 ____________________________________________________________________________
+
  ### Q) Explain spring boot's approach to handle asynchronous operations.
+
+          Spring Boot provides built-in support for asynchronous operations through Spring Framework’s @Async mechanism,
+     allowing you to execute methods in a non-blocking, parallel, or background fashion without manually managing threads.
+
+          Here’s how Spring Boot handles asynchronous operations in a clean, declarative way:
+          
+     🧩 1. Enabling Asynchronous Support
+     
+          To use asynchronous methods, you must enable async processing by annotating a configuration class with:
+          
+
+          ``@EnableAsync
+@SpringBootApplication
+public class MyApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(MyApplication.class, args);
+    }
+}
+``
+
+     ⚙️ 2. Defining Asynchronous Methods
+
+          Mark any method that should run asynchronously with @Async.
+          Spring will execute such methods in a separate thread, freeing up the main thread to handle other tasks.
+
+          ``@Service
+public class EmailService {
+
+    @Async
+    public void sendEmail(String to) {
+        // Simulate delay
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+        System.out.println("Email sent to: " + to);
+    }
+}
+``
+When you call sendEmail(), it returns immediately — the actual execution happens in a background thread.
+
+
+     🧵 3. Async Return Types
+               An @Async method can:
+                         Return void
+                         Return Future<T>
+                         Return CompletableFuture<T> (recommended for better composition and non-blocking chaining)
+
+
+                         Example:
+                         
+
+                         ``@Async
+public CompletableFuture<String> fetchData() {
+    String data = callExternalApi();
+    return CompletableFuture.completedFuture(data);
+}
+``
+
+          You can then combine multiple async calls:
+
+          ``CompletableFuture<String> f1 = service.fetchData();
+CompletableFuture<String> f2 = service.fetchData();
+CompletableFuture.allOf(f1, f2).join();
+``
+
+     ⚖️ 4. Thread Pool Configuration
+          By default, Spring uses a SimpleAsyncTaskExecutor, which creates new threads for each task
+          For production use, you can define a custom thread pool to control concurrency and performance:
+
+
+          ``@Configuration
+@EnableAsync
+public class AsyncConfig implements AsyncConfigurer {
+
+    @Override
+    public Executor getAsyncExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(5);
+        executor.setMaxPoolSize(10);
+        executor.setQueueCapacity(25);
+        executor.setThreadNamePrefix("AsyncExecutor-");
+        executor.initialize();
+        return executor;
+    }
+}
+``
+
+          🧰 5. Error Handling
+               To handle exceptions in async methods returning void, you can implement AsyncUncaughtExceptionHandler:
+
+
+                ``@Override
+public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
+    return (ex, method, params) ->
+        System.err.println("Exception in async method: " + method.getName() + " -> " + ex.getMessage());
+}
+``    
+
+         ⚡ 6. Integration with Web & Reactive Stack
+
+              * For Servlet-based apps, @Async offloads long-running tasks to background threads.
+              * For Reactive apps (Spring WebFlux), you typically use reactive types (Mono, Flux) instead of @Async,
+                since the reactive stack already provides non-blocking behavior. 
+
+     In essence:
+               Spring Boot simplifies asynchronous programming by abstracting thread management. 
+               You just annotate methods with @Async, and Spring handles the rest—creating threads, 
+               managing execution, and returning results asynchronously.
 
 ____________________________________________________________________________
  ### Q) How can you enable and use asynchrounous method in a spring boot app ? 
+
+      
 
 ____________________________________________________________________________
  ### Q) Describe how you would secure sensitive data in a Spring Boot application that is accessed by multiple users with different roles ? 
