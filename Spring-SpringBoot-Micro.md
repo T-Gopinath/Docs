@@ -2574,11 +2574,127 @@ This allows a method to run in a separate thread, freeing up the main thread to 
 
 ____________________________________________________________________________
  ### Q) Describe how you would secure sensitive data in a Spring Boot application that is accessed by multiple users with different roles ? 
- 
+
+      Securing sensitive data in a Spring Boot application accessed by multiple users with different roles involves implementing a layered approach that combines authentication, authorization, encryption, and secure configuration management.
+Here’s a detailed breakdown of how you can achieve this:
+
+
+     1. Implement Authentication and Authorization
+     
+          ✅ Authentication
+               * Use Spring Security to verify user identities.
+               * Integrate with a secure identity provider (e.g., OAuth2, OpenID Connect, or LDAP) or 
+                    *  manage users with Spring Security’s UserDetailsService.
+               * Use JWT tokens or session-based authentication for stateless APIs.
+               
+          ✅ Authorization   
+               * Define role-based access control (RBAC) using annotations:
+
+
+               `` @PreAuthorize("hasRole('ADMIN')")
+public void deleteUser(Long id) { ... }
+               ``
+
+               * Secure endpoints in your SecurityFilterChain:
+
+                ``http
+    .authorizeHttpRequests()
+    .requestMatchers("/admin/**").hasRole("ADMIN")
+    .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
+    .anyRequest().authenticated();
+                ``
+
+                
+               
+     2. Protect Sensitive Data in Storage
+          * Encrypt sensitive fields (like passwords, tokens, or PII) before persisting to the database.
+               * Use JPA converters or Spring Security’s BCryptPasswordEncoder for hashing passwords.
+               
+
+                   `` @Bean
+public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+}
+``
+
+          
+     3. Secure Data in Transit
+          * Always use HTTPS (TLS) for all communication.
+          * Enforce HTTPS by redirecting all HTTP traffic:
+
+          
+          ``server:
+                 ssl:
+                   enabled: true
+
+          ``
+          
+          
+     4. Manage Secrets and Configuration Securely
+
+          * Never hardcode secrets (like API keys, DB credentials, or encryption keys) in code or Git.
+          * Use one of the following approaches:
+               * Spring Cloud Config + Vault for centralized encrypted secret management.
+               * Environment variables or Kubernetes secrets for containerized deployments.
+               
+               * Example using Vault:
+
+
+                    ``
+                    spring.cloud.vault.enabled=true
+spring.cloud.vault.token=<vault-token>
+spring.cloud.vault.uri=https://vault-server:8200
+``
+               
+          
+     5. Implement Data Access Restrictions
+          * Apply method-level or data-level security:
+               * Use @PostFilter or @PreFilter to filter sensitive data based on user roles.
+               
+                    * For example
+
+                    
+                         `` @PostFilter("filterObject.owner == authentication.name")
+public List<Document> getDocuments() { ... }
+``
+               
+     * Use database-level row filtering or multi-tenant access control where applicable.
+
+                    
+     6. Logging and Auditing
+     
+          * Log security-relevant events (logins, failed access attempts, data modifications).
+          * Mask sensitive information in logs (like passwords, credit card numbers).
+          * Enable Spring Boot Actuator audit events for tracking access.
+          
+          
+     7. Input Validation and Output Encoding
+          * Prevent injection attacks by validating user inputs.
+          * Use Spring’s @Valid annotation and Bean Validation.
+          * Sanitize or encode output to avoid XSS attacks.
+          
+     8. Regular Security Updates and Testing
+          * Keep dependencies up-to-date using tools like OWASP Dependency Check.
+          * Use Spring Boot’s Actuator Security to limit exposure.
+          * Perform regular penetration testing and code reviews.
+
+
+     ✅ Example: Summary Architecture
+
+               | Security Layer         | Implementation                    |
+               | ---------------------- | --------------------------------- |
+               | **Authentication**     | Spring Security (JWT/OAuth2)      |
+               | **Authorization**      | Role-based (`@PreAuthorize`)      |
+               | **Data Encryption**    | BCrypt + Jasypt/Spring Vault      |
+               | **Transport Security** | HTTPS/TLS                         |
+               | **Secret Management**  | Spring Vault / Env Vars           |
+               | **Auditing**           | Spring Boot Actuator Audit Events |
+
+     
+     
 
 ____________________________________________________________________________
- ### Q) you are creating an endpoint in a Spring boot application that allows
- users to upload files. Explain how you would handle the file upload and where you would store the files.
+ ### Q) you are creating an endpoint in a Spring boot application that allows users to upload files. Explain how you would handle the file upload and where you would store the files.
 
 ____________________________________________________________________________
  ### Q) After successful registration, your spring boot application needs to send a welcome email to the user. Describe how would you send the emails to the registered users.
