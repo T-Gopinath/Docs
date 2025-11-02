@@ -2569,7 +2569,8 @@ public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
 ____________________________________________________________________________
  ### Q) How can you enable and use asynchrounous method in a spring boot app ? 
 
-      
+      To enable and use asynchronous methods in a Spring Boot application, you use Spring’s @Async support.
+This allows a method to run in a separate thread, freeing up the main thread to handle other tasks — improving scalability and responsiveness, especially for I/O-bound operations.
 
 ____________________________________________________________________________
  ### Q) Describe how you would secure sensitive data in a Spring Boot application that is accessed by multiple users with different roles ? 
