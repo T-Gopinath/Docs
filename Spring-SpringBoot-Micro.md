@@ -3092,12 +3092,237 @@ ________________________________________________________________________________
 
               🧾 In short:  
                    To secure S3 pre-signed URL uploads, use AWS IAM roles and fine-grained S3 policies so only authorized backend services can generate URLs. The client never gets AWS credentials and can upload only to a specific bucket, file path, and time window defined in the signed request.
-                       
-       **AWS S3 2 S3 End**   
+                               
+       **AWS S3 2 S3 End**                
+         
+    -**AWS S3 3 S3  Download pre-signed URL**_  
+
+          🛠️ Step 1: Configure AWS S3 in Spring Boot
+          
+               In application.properties:
+
+
+               `` aws.access.key.id=YOUR_AWS_ACCESS_KEY
+                    aws.secret.access.key=YOUR_AWS_SECRET_KEY
+                    aws.s3.bucket.name=my-bucket
+                    aws.region=us-west-2
+                    jwt.secret.key=your_jwt_secret_key
+``
+
                
-    
-    -  **AWS S3 3 S3  Download pre-signed URL**    
-       **AWS S3 2 S3 Download**     
+          🧠 Step 2: Create the S3 Service
+          
+               This service generates pre-signed URLs for secure, temporary access to S3 files.
+
+               
+               ``
+               import com.amazonaws.HttpMethod;
+                    import com.amazonaws.auth.AWSStaticCredentialsProvider;
+                    import com.amazonaws.auth.BasicAWSCredentials;
+                    import com.amazonaws.regions.Regions;
+                    import com.amazonaws.services.s3.AmazonS3;
+                    import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+                    import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
+                    import org.springframework.beans.factory.annotation.Value;
+                    import org.springframework.stereotype.Service;
+                    
+                    import java.net.URL;
+                    import java.util.Date;
+                    
+                    @Service
+                    public class S3Service {
+                    
+                        private final AmazonS3 s3Client;
+                        private final String bucketName;
+                    
+                        public S3Service(@Value("${aws.access.key.id}") String accessKey,
+                                         @Value("${aws.secret.access.key}") String secretKey,
+                                         @Value("${aws.s3.bucket.name}") String bucketName,
+                                         @Value("${aws.region}") String region) {
+                    
+                            this.bucketName = bucketName;
+                    
+                            BasicAWSCredentials creds = new BasicAWSCredentials(accessKey, secretKey);
+                            this.s3Client = AmazonS3ClientBuilder.standard()
+                                    .withCredentials(new AWSStaticCredentialsProvider(creds))
+                                    .withRegion(Regions.fromName(region))
+                                    .build();
+                        }
+                    
+                        public String generatePresignedDownloadUrl(String fileName) {
+                            Date expiration = new Date(System.currentTimeMillis() + 1000 * 60 * 5); // 5 minutes validity
+                            GeneratePresignedUrlRequest request = new GeneratePresignedUrlRequest(bucketName, fileName)
+                                    .withMethod(HttpMethod.GET)
+                                    .withExpiration(expiration);
+                    
+                            URL url = s3Client.generatePresignedUrl(request);
+                            return url.toString();
+                        }
+                    }
+``
+
+               
+          🔒 Step 3: Secure the API with JWT
+
+               Here’s a simplified JWT authentication filter (like the upload example):
+
+               
+               `` 
+                    import io.jsonwebtoken.Claims;
+                    import io.jsonwebtoken.Jwts;
+                    import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+                    import org.springframework.security.core.context.SecurityContextHolder;
+                    import org.springframework.web.filter.OncePerRequestFilter;
+                    
+                    import javax.servlet.FilterChain;
+                    import javax.servlet.ServletException;
+                    import javax.servlet.http.HttpServletRequest;
+                    import javax.servlet.http.HttpServletResponse;
+                    import java.io.IOException;
+                    
+                    public class JwtAuthenticationFilter extends OncePerRequestFilter {
+                    
+                        private final String secretKey = "your_jwt_secret_key";
+                    
+                        @Override
+                        protected void doFilterInternal(HttpServletRequest request, 
+                                                           HttpServletResponse response, 
+                                                           FilterChain filterChain) throws ServletException, IOException {
+                    
+                            String header = request.getHeader("Authorization");
+                            if (header != null && header.startsWith("Bearer ")) {
+                                String token = header.substring(7);
+                    
+                                try {
+                                    Claims claims = Jwts.parser()
+                                            .setSigningKey(secretKey)
+                                            .parseClaimsJws(token)
+                                            .getBody();
+                    
+                                    String username = claims.getSubject();
+                                    if (username != null) {
+                                        SecurityContextHolder.getContext().setAuthentication(
+                                                new UsernamePasswordAuthenticationToken(username, null, null));
+                                    }
+                                } catch (Exception ignored) {
+                                }
+                            }
+                    
+                            filterChain.doFilter(request, response);
+                        }
+                    }
+       
+               ``
+                    
+                    
+          ⚙️ Step 4: Spring Security Configuration
+          
+
+                    ` import org.springframework.context.annotation.Configuration;
+                    import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+                    import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+                    import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+                    
+                    @Configuration
+                    @EnableWebSecurity
+                    public class SecurityConfig extends                          org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter {
+                    
+                        @Override
+                        protected void configure(HttpSecurity http) throws Exception {
+                            http.csrf().disable()
+                                    .authorizeRequests()
+                                    .antMatchers("/api/files/download/**").authenticated()
+                                    .anyRequest().permitAll()
+                                    .and()
+                                    .addFilterBefore(new JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+                        }
+                    }
+                    `
+
+
+          📁 Step 5: Create File Download Controller
+               This endpoint returns a pre-signed URL for the requested file.
+
+
+               ` import org.springframework.beans.factory.annotation.Autowired;
+               import org.springframework.http.ResponseEntity;
+               import org.springframework.web.bind.annotation.*;
+               
+               @RestController
+               @RequestMapping("/api/files")
+               public class FileDownloadController {
+               
+                   @Autowired
+                   private S3Service s3Service;
+               
+                   @GetMapping("/download/{fileName}")
+                   public ResponseEntity<String> getDownloadUrl(@PathVariable String fileName) {
+                       String presignedUrl = s3Service.generatePresignedDownloadUrl(fileName);
+                       return ResponseEntity.ok(presignedUrl);
+                   }
+               }
+               `
+
+                                  
+          ⚛️ Step 6: React.js Client
+               Here’s how your React.js client can securely download the file:
+
+               ` import React, { useState } from 'react';
+               import axios from 'axios';
+               
+               function FileDownloader() {
+                   const [fileName, setFileName] = useState('');
+                   const [downloadUrl, setDownloadUrl] = useState('');
+                   const [error, setError] = useState('');
+                   const token = localStorage.getItem('token'); // JWT token stored after login
+               
+                   const handleDownload = async () => {
+                       try {
+                           const response = await axios.get(`http://localhost:8080/api/files/download/${fileName}`, {
+                               headers: {
+                                   Authorization: `Bearer ${token}`
+                               }
+                           });
+                           setDownloadUrl(response.data);
+                           window.open(response.data, "_blank"); // Automatically trigger download
+                       } catch (err) {
+                           setError('Failed to get download URL');
+                       }
+                   };
+               
+                   return (
+                       <div>
+                           <input
+                               type="text"
+                               placeholder="Enter file name"
+                               value={fileName}
+                               onChange={(e) => setFileName(e.target.value)}
+                           />
+                           <button onClick={handleDownload}>Download File</button>
+                           {error && <p style={{ color: 'red' }}>{error}</p>}
+                           {downloadUrl && <p>Download link generated!</p>}
+                       </div>
+                   );
+               }
+               
+               export default FileDownloader;
+               `
+
+                    
+          ✅ Flow Summary     
+               1 React calls /api/files/download/{fileName} with JWT in headers.
+               2 Spring Boot validates JWT, generates a temporary pre-signed S3 URL, and returns it.
+               3 React opens the URL → AWS S3 serves the file directly. 
+               
+          🧾 Advantages
+               
+         
+       **AWS S3 2 S3 Download** 
+            ✅ Secure: JWT ensures only authorized users can generate URLs.
+            ✅ Efficient: Files are downloaded directly from S3 (not proxied).
+            ✅ Scalable: Works for large files without stressing your backend.
+            ✅ Temporary Access: Pre-signed URLs expire automatically.
+            
      
 
      
