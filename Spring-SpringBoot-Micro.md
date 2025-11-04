@@ -3107,8 +3107,9 @@ ________________________________________________________________________________
                     aws.s3.bucket.name=my-bucket
                     aws.region=us-west-2
                     jwt.secret.key=your_jwt_secret_key
-``
+                    ``
 
+               
                
           🧠 Step 2: Create the S3 Service
           
