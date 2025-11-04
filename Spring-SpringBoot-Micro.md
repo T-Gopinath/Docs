@@ -2569,16 +2569,538 @@ public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
 ____________________________________________________________________________
  ### Q) How can you enable and use asynchrounous method in a spring boot app ? 
 
-      
+      To enable and use asynchronous methods in a Spring Boot application, you use Spring’s @Async support.
+This allows a method to run in a separate thread, freeing up the main thread to handle other tasks — improving scalability and responsiveness, especially for I/O-bound operations.
 
 ____________________________________________________________________________
  ### Q) Describe how you would secure sensitive data in a Spring Boot application that is accessed by multiple users with different roles ? 
- 
 
-____________________________________________________________________________
- ### Q) you are creating an endpoint in a Spring boot application that allows
- users to upload files. Explain how you would handle the file upload and where you would store the files.
+      Securing sensitive data in a Spring Boot application accessed by multiple users with different roles involves implementing a layered approach that combines authentication, authorization, encryption, and secure configuration management.
+Here’s a detailed breakdown of how you can achieve this:
 
+
+     1. Implement Authentication and Authorization
+     
+          ✅ Authentication
+               * Use Spring Security to verify user identities.
+               * Integrate with a secure identity provider (e.g., OAuth2, OpenID Connect, or LDAP) or 
+                    *  manage users with Spring Security’s UserDetailsService.
+               * Use JWT tokens or session-based authentication for stateless APIs.
+               
+          ✅ Authorization   
+               * Define role-based access control (RBAC) using annotations:
+
+
+               `` @PreAuthorize("hasRole('ADMIN')")
+                  public void deleteUser(Long id) { ... }
+                  ``
+
+
+               * Secure endpoints in your SecurityFilterChain:
+
+                ``http
+    .authorizeHttpRequests()
+    .requestMatchers("/admin/**").hasRole("ADMIN")
+    .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
+    .anyRequest().authenticated();
+                ``
+
+                               
+     2. Protect Sensitive Data in Storage
+          * Encrypt sensitive fields (like passwords, tokens, or PII) before persisting to the database.
+               * Use JPA converters or Spring Security’s BCryptPasswordEncoder for hashing passwords.
+               
+
+                   `` @Bean
+public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+}
+``
+
+          
+     3. Secure Data in Transit
+          * Always use HTTPS (TLS) for all communication.
+          * Enforce HTTPS by redirecting all HTTP traffic:
+
+          
+          ``server:
+                 ssl:
+                   enabled: true
+                   ``
+
+                    
+     4. Manage Secrets and Configuration Securely
+
+          * Never hardcode secrets (like API keys, DB credentials, or encryption keys) in code or Git.
+          * Use one of the following approaches:
+               * Spring Cloud Config + Vault for centralized encrypted secret management.
+               * Environment variables or Kubernetes secrets for containerized deployments.
+               
+               * Example using Vault:
+
+
+                    `` spring.cloud.vault.enabled=true
+spring.cloud.vault.token=<vault-token>
+spring.cloud.vault.uri=https://vault-server:8200
+``
+               
+          
+     5. Implement Data Access Restrictions
+          * Apply method-level or data-level security:
+               * Use @PostFilter or @PreFilter to filter sensitive data based on user roles.
+               
+                    * For example
+
+                    
+                         `` @PostFilter("filterObject.owner == authentication.name")
+public List<Document> getDocuments() { ... }
+``
+               
+     * Use database-level row filtering or multi-tenant access control where applicable.
+
+                    
+     6. Logging and Auditing
+     
+          * Log security-relevant events (logins, failed access attempts, data modifications).
+          * Mask sensitive information in logs (like passwords, credit card numbers).
+          * Enable Spring Boot Actuator audit events for tracking access.
+          
+          
+     7. Input Validation and Output Encoding
+          * Prevent injection attacks by validating user inputs.
+          * Use Spring’s @Valid annotation and Bean Validation.
+          * Sanitize or encode output to avoid XSS attacks.
+
+          
+     8. Regular Security Updates and Testing
+          * Keep dependencies up-to-date using tools like OWASP Dependency Check.
+          * Use Spring Boot’s Actuator Security to limit exposure.
+          * Perform regular penetration testing and code reviews.
+
+
+     ✅ Example: Summary Architecture
+
+               | Security Layer         | Implementation                    |
+               | ---------------------- | --------------------------------- |
+               | **Authentication**     | Spring Security (JWT/OAuth2)      |
+               | **Authorization**      | Role-based (`@PreAuthorize`)      |
+               | **Data Encryption**    | BCrypt + Jasypt/Spring Vault      |
+               | **Transport Security** | HTTPS/TLS                         |
+               | **Secret Management**  | Spring Vault / Env Vars           |
+               | **Auditing**           | Spring Boot Actuator Audit Events |
+
+     
+     
+
+________________________________________________________________________________________________________________________________________
+
+### Q) you are creating an endpoint in a Spring boot application that allows users to upload files. Explain how you would handle the file upload and where        you would store the files.
+
+     🧩 1. Enable File Upload Support
+
+          Spring Boot automatically provides multipart file upload support through MultipartResolver.
+          To enable it, ensure that you have the following dependency in your pom.xml (for web apps):
+     
+     
+          `` <dependency>
+         <groupId>org.springframework.boot</groupId>
+         <artifactId>spring-boot-starter-web</artifactId>
+     </dependency> ``
+     
+     
+          By default, Spring Boot enables 
+     
+          `` spring.servlet.multipart.enabled=true.
+          ``
+     
+          You can customize upload limits in application.properties:
+     
+          `` spring.servlet.multipart.max-file-size=10MB
+          spring.servlet.multipart.max-request-size=10MB
+          ``
+
+     ⚙️ 2. Create the Upload Endpoint
+     
+          Here’s a simple REST controller to handle file uploads:
+
+          `` @RestController
+             @RequestMapping("/api/files")             
+             public class FileUploadController {          
+             private static final String UPLOAD_DIR = "uploads/";
+          
+              @PostMapping("/upload")
+              public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
+                  try {
+                      // Ensure directory exists
+                      File directory = new File(UPLOAD_DIR);
+                      if (!directory.exists()) {
+                          directory.mkdirs();
+                      }
+          
+                      // Save file to local directory
+                      Path path = Paths.get(UPLOAD_DIR + file.getOriginalFilename());
+                      Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+          
+                      return ResponseEntity.ok("File uploaded successfully: " + file.getOriginalFilename());
+                  } catch (IOException e) {
+                      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                              .body("File upload failed: " + e.getMessage());
+                  }
+              }
+          }
+          ``
+     
+     🗂️ 3. Where to Store the File
+          There are several options depending on your use case:
+          🏠 Local File System
+               Pros: Easy to set up and good for small projects or local development.
+               Cons: Not suitable for distributed environments (e.g., multiple app servers).
+          Example:
+               Files stored under /uploads inside your project directory or an external mount point.
+               
+          ☁️ Cloud Storage
+               For scalability and fault-tolerance, use:
+                    * Amazon S3
+                    * Google Cloud Storage
+                    * Azure Blob Storage
+               You would then upload the file directly to the cloud storage bucket instead of saving it locally:
+                    
+
+          `` amazonS3.putObject(new PutObjectRequest(bucketName, keyName, file.getInputStream(), metadata));
+          ``
+
+     🧠 Database Storage (as BLOB)
+          Suitable for small files and when you need strong transactional consistency.
+          Store file bytes in a BLOB column, with metadata in the same table.
+
+               Example entity:
+
+
+               ``
+               @Entity
+               public class FileEntity {
+                   @Id @GeneratedValue
+                   private Long id;
+                   private String filename;
+                   private String contentType;
+                   @Lob
+                   private byte[] data;
+               }
+               ``
+
+     🧾 4. Security and Best Practices
+
+               * Validate file type and size before saving (file.getContentType(), file.getSize()).
+               * Use random or UUID-based file names to avoid collisions.
+               * Sanitize file paths to prevent directory traversal attacks.
+               * Consider virus scanning or checksum validation for uploaded files.
+               * If using public access, serve files through a secure download endpoint rather than exposing the directory.
+
+
+
+               ✅ Summary
+               
+
+                    | Aspect       | Option                 | Best for                        |
+                    | ------------ | ---------------------- | ------------------------------- |
+                    | **Storage**  | Local filesystem       | Simple apps or development      |
+                    | **Storage**  | Cloud (S3, GCS, Azure) | Production and scalability      |
+                    | **Storage**  | Database (BLOB)        | Small files, transactional apps |
+                    | **Security** | Validate & sanitize    | Always                          |
+
+
+        **AWS S3- 1 Spring Boot file upload endpoint that stores files in AWS S3**
+
+          🚀 1. Add AWS SDK Dependency
+               In your pom.xml, include the AWS SDK for S3:
+
+
+             `` <dependency>
+                   <groupId>software.amazon.awssdk</groupId>
+                   <artifactId>s3</artifactId>
+               </dependency>
+             ''
+
+          ⚙️ 2. Configure AWS Credentials
+
+             You can provide AWS credentials in several ways:
+
+                  * Environment variables:
+
+                  
+                            `` 
+                              AWS_ACCESS_KEY_ID=your_access_key
+                              AWS_SECRET_ACCESS_KEY=your_secret_key
+                              AWS_REGION=ap-south-1
+                              ``
+
+                    * Or in application.properties:   
+                         
+                         
+                         `` cloud.aws.region.static=ap-south-1
+                         cloud.aws.s3.bucket-name=my-upload-bucket
+                         ``
+
+       🧩 3. Create a Configuration Bean for S3 Client         
+
+
+            `` import org.springframework.context.annotation.Bean;
+               import org.springframework.context.annotation.Configuration;
+               import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
+               import software.amazon.awssdk.regions.Region;
+               import software.amazon.awssdk.services.s3.S3Client;
+               
+               @Configuration
+               public class S3Config {
+               
+                   @Bean
+                   public S3Client s3Client() {
+                       return S3Client.builder()
+                               .region(Region.AP_SOUTH_1)  // or from properties
+                               .credentialsProvider(DefaultCredentialsProvider.create())
+                               .build();
+                   }
+               }
+``
+
+     📤 4. Create the File Upload Service
+
+          `` import org.springframework.beans.factory.annotation.Value;
+               import org.springframework.stereotype.Service;
+               import org.springframework.web.multipart.MultipartFile;
+               import software.amazon.awssdk.core.sync.RequestBody;
+               import software.amazon.awssdk.services.s3.S3Client;
+               import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+               
+               import java.io.IOException;
+               import java.util.UUID;
+               
+               @Service
+               public class S3FileUploadService {
+               
+                   private final S3Client s3Client;
+               
+                   @Value("${cloud.aws.s3.bucket-name}")
+                   private String bucketName;
+               
+                   public S3FileUploadService(S3Client s3Client) {
+                       this.s3Client = s3Client;
+                   }
+               
+                   public String uploadFile(MultipartFile file) throws IOException {
+                       String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+               
+                       PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                               .bucket(bucketName)
+                               .key(fileName)
+                               .contentType(file.getContentType())
+                               .build();
+               
+                       s3Client.putObject(putObjectRequest, RequestBody.fromBytes(file.getBytes()));
+               
+                       return fileName;
+                   }
+               }
+               ``
+
+          🌐 5. Create the REST Controller
+
+               ``
+                    import org.springframework.http.ResponseEntity;
+                    import org.springframework.web.bind.annotation.*;
+                    import org.springframework.web.multipart.MultipartFile;
+
+                    @RestController
+                    @RequestMapping("/api/files")
+                    public class FileUploadController {
+                    
+                        private final S3FileUploadService s3FileUploadService;
+                    
+                        public FileUploadController(S3FileUploadService s3FileUploadService) {
+                            this.s3FileUploadService = s3FileUploadService;
+                        }
+                    
+                        @PostMapping("/upload")
+                        public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
+                            try {
+                                String fileName = s3FileUploadService.uploadFile(file);
+                                String fileUrl = "https://my-upload-bucket.s3.amazonaws.com/" + fileName;
+                                return ResponseEntity.ok("File uploaded successfully! URL: " + fileUrl);
+                            } catch (Exception e) {
+                                return ResponseEntity.internalServerError()
+                                        .body("File upload failed: " + e.getMessage());
+                            }
+                        }
+                    }
+``
+
+          🧾 6. Security and Best Practices
+
+               ✅ Use IAM Roles instead of static keys when running on AWS.
+               ✅ Validate file types and sizes before uploading.
+               ✅ Use UUIDs or timestamp-based naming to avoid collisions.
+               ✅ Restrict S3 bucket permissions — only allow putObject and getObject where needed.
+               ✅ Consider S3 pre-signed URLs for large uploads from the browser directly to S3 (bypassing backend).
+               
+               
+     ✅ Summary
+
+
+     | Step | Description                       |
+     | ---- | --------------------------------- |
+     | 1️⃣  | Add AWS SDK dependency            |
+     | 2️⃣  | Configure credentials & region    |
+     | 3️⃣  | Create `S3Client` bean            |
+     | 4️⃣  | Implement upload logic in service |
+     | 5️⃣  | Expose REST endpoint              |
+     | 6️⃣  | Apply security & validation       |
+
+
+     **AWS S3 1 S3 End**
+
+    -  **AWS S3 2 S3 Explain how to secure Amazon S3 pre-signed URL uploads using AWS Identity and Access Management (IAM), with an example.**
+    
+          1️⃣ What Are Pre-Signed URLs?
+               A pre-signed URL is a temporary, secure link that allows a client (e.g., a web or mobile app) to upload or download an                object directly to or from Amazon S3, without requiring AWS credentials on the client side.
+
+               _he URL is generated and signed by your backend server using valid AWS credentials._
+
+               This allows direct client-to-S3 uploads, offloading file transfer from your server while keeping control and security centralized.
+                   
+               
+          2️⃣ Why Use IAM for Security
+               AWS Identity and Access Management (IAM) is used to:
+                    * Control who can generate pre-signed URLs.
+                    * Limit what actions can be performed (e.g., only upload, no delete).
+                    * Enforce fine-grained permissions on specific S3 buckets or prefixes.
+                    
+               You use IAM roles and policies to ensure that only authorized backend components 
+               (like your Spring Boot app) can create pre-signed URLs, while the public client can only
+               use the URL to upload a file.
+                    
+               
+          3️⃣ IAM Policy Example
+                    Here’s a secure IAM policy that allows your backend service to generate upload URLs (PUT)
+               and optionally read (GET) objects:
+
+
+                    `` 
+                         {
+                           "Version": "2012-10-17",
+                           "Statement": [
+                             {
+                               "Effect": "Allow",
+                               "Action": ["s3:PutObject", "s3:GetObject"],
+                               "Resource": "arn:aws:s3:::my-secure-upload-bucket/*"
+                             }
+                           ]
+                         }
+``
+
+
+               ➡️ Attach this policy to the IAM role of your backend application (e.g., EC2, ECS, or Lambda).
+                    Your frontend or clients never get access to AWS credentials directly.
+               
+                    
+               
+          4️⃣ Backend Flow (Spring Boot Example)
+               Step 1: Backend generates a pre-signed URL
+               The backend uses the AWS SDK and IAM credentials to create a temporary signed URL:    
+
+
+`` 
+               @Service
+               public class S3PresignedUrlService {
+               
+                   private final S3Presigner presigner;
+                   private final String bucketName = "my-secure-upload-bucket";
+               
+                   public S3PresignedUrlService(S3Presigner presigner) {
+                       this.presigner = presigner;
+                   }
+               
+                   public String generatePresignedUploadUrl(String fileName, String contentType) {
+                       String key = "uploads/" + UUID.randomUUID() + "_" + fileName;
+               
+                       PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                               .bucket(bucketName)
+                               .key(key)
+                               .contentType(contentType)
+                               .build();
+               
+                       PresignedPutObjectRequest presignedRequest = presigner.presignPutObject(p -> p
+                               .putObjectRequest(putObjectRequest)
+                               .signatureDuration(Duration.ofMinutes(5))
+                       );
+               
+                       return presignedRequest.url().toString();
+                   }
+               }
+``
+
+
+               Step 2: Client uses the URL to upload directly to S3
+                         Once the backend provides the signed URL, the client can upload the file using HTTP PUT:
+
+
+`` 
+               const file = document.querySelector('#fileInput').files[0];
+               const response = await fetch(`/api/files/presigned-upload?fileName=${file.name}&contentType=${file.type}`);
+               const uploadUrl = await response.text();
+               
+               // Upload directly to S3
+               await fetch(uploadUrl, {
+                 method: 'PUT',
+                 headers: { 'Content-Type': file.type },
+                 body: file
+               });
+
+``
+                    
+               
+          5️⃣ Security Best Practices
+
+          | Control                         | Description                                                                          |
+          | ------------------------------- | ------------------------------------------------------------------------------------ |
+          | **IAM Roles (not static keys)** | Use IAM roles attached to EC2/ECS/Lambda instead of hardcoded access keys.           |
+          | **Scoped Permissions**          | Allow only required actions (`PutObject`, `GetObject`) for a specific bucket/prefix. |
+          | **Short Expiration**            | Set signed URL expiry (e.g., 5–10 minutes) to limit misuse.                          |
+          | **File Validation**             | Backend should validate file size, type, and user permissions before generating URL. |
+          | **CORS Configuration**          | In S3, restrict origins and methods allowed for uploads.                             |
+          | **Unique Keys**                 | Use UUIDs or user IDs to avoid filename collisions.                                  |
+
+
+             Example S3 CORS Policy:
+
+                 `` [
+                      {
+                        "AllowedHeaders": ["*"],
+                        "AllowedMethods": ["PUT", "GET"],
+                        "AllowedOrigins": ["https://your-frontend.com"],
+                        "ExposeHeaders": ["ETag"]
+                      }
+                    ]
+                    ``
+          ✅ Summary
+
+               | Step | Description                                                  |
+               | ---- | ------------------------------------------------------------ |
+               | 1    | Backend uses IAM role credentials to generate pre-signed URL |
+               | 2    | URL allows secure, time-limited PUT to S3                    |
+               | 3    | Client uploads directly to S3                                |
+               | 4    | IAM and validation ensure access control and data protection |
+
+              🧾 In short:  
+                   To secure S3 pre-signed URL uploads, use AWS IAM roles and fine-grained S3 policies so only authorized backend services can generate URLs. The client never gets AWS credentials and can upload only to a specific bucket, file path, and time window defined in the signed request.
+                       
+       **AWS S3 2 S3 End**   
+               
+    
+    -  **AWS S3 3 S3  Download pre-signed URL**    
+       **AWS S3 2 S3 Download**     
+     
+
+     
 ____________________________________________________________________________
  ### Q) After successful registration, your spring boot application needs to send a welcome email to the user. Describe how would you send the emails to the registered users.
 
