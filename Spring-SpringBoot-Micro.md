@@ -2773,19 +2773,22 @@ ____________________________________________________________________________
           Suitable for small files and when you need strong transactional consistency.
           Store file bytes in a BLOB column, with metadata in the same table.
 
+
+
                Example entity:
 
 
-`` @Entity
-public class FileEntity {
-    @Id @GeneratedValue
-    private Long id;
-    private String filename;
-    private String contentType;
-    @Lob
-    private byte[] data;
-}
-``
+               ``
+               @Entity
+               public class FileEntity {
+                   @Id @GeneratedValue
+                   private Long id;
+                   private String filename;
+                   private String contentType;
+                   @Lob
+                   private byte[] data;
+               }
+               ``
 
      🧾 4. Security and Best Practices
 
