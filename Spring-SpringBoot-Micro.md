@@ -2592,8 +2592,9 @@ Here’s a detailed breakdown of how you can achieve this:
 
 
                `` @PreAuthorize("hasRole('ADMIN')")
-public void deleteUser(Long id) { ... }
-               ``
+                  public void deleteUser(Long id) { ... }
+                  ``
+
 
                * Secure endpoints in your SecurityFilterChain:
 
@@ -2604,8 +2605,7 @@ public void deleteUser(Long id) { ... }
     .anyRequest().authenticated();
                 ``
 
-                
-               
+                               
      2. Protect Sensitive Data in Storage
           * Encrypt sensitive fields (like passwords, tokens, or PII) before persisting to the database.
                * Use JPA converters or Spring Security’s BCryptPasswordEncoder for hashing passwords.
@@ -2626,10 +2626,9 @@ public PasswordEncoder passwordEncoder() {
           ``server:
                  ssl:
                    enabled: true
+                   ``
 
-          ``
-          
-          
+                    
      4. Manage Secrets and Configuration Securely
 
           * Never hardcode secrets (like API keys, DB credentials, or encryption keys) in code or Git.
@@ -2640,8 +2639,7 @@ public PasswordEncoder passwordEncoder() {
                * Example using Vault:
 
 
-                    ``
-                    spring.cloud.vault.enabled=true
+                    `` spring.cloud.vault.enabled=true
 spring.cloud.vault.token=<vault-token>
 spring.cloud.vault.uri=https://vault-server:8200
 ``
@@ -2672,6 +2670,7 @@ public List<Document> getDocuments() { ... }
           * Prevent injection attacks by validating user inputs.
           * Use Spring’s @Valid annotation and Bean Validation.
           * Sanitize or encode output to avoid XSS attacks.
+
           
      8. Regular Security Updates and Testing
           * Keep dependencies up-to-date using tools like OWASP Dependency Check.
@@ -2696,6 +2695,116 @@ public List<Document> getDocuments() { ... }
 ____________________________________________________________________________
  ### Q) you are creating an endpoint in a Spring boot application that allows users to upload files. Explain how you would handle the file upload and where you would store the files.
 
+     🧩 1. Enable File Upload Support
+
+          Spring Boot automatically provides multipart file upload support through MultipartResolver.
+          To enable it, ensure that you have the following dependency in your pom.xml (for web apps):
+     
+     
+          ``<dependency>
+         <groupId>org.springframework.boot</groupId>
+         <artifactId>spring-boot-starter-web</artifactId>
+     </dependency> 
+     ``
+     
+     
+          By default, Spring Boot enables 
+     
+          `` spring.servlet.multipart.enabled=true.
+          ``
+     
+          You can customize upload limits in application.properties:
+     
+          `` spring.servlet.multipart.max-file-size=10MB
+          spring.servlet.multipart.max-request-size=10MB
+          ``
+
+     ⚙️ 2. Create the Upload Endpoint
+     
+          Here’s a simple REST controller to handle file uploads:
+
+          `` @RestController
+             @RequestMapping("/api/files")             
+             public class FileUploadController {          
+             private static final String UPLOAD_DIR = "uploads/";
+          
+              @PostMapping("/upload")
+              public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
+                  try {
+                      // Ensure directory exists
+                      File directory = new File(UPLOAD_DIR);
+                      if (!directory.exists()) {
+                          directory.mkdirs();
+                      }
+          
+                      // Save file to local directory
+                      Path path = Paths.get(UPLOAD_DIR + file.getOriginalFilename());
+                      Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+          
+                      return ResponseEntity.ok("File uploaded successfully: " + file.getOriginalFilename());
+                  } catch (IOException e) {
+                      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                              .body("File upload failed: " + e.getMessage());
+                  }
+              }
+          }
+          ``
+     
+     🗂️ 3. Where to Store the File
+          There are several options depending on your use case:
+          🏠 Local File System
+               Pros: Easy to set up and good for small projects or local development.
+               Cons: Not suitable for distributed environments (e.g., multiple app servers).
+          Example:
+               Files stored under /uploads inside your project directory or an external mount point.
+               
+          ☁️ Cloud Storage
+               For scalability and fault-tolerance, use:
+                    * Amazon S3
+                    * Google Cloud Storage
+                    * Azure Blob Storage
+               You would then upload the file directly to the cloud storage bucket instead of saving it locally:
+                    
+
+          `` amazonS3.putObject(new PutObjectRequest(bucketName, keyName, file.getInputStream(), metadata));
+          ``
+
+     🧠 Database Storage (as BLOB)
+          Suitable for small files and when you need strong transactional consistency.
+          Store file bytes in a BLOB column, with metadata in the same table.
+
+               Example entity:
+
+
+`` @Entity
+public class FileEntity {
+    @Id @GeneratedValue
+    private Long id;
+    private String filename;
+    private String contentType;
+    @Lob
+    private byte[] data;
+}
+``
+
+     🧾 4. Security and Best Practices
+
+               * Validate file type and size before saving (file.getContentType(), file.getSize()).
+               * Use random or UUID-based file names to avoid collisions.
+               * Sanitize file paths to prevent directory traversal attacks.
+               * Consider virus scanning or checksum validation for uploaded files.
+               * If using public access, serve files through a secure download endpoint rather than exposing the directory.
+
+               ✅ Summary
+
+                    | Aspect       | Option                 | Best for                        |
+                    | ------------ | ---------------------- | ------------------------------- |
+                    | **Storage**  | Local filesystem       | Simple apps or development      |
+                    | **Storage**  | Cloud (S3, GCS, Azure) | Production and scalability      |
+                    | **Storage**  | Database (BLOB)        | Small files, transactional apps |
+                    | **Security** | Validate & sanitize    | Always                          |
+
+     
 ____________________________________________________________________________
  ### Q) After successful registration, your spring boot application needs to send a welcome email to the user. Describe how would you send the emails to the registered users.
 
