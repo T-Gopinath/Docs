@@ -2798,7 +2798,10 @@ ____________________________________________________________________________
                * Consider virus scanning or checksum validation for uploaded files.
                * If using public access, serve files through a secure download endpoint rather than exposing the directory.
 
+
+
                ✅ Summary
+               
 
                     | Aspect       | Option                 | Best for                        |
                     | ------------ | ---------------------- | ------------------------------- |
