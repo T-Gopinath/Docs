@@ -3756,7 +3756,67 @@ ____________________________________________________________________________
 
           
 ____________________________________________________________________________
- ### Q) explain the difference between cache eviction and cache expiration.
+ ### Q) Explain the difference between cache eviction and cache expiration.
+
+     
+      In a Spring Boot application (or any caching system), cache eviction and cache expiration both deal with removing entries from the cache — but they happen for different reasons and are triggered differently.
+
+      🧩 1. Cache Expiration
+                   Definition:
+                        Cache expiration means that cached data automatically becomes invalid after a 
+                        specific period of time — it expires due to time-based rules.
+                        
+                    When it happens:
+                         * After a predefined TTL (Time-To-Live) or TTI (Time-To-Idle) duration expires.
+                         * Controlled by the cache provider’s configuration (e.g., Caffeine, Ehcache, Redis).
+                         
+
+                    ``
+                    @Bean
+                    public CacheManager cacheManager() {
+                        return new CaffeineCacheManager("users", "products") {{
+                            setCaffeine(Caffeine.newBuilder()
+                                .expireAfterWrite(10, TimeUnit.MINUTES)); // expires 10 mins after write
+                        }};
+                    }
+                    ``
+                    
+      🧹 2. Cache Eviction
+
+           Definition:
+                     Cache eviction means manually or programmatically removing data from
+                     the cache — either by developer action or cache policy (like memory pressure).
+
+
+
+                     ``
+                          @CacheEvict(value = "users", key = "#userId")
+                         public void updateUser(Long userId, User newUserData) {
+                             userRepository.save(newUserData);
+                         }
+                         ``
+
+
+                     ✅ Here, when a user is updated, the corresponding cache entry is evicted 
+                     so that fresh data will be fetched next time.
+      
+      ⚖️ Summary Comparison Table
+
+
+          | Aspect         | Cache Expiration                         | Cache Eviction                            |
+          | -------------- | ---------------------------------------- | ----------------------------------------- |
+          | **Trigger**    | Time-based (TTL/TTI)                     | Manual, programmatic, or memory-based     |
+          | **Purpose**    | Avoid stale data                         | Keep cache consistent or prevent overflow |
+          | **Control**    | Cache provider’s configuration           | Application code or cache policy          |
+          | **Example**    | `expireAfterWrite(10, TimeUnit.MINUTES)` | `@CacheEvict(value="users", key="#id")`   |
+          | **Automatic?** | Yes                                      | Sometimes (if policy-based), often manual |
+          
+
+      🚀 In Short:
+           * Expiration → Time-based automatic removal.
+           * Eviction → Manual or policy-based removal (due to updates, deletes, or size limits).
+
+      
 
 ____________________________________________________________________________
  ### Q) If you had to scale a Spring Boot application to handle high traffic, what strategies would you use ? 
