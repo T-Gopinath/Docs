@@ -3653,6 +3653,17 @@ ____________________________________________________________________________
                 ``
 
      🧾 Summary
+
+
+          | Step | Description                                            |
+          | ---- | ------------------------------------------------------ |
+          | 1    | Add `spring-boot-starter-security`                     |
+          | 2    | Create `SecurityConfig` with `SecurityFilterChain`     |
+          | 3    | Define authentication rules (in-memory, DB, JWT, etc.) |
+          | 4    | Configure authorization for endpoints                  |
+          | 5    | Enable encryption (`BCryptPasswordEncoder`)            |
+          | 6    | Test secured endpoints                                 |
+
      
 ____________________________________________________________________________
  ### Q) how to disable a specific Auto-Configuration ? 
