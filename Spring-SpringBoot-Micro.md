@@ -3493,6 +3493,22 @@ ____________________________________________________________________________
 ____________________________________________________________________________
  ### Q) What is spring boot CLI and how to execute the Spring Boot project using boot CLI ? 
 
+             🧩 What is Spring Boot CLI?
+                 Spring Boot CLI (Command Line Interface) is a lightweight tool that allows you to:
+                      * Quickly create, run, and test Spring Boot applications using simple Groovy scripts or Maven/Gradle projects.
+                      * Avoid writing boilerplate Java code — you can write concise Groovy-based Spring Boot apps that auto-configure                               themselves.
+                      * Run and manage Spring Boot projects directly from the terminal, without needing an IDE.
+
+           🧱 Option 2: Manual installation
+                     * https://spring.io/tools Then unzip and add the bin/ directory to your system PATH.
+                       Check installation:    spring --version     console output Spring Boot v3.4.0
+                       
+           🧩 4. Running an Existing Spring Boot Project (Maven/Gradle)
+           
+                spring run src/main/java/com/example/DemoApplication.java or simpley mvn spring-boot:run
+                
+
+           
 ____________________________________________________________________________
  ### Q) HOW IS SPRING Security Implemented In a Spring Boot Application ? 
 
