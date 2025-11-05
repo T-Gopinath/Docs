@@ -3329,7 +3329,167 @@ ________________________________________________________________________________
      
 ____________________________________________________________________________
  ### Q) After successful registration, your spring boot application needs to send a welcome email to the user. Describe how would you send the emails to the registered users.
+ 
+     To send a welcome email after a successful registration in a Spring Boot application, you can use Spring’s email support with JavaMailSender (part of the spring-boot-starter-mail dependency).
 
+     ✅ Step 1: Add Dependencies
+
+                    In your pom.xml, add the following dependencies:
+
+
+                    `` <dependencies>
+                             <!-- Spring Boot starter for sending emails -->
+                             <dependency>
+                                 <groupId>org.springframework.boot</groupId>
+                                 <artifactId>spring-boot-starter-mail</artifactId>
+                             </dependency>
+                             
+                             <!-- Optional: for sending HTML emails -->
+                             <dependency>
+                                 <groupId>org.springframework.boot</groupId>
+                                 <artifactId>spring-boot-starter-thymeleaf</artifactId>
+                             </dependency>
+                         </dependencies>
+                         ``
+
+               
+     ✅ Step 2: Configure Mail Properties
+
+          In your application.properties (or application.yml), configure the SMTP server details:
+
+
+          `` spring.mail.host=smtp.gmail.com
+               spring.mail.port=587
+               spring.mail.username=your_email@gmail.com
+               spring.mail.password=your_app_password
+               spring.mail.properties.mail.smtp.auth=true
+               spring.mail.properties.mail.smtp.starttls.enable=true
+               ``
+
+
+               💡 Tip: If you’re using Gmail, make sure to generate an App Password (not your Gmail password) and enable 2FA.
+               
+          
+     ✅ Step 3: Create an Email Service
+
+          Create a EmailService class that uses JavaMailSender to send emails.
+          
+
+          `` 
+          import org.springframework.beans.factory.annotation.Autowired;
+          import org.springframework.mail.SimpleMailMessage;
+          import org.springframework.mail.javamail.JavaMailSender;
+          import org.springframework.stereotype.Service;
+          
+          @Service
+          public class EmailService {
+          
+              @Autowired
+              private JavaMailSender mailSender;
+          
+              public void sendWelcomeEmail(String toEmail, String userName) {
+                  String subject = "Welcome to Our Platform!";
+                  String body = "Hi " + userName + ",\n\n" +
+                                "Welcome to our application! We're excited to have you on board.\n\n" +
+                                "Best regards,\nThe Team";
+          
+                  SimpleMailMessage message = new SimpleMailMessage();
+                  message.setFrom("your_email@gmail.com");
+                  message.setTo(toEmail);
+                  message.setSubject(subject);
+                  message.setText(body);
+          
+                  mailSender.send(message);
+              }
+          }
+          ``
+
+          
+          
+     ✅ Step 4: Call the Email Service After Registration
+
+          In your user registration service, send the welcome email after saving the user
+
+
+          ``
+               import org.springframework.beans.factory.annotation.Autowired;
+               import org.springframework.stereotype.Service;
+               
+               @Service
+               public class UserService {
+               
+                   @Autowired
+                   private UserRepository userRepository;
+               
+                   @Autowired
+                   private EmailService emailService;
+               
+                   public void registerUser(User user) {
+                       // 1. Save user to database
+                       userRepository.save(user);
+               
+                       // 2. Send welcome email
+                       emailService.sendWelcomeEmail(user.getEmail(), user.getName());
+                   }
+               }
+
+          ``
+     
+     ✅ Step 5: (Optional) Send HTML Emails
+
+          If you want rich HTML emails, use MimeMessageHelper:
+
+
+          ``
+          import jakarta.mail.MessagingException;
+          import jakarta.mail.internet.MimeMessage;
+          import org.springframework.mail.javamail.MimeMessageHelper;
+          
+          public void sendHtmlWelcomeEmail(String toEmail, String userName) throws MessagingException {
+              MimeMessage mimeMessage = mailSender.createMimeMessage();
+              MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+          
+              helper.setFrom("your_email@gmail.com");
+              helper.setTo(toEmail);
+              helper.setSubject("Welcome to Our Platform!");
+              helper.setText("<h1>Welcome, " + userName + "!</h1><p>We're glad to have you with us.</p>", true);
+          
+              mailSender.send(mimeMessage);
+          }
+          ``
+
+
+          
+     ✅ Step 6: Testing
+
+          You can test the functionality with a simple controller endpoint:
+
+
+               ``
+               import org.springframework.web.bind.annotation.*;
+
+               @RestController
+               @RequestMapping("/api/users")
+               public class UserController {
+               
+                   @Autowired
+                   private UserService userService;
+               
+                   @PostMapping("/register")
+                   public String registerUser(@RequestBody User user) {
+                       userService.registerUser(user);
+                       return "User registered and welcome email sent!";
+                   }
+               }
+               ``
+
+          
+     💡 Best Practices
+          * Use asynchronous sending with @Async to avoid blocking registration response.
+          * Use a templating engine (Thymeleaf or FreeMarker) for beautiful email layouts.
+          * Use transactional events to ensure the email is sent only after successful registration.
+          
+     
 ____________________________________________________________________________
  ### Q) What is spring boot CLI and how to execute the Spring Boot project using boot CLI ? 
 
