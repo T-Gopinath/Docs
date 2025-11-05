@@ -3667,7 +3667,94 @@ ____________________________________________________________________________
      
 ____________________________________________________________________________
  ### Q) how to disable a specific Auto-Configuration ? 
+ 
+          In Spring Boot, auto-configuration is a key feature that automatically configures beans based on the classpath and environment. However, sometimes you may need to disable a specific auto-configuration because it conflicts with your setup or you want to manually configure something.
 
+          Here are 4 common ways to disable specific auto-configurations:
+          
+          ✅ 1. Using @SpringBootApplication(exclude = …)
+                    This is the most common and direct way.
+                    
+
+                    ``
+                         import org.springframework.boot.autoconfigure.SpringBootApplication;
+                         import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+
+                         @SpringBootApplication(exclude = { DataSourceAutoConfiguration.class })
+                         public class MyApplication {
+                             public static void main(String[] args) {
+                                 SpringApplication.run(MyApplication.class, args);
+                             }
+                         }
+                         ``
+
+                      🟢 When to use:
+                           When you know exactly which auto-configuration class to exclude and want to apply it globally.   
+                    
+          ✅ 2. Using @EnableAutoConfiguration(exclude = …)
+                    This works the same as above but is more explicit.
+
+
+                         `` 
+                         import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+                         import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
+                         import org.springframework.context.annotation.Configuration;
+                         
+                         @Configuration
+                         @EnableAutoConfiguration(exclude = { HibernateJpaAutoConfiguration.class })
+                         public class AppConfig { }
+                         ``
+
+                              🟢 When to use:
+                                        When you don’t use @SpringBootApplication (e.g., in a library or a non-main config class).
+
+               
+          ✅ 3. Using spring.autoconfigure.exclude in application.properties or application.yml
+                    This method lets you disable auto-configurations without touching code.
+
+
+                    `` spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+                    ``
+
+                    🟢 When to use:
+                              If you want to disable auto-configurations based on environment or profile without recompiling code.
+                                        
+               
+          ✅ 4. Programmatically via SpringApplicationBuilder     
+
+               You can disable it when creating the SpringApplication.
+
+
+                    `` 
+                   new SpringApplicationBuilder(MyApplication.class)
+                  .web(WebApplicationType.SERVLET)
+                  .properties("spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration")
+                  .run(args);
+                  ``
+
+                  
+               🟢 When to use:
+                         In advanced or programmatic startup scenarios.
+                    
+
+
+      💡 How to know which auto-configuration to exclu
+          If you’re unsure which class to exclude:
+               Run your app with --debug flag or set
+                    debug = true
+               Spring boot will log "AUTO-CONFIGURATION REPORT", showing which auto configurations were applied or not.
+
+          
+       🧠 Example use case
+            If you want to use your own database configuration instead of Spring Boot’s:
+
+
+            ``
+                 @SpringBootApplication(exclude = { DataSourceAutoConfiguration.class })
+                    public class CustomDbApp { ... }
+            ``
+
+          
 ____________________________________________________________________________
  ### Q) explain the difference between cache eviction and cache expiration.
 
