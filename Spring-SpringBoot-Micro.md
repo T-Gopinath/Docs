@@ -4058,11 +4058,138 @@ ________________________________________________________________________________
                     | Auditing           | Centralized logging & monitoring (ELK / Splunk) |
 
           
-____________________________________________________________________________
- ### Q) In Spring boot how is session management configured and handled, especially in distributed systems. ? 
+______________________________________________________________________________________________________________
 
+### Q) In Spring boot how is session management configured and handled, especially in distributed systems. ? 
+
+🧩 1. Default Session Management (Single Instance)
+
+     By default, Spring Boot uses the Servlet container’s HTTP session mechanism.
+          * Where sessions are stored: In-memory within the server (Tomcat/Jetty/Undertow).
+          * Session ID: Stored in a cookie named JSESSIONID.
+          * Configuration Example:
+
+
+          `` 
+          # Session timeout (in minutes)
+          server.servlet.session.timeout=30m
+
+          # Use cookies for session tracking
+          server.servlet.session.tracking-modes=cookie
+          ``
+               
+
+     **Limitations**
+          In a distributed setup (multiple instances behind a load balancer), 
+          sessions are not shared between nodes — a user may 
+          lose their session if routed to another instance.
+
+                       
+🏗️ 2. Session Management in Distributed Systems
+     
+
+          To support scalability and high availability, you must use external session storage.
+     Spring Boot provides Spring Session, which allows you to manage sessions across multiple 
+     servers using a shared backend.
+
+          
+     Common Backends:
+
+
+          | Backend | Spring Session Module         | Use Case                              |
+          | ------- | ----------------------------- | ------------------------------------- |
+          | Redis   | `spring-session-data-redis`   | Most popular choice; high performance |
+          | JDBC    | `spring-session-jdbc`         | Uses relational DB for persistence    |
+          | MongoDB | `spring-session-data-mongodb` | For NoSQL environments                |
+
+
+⚙️ 3. Example: Using Spring Session with Redis
+
+          ✅ Dependencies
+               
+               `` 
+               <dependency>
+                   <groupId>org.springframework.session</groupId>
+                   <artifactId>spring-session-data-redis</artifactId>
+               </dependency>
+               
+               <dependency>
+                   <groupId>org.springframework.boot</groupId>
+                   <artifactId>spring-boot-starter-data-redis</artifactId>
+               </dependency>
+               ``
+
+          
+        ✅ Configuration
+
+             ``
+               # Redis connection
+               spring.redis.host=localhost
+               spring.redis.port=6379
+               
+               # Optional: session timeout
+               server.servlet.session.timeout=30m
+               ``
+
+          ✅ How it works
+               * Session data (attributes, metadata, etc.) is stored in Redis.
+               * All instances share session information via Redis.
+               * Users can move between servers seamlessly.
+               
+
+🔒 4. Integration with Spring Security
+
+     If you’re using Spring Security, session management can be configured with policies like:          
+
+
+
+               ``
+               @Override
+               protected void configure(HttpSecurity http) throws Exception {
+                   http
+                       .sessionManagement(session -> session
+                           .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                           .maximumSessions(1) // prevent multiple logins
+                           .maxSessionsPreventsLogin(true)
+                       );
+               }
+               ``
+
+               policies:
+                    * ALWAY : Always create a session.
+                    * IF_REQUIRED : Create only when needed.
+                    * NEVER : Never create; use existing only.
+                    * Statless: No session at all (ideal for JWT-based stateless APIs).
+                    
+          
+🧠 5. Stateless Alternative: JWT-based 
+
+          In many microservice architectures, stateful sessions are avoided. 
+          Instead, JWT (JSON Web Token) is used for stateless authentication.
+
+               * No need for shared session storage
+               * Each request carries the JWT in the header
+               * The server validates the token without storing session data.
+
+          Pros: Easier to scale horizontally, no centralized session store.
+          Cons: Harder to revoke tokens early (e.g., on logout).
+
+          
+🧩 6. Summary Table
+
+
+          | Strategy               | Storage   | Suitable For             | Scalability |
+          | ---------------------- | --------- | ------------------------ | ----------- |
+          | Default (Tomcat)       | In-memory | Single instance          | ❌          |
+          | Spring Session + Redis | Redis     | Distributed web apps     | ✅✅       | 
+          | Spring Session + JDBC  | Database  | Small/medium apps        | ✅          |
+          | Stateless (JWT)        | None      | REST APIs, Microservices | ✅✅✅     |
+
+     
 ____________________________________________________________________________
  ### Q) Imagine you are designing a spring boot application that interfaces with multiple external APIs . How would you handle API rate limits and failures ? 
+     
+      
 
 ____________________________________________________________________________
  ### Q) Imagine you are designing a Spring Boot application that interfaces with multiple external APIs. How would you handle API rate limits and failures ?
