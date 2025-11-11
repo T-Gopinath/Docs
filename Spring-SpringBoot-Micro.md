@@ -4062,6 +4062,7 @@ ________________________________________________________________________________
 
 ### Q) In Spring boot how is session management configured and handled, especially in distributed systems. ? 
 
+
 🧩 1. Default Session Management (Single Instance)
 
      By default, Spring Boot uses the Servlet container’s HTTP session mechanism.
@@ -4085,7 +4086,7 @@ ________________________________________________________________________________
           lose their session if routed to another instance.
 
                        
-🏗️ 2. Session Management in Distributed Systems
+🏗️ 2. Session Management in Distributed Systems.
      
 
           To support scalability and high availability, you must use external session storage.
@@ -4105,7 +4106,9 @@ ________________________________________________________________________________
 
 ⚙️ 3. Example: Using Spring Session with Redis
 
+
           ✅ Dependencies
+
                
                `` 
                <dependency>
@@ -4121,6 +4124,7 @@ ________________________________________________________________________________
 
           
         ✅ Configuration
+
 
              ``
                # Redis connection
@@ -4139,8 +4143,7 @@ ________________________________________________________________________________
 
 🔒 4. Integration with Spring Security
 
-     If you’re using Spring Security, session management can be configured with policies like:          
-
+ If you’re using Spring Security, Session management can be configured with policies like:          
 
 
                ``
@@ -4187,12 +4190,72 @@ ________________________________________________________________________________
 
      
 ____________________________________________________________________________
- ### Q) Imagine you are designing a spring boot application that interfaces with multiple external APIs . How would you handle API rate limits and failures ? 
+
+### Q) Imagine you are designing a spring boot application that interfaces with multiple external APIs . How would you handle API rate limits and failures ? 
      
+      When designing a Spring Boot application that integrates with multiple external APIs, handling rate limits and failures is crucial for reliability and scalability.
+
+      1. Handling API Rate Limits
+           a. Implement Client-Side Rate Limiting:
+                Use a library like Resilience4j RateLimiter to ensure we don’t exceed the provider’s API limits.
+                     * Configure rate limits per API (e.g., 100 requests per minute).
+                     * Queue or delay requests when the limit is reached.
+
+
+
+                     ``
+                     RateLimiterConfig config = RateLimiterConfig.custom()
+                        .limitForPeriod(100)
+                        .limitRefreshPeriod(Duration.ofMinutes(1))
+                        .timeoutDuration(Duration.ofSeconds(2))
+                        .build();
+
+                    RateLimiter rateLimiter = RateLimiter.of("externalApi", config);
+                    ``
+
+               
+                    
+                
+           b. Respect API Provider Headers:
+                Many APIs return headers like X-RateLimit-Remaining or Retry-After.
+                I would inspect these headers and dynamically adjust the request rate or pause calls accordingly.
+                                
+           c. Caching Responses:
+                To reduce unnecessary external calls, I’d use Spring Cache (e.g., Caffeine/Redis) to cache frequently requested data.
+                           
+      2. Handling API Failures
+           a. Retry Mechanism with Backoff:
+                Use Resilience4j Retry or Spring Retry for transient failures (e.g., 5xx or timeouts).
+                     * Configure exponential backoff and max retry attempts.
+                     * Avoid retrying for client errors (4xx).
+                     
+           b. Circuit Breaker Pattern:
+                Implement Resilience4j CircuitBreaker to prevent cascading failures.
+                    * If an API repeatedly fails, the circuit opens and stops sending requests temporarily.
+                    * Once it recovers, the circuit closes automatically.
+                     
+           c. Fallback Mechanism:
+                Provide fallback responses when an API fails — e.g.,
+                   * Serve cached data
+                   * Return a default response
+                   * Or use an alternate API if available
+                
+           d. Timeout and Bulkhead Isolation:
+                   * Set connection and read timeouts in RestTemplate or WebClient.
+                   * Use bulkhead pattern (Resilience4j Bulkhead) to isolate API calls, so one slow API doesn’t affect others.
+                               
+      3. Monitoring and Alerting
+           Use Spring Boot Actuator, Micrometer, and tools like Prometheus + Grafana to monitor
+                *     API latency
+                *     Failure rate
+                *     Circuit breaker state
+                *     Rate limit utilization
+
       
 
 ____________________________________________________________________________
  ### Q) Imagine you are designing a Spring Boot application that interfaces with multiple external APIs. How would you handle API rate limits and failures ?
+ 
 
 ____________________________________________________________________________
  ### Q) How you would manage externalized configuration and secure sensitive configuration properties in a microservices architecture ? 
