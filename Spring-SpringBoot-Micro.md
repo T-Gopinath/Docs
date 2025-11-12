@@ -6447,10 +6447,188 @@ ____________________________________________________________________________
 
 ____________________________________________________________________________
  ### Q) How to deploy spring boot web applications as jar and war files ? 
+
+     🟢 1. Deploying as an Executable JAR
+          This is the default and most common way in Spring Boot.
+          
+         ✅ Steps 
+               1 Set packaging to JAR in pom.xml (default)
+               
+                    `
+                    <packaging>jar</packaging>
+                    `
+               
+              2 Main application class 
+
+
+              ` @SpringBootApplication
+               public class MyApplication {
+                   public static void main(String[] args) {
+                       SpringApplication.run(MyApplication.class, args);
+                   }
+               }
+               `
+            3 Build the JAR   
+               `mvn clean package
+               `
+               This creates a fat JAR (usually in target/myapp-0.0.1-SNAPSHOT.jar) containing:
+                    Your application classes
+                    Embedded Tomcat/Jetty/Undertow
+                    Dependencies
+
+          4. Run the JAR
+          
+               ` java -jar target/myapp-0.0.1-SNAPSHOT.jar
+               `
+
+         5  Access the app     
+              By default, it runs on port 8080
+                   👉 http://localhost:8080
+
+               ✅ When to use JAR deployment
+                    * You want simple deployment (e.g., on cloud, Docker, Kubernetes, or standalone server)
+                    * You don’t need a separate servlet container
+                    * You want fast startup and easy CI/CD
+                    
+                   
+     🟠 2. Deploying as a WAR (for external servers)
+          If your organization uses traditional application servers, deploy your Spring Boot app as a WAR.
+          
+          
+          ✅ Steps
+          
+             Set packaging to WAR  
+                   <packaging>war</packaging>
+ 
+               Modify dependencies
+                    * Exclude the embedded Tomcat when packaging as WAR
+
+                    ` <dependency>
+                             <groupId>org.springframework.boot</groupId>
+                             <artifactId>spring-boot-starter-web</artifactId>
+                             <exclusions>
+                                 <exclusion>
+                                     <groupId>org.springframework.boot</groupId>
+                                     <artifactId>spring-boot-starter-tomcat</artifactId>
+                                 </exclusion>
+                             </exclusions>
+                         </dependency>
+                         
+                         <!-- Provided Tomcat dependency -->
+                         <dependency>
+                             <groupId>org.springframework.boot</groupId>
+                             <artifactId>spring-boot-starter-tomcat</artifactId>
+                             <scope>provided</scope>
+                         </dependency>
+                         `
+                         
+               Extend SpringBootServletInitializer in your main class
+                    
+
+                    `@SpringBootApplication
+                    public class MyApplication extends SpringBootServletInitializer {
+                    
+                        @Override
+                        protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+                            return builder.sources(MyApplication.class);
+                        }
+                    
+                        public static void main(String[] args) {
+                            SpringApplication.run(MyApplication.class, args);
+                        }
+                    }
+                    `
+                 Build the WAR
+
+                 
+                 ` mvn clean package
+`
+               Output:
+                    target/myapp-0.0.1-SNAPSHOT.war
+
+               Deploy the WAR
+                    Copy it to your application server’s deployment folder:
+                         Tomcat → tomcat/webapps/
+                         JBoss/WildFly → standalone/deployments/
+                         WebLogic/WebSphere → use admin console
+
+               Access the app
+                    `http://localhost:8080/myapp
+`
+                    
+          ✅ When to use JAR deployment
+               You want simple deployment (e.g., on cloud, Docker, Kubernetes, or standalone server)
+               You don’t need a separate servlet container
+               You want fast startup and easy CI/CD
+               
+     ⚙️ Summary Comparison
      
-____________________________________________________________________________
+               | Feature              | Executable JAR       | Traditional WAR     |
+               | -------------------- | -------------------- | ------------------- |
+               | **Embedded server**  | ✅ Yes                | ❌ No             |
+               | **Easy to run**      | `java -jar`          | Needs app server    |
+               | **Best for**         | Cloud, microservices | Legacy app servers  |
+               | **Setup complexity** | Low                  | Moderate            |
+               | **Startup speed**    | Fast                 | Slightly slower     |
+               | **Deployment**       | Copy JAR anywhere    | Deploy to container |
+
+
+     
+__________________________________________________________________________________________________________
+
  ### Q) What Does It Mean Spring Boot Supports Relaxed Binding ? 
-     
+ 
+      🔍 Meaning in Simple Terms
+           Relaxed binding means you don’t have to use the exact same naming convention in your configuration file 
+           as your Java field names — Spring Boot automatically understands and converts various naming styles.
+      
+      💡 Example
+          Let’s say you have a class:
+
+          `@ConfigurationProperties(prefix = "my.app")
+          public class MyAppProperties {
+          private String appName;
+          private int maxConnections;
+          
+          // getters and setters
+          }
+          `
+           With relaxed binding, the following property names would all work and bind correctly:  
+
+         ` # application.properties
+          my.app.appName=TestApp
+          my.app.app-name=TestApp
+          my.app.app_name=TestApp
+          MY_APP_APP_NAME=TestApp
+          my.app.maxConnections=10
+          my.app.max-connections=10
+          `
+
+          Spring Boot will automatically normalize these names and map them to the right fields 
+          (appName, maxConnections) in the Java class.
+           
+      ⚙️ Supported Naming Conventions
+           Spring Boot supports these relaxed forms:
+           
+               | Type                                      | Example           |
+               | ----------------------------------------- | ----------------- |
+               | Camel case                                | `my.appName`      |
+               | Kebab case (hyphen)                       | `my.app-name`     |
+               | Underscore case                           | `my.app_name`     |
+               | Uppercase with underscores (for env vars) | `MY_APP_APP_NAME` |
+
+      
+      🧩 Why It Matters
+          * Makes configuration flexible across environments (YAML, properties, env vars, etc.)
+          * Improves readability for different audiences (developers vs. DevOps)
+          * Supports consistent mapping even when naming styles differ
+      
+     ✅ In Summary
+          Relaxed Binding in Spring Boot =
+
+          “Spring Boot automatically maps configuration properties to Java fields even if the property names 
+               use different cases, separators, or styles.”
+               
 ____________________________________________________________________________
  ### Q) Discuss the integration of Spring Boot applications with CI/CD pipelines.
 
