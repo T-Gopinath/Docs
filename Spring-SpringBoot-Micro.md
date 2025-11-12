@@ -6000,13 +6000,18 @@ ________________________________________________________________________________
          <artifactId>spring-boot-starter-actuator</artifactId>
      </dependency>
     `
+
+    
     Expose metrics:
+
+    
          ` management:
             endpoints:
               web:
                 exposure:
                   include: ["health", "metrics", "prometheus"]
     `
+
     
     Metrics you can track:
          * Thread pool metrics (queue size, active threads)
@@ -6046,7 +6051,8 @@ ________________________________________________________________________________
           | 1234    | IN_PROGRESS | 40%      | Processing records | 10:00 AM   | null         |
     `
                     
- 8. Advanced Alternatives  
+ 8. Advanced Alternatives
+ 
      For more complex orchestration or monitoring needs:
         * Use Spring Batch for job processing with retry, restart, and status tracking. 
         * Integrate Message Queues (RabbitMQ, Kafka) to handle async workloads with better durability.
@@ -6064,9 +6070,169 @@ ________________________________________________________________________________
           | Persistent Jobs | Spring Batch or Message Queues                |
 
      
-____________________________________________________________________________
- ### Q) You application needs to process notifications asynchronously using a message queue. Explain how you would setup integration and send message from your spring boot application
- 
+________________________________________________________________________________________________________________________________
+### Q) You application needs to process notifications asynchronously using a message queue. Explain how you would setup integration and send message from your spring boot application
+
+      To process notifications asynchronously in a Spring Boot application using a message queue, you can integrate a messaging system like RabbitMQ, Kafka, or AWS SQS. Below is a step-by-step explanation using RabbitMQ (the same principles apply to other brokers).
+
+     🧩 1. Objective
+               We want to:
+                    * Send notifications (emails, SMS, push messages, etc.) asynchronously.
+                    * Decouple the notification sender from the main business logic.
+                    * Ensure reliable delivery and retry in case of failure.
+
+                    
+     ⚙️ 2. Setup RabbitMQ Integration
+          Step 1: Add Dependencies
+               In pom.xml:
+
+               
+                    `<dependency>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-starter-amqp</artifactId>
+                    </dependency>
+                    `               
+                    
+                    
+          Step 2: Configure RabbitMQ Connection
+               In application.yml:
+
+
+               `spring:
+                 rabbitmq:
+                   host: localhost
+                   port: 5672
+                   username: guest
+                   password: guest
+                   `
+     
+                    
+          Step 3: Define a Queue, Exchange, and Binding
+          
+          Create a configuration class to define the messaging topology.
+
+          
+            ` @Configuration
+               public class RabbitMQConfig {
+               
+                   public static final String EXCHANGE = "notification.exchange";
+                   public static final String ROUTING_KEY = "notification.key";
+                   public static final String QUEUE = "notification.queue";
+               
+                   @Bean
+                   public TopicExchange exchange() {
+                       return new TopicExchange(EXCHANGE);
+                   }
+               
+                   @Bean
+                   public Queue queue() {
+                       return new Queue(QUEUE, true); // durable queue
+                   }
+               
+                   @Bean
+                   public Binding binding(Queue queue, TopicExchange exchange) {
+                       return BindingBuilder.bind(queue).to(exchange).with(ROUTING_KEY);
+                   }
+               }
+               `  
+               
+          
+     📤 3. Send a Message (Producer)
+          When an event occurs (like a user registering), publish a message to the queue.
+
+          ` @Service
+          public class NotificationPublisher {
+          
+              private final RabbitTemplate rabbitTemplate;
+          
+              @Autowired
+              public NotificationPublisher(RabbitTemplate rabbitTemplate) {
+                  this.rabbitTemplate = rabbitTemplate;
+              }
+          
+              public void sendNotification(NotificationEvent event) {
+                  rabbitTemplate.convertAndSend(
+                      RabbitMQConfig.EXCHANGE,
+                      RabbitMQConfig.ROUTING_KEY,
+                      event
+                  );
+                  System.out.println("Notification message sent: " + event);
+              }
+          }
+          `
+
+          Example Message DTO
+
+
+                    ` @Data
+                    @AllArgsConstructor
+                    @NoArgsConstructor
+                    public class NotificationEvent implements Serializable {
+                        private String userId;
+                        private String message;
+                        private String type; // e.g. EMAIL, SMS, PUSH
+                    }
+                    `
+                    
+
+     📥 4. Consume Messages (Listener)
+          Create a listener to receive and process messages asynchronously.
+
+
+          ` @Service
+               public class NotificationListener {
+               
+                   @RabbitListener(queues = RabbitMQConfig.QUEUE)
+                   public void handleNotification(NotificationEvent event) {
+                       System.out.println("Processing notification: " + event);
+                       // Add email/SMS sending logic here
+                   }
+               }
+               `
+               
+         Spring Boot automatically runs this in a separate thread, enabling asynchronous processing. 
+          
+     🛡️ 5. Error Handling and Retry
+          Add retry and dead-letter queue (DLQ) configuration for robustness:
+               
+          ` spring:
+                 rabbitmq:
+                   listener:
+                     simple:
+                       retry:
+                         enabled: true
+                         max-attempts: 3
+                         initial-interval: 2000ms
+                       default-requeue-rejected: false
+                       `
+                  
+     You can also configure a Dead Letter Queue to capture failed messages.
+     
+     📊 6. Monitoring & Management
+          
+          You can:
+               Enable RabbitMQ management plugin: http://localhost:15672
+               Monitor queue depth, consumer lag, and delivery rate.
+               Use Spring Boot Actuator for health checks (/actuator/health).
+     
+     ⚡ Alternative Message Brokers
+
+          
+          | Broker       | Spring Integration           | Use Case                        |
+          | ------------ | ---------------------------- | ------------------------------- |
+          | **RabbitMQ** | `spring-boot-starter-amqp`   | Reliable, simple message queue  |
+          | **Kafka**    | `spring-kafka`               | High throughput event streaming |
+          | **AWS SQS**  | `spring-cloud-aws-messaging` | Cloud-native async processing   |
+
+     
+     ✅ In summary:
+      
+          1. Configure your message broker connection
+          2. Define queues, exchanges, and bindings.
+          3. Use RabbitTemplate (or KafkaTemplate) to send messages.
+          4. Use @RabbitListener to consume messages asynchronously.
+          5. Add retry/DLQ for resilience and monitor via management tools.
+     
 
 ____________________________________________________________________________
  ### Q) You need to secure a spring boot app, to ensure that only authenticated users can access certain endpoints. Describe how you would configure spring security to set up a basic for-based authentication.
