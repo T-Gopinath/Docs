@@ -5292,7 +5292,209 @@ ____________________________________________________________________________
           
 
 ____________________________________________________________________________
- ### Q) Discuss how would you secure a Spring Boot application using JSON Web Token (JWT) ? 
+ ### Q) Discuss how would you secure a Spring Boot application using JSON Web Token (JWT) ?
+
+🔐 1. What is JWT?
+
+     A JSON Web Token is a compact, URL-safe token that encodes user identity and authorization claims.
+     
+     A JWT has three parts:
+
+          
+          `` Header.Payload.Signature
+          ``
+
+          Example:
+
+          
+               `` eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqb2huIiwicm9sZXMiOiJBRE1JTiJ9.G9T5L1gX5rC9p7V2v5X5JfQ9eXqU9yD6Bq2C1fFZ3uA
+               ``
+
+          
+🧩 2. Architecture Overview
+
+     Workflow:
+          User Authentication:
+               The user logs in by sending credentials (e.g., username & password) to /auth/login.
+          JWT Issuance:
+               The server validates credentials and generates a JWT, signed using a secret key or public/private key pair.
+          Client Request
+               The client includes the JWT in the Authorization header for subsequent API calls:
+
+
+               ``Authorization: Bearer <token>
+               ``
+                    
+          Token Validation:
+               The server validates the token on each request — no session needed.
+               
+          Access Granted:
+               If valid, the request proceeds; otherwise, returns 401 Unauthorized.
+          
+⚙️ 3. Spring Security Configuration
+
+     ✅ Step 1: Add Dependencies
+
+
+               ``
+               <dependency>
+                   <groupId>org.springframework.boot</groupId>
+                   <artifactId>spring-boot-starter-security</artifactId>
+               </dependency>
+               <dependency>
+                   <groupId>io.jsonwebtoken</groupId>
+                   <artifactId>jjwt-api</artifactId>
+                   <version>0.11.5</version>
+               </dependency>
+               <dependency>
+                   <groupId>io.jsonwebtoken</groupId>
+                   <artifactId>jjwt-impl</artifactId>
+                   <version>0.11.5</version>
+                   <scope>runtime</scope>
+               </dependency>
+               <dependency>
+                   <groupId>io.jsonwebtoken</groupId>
+                   <artifactId>jjwt-jackson</artifactId>
+                   <version>0.11.5</version>
+                   <scope>runtime</scope>
+               </dependency>
+               ``
+
+     ✅ Step 2: Create a JwtUtil Class
+          Handles token generation and validation:
+
+
+          ``
+          @Component
+          public class JwtUtil {
+              private final String SECRET_KEY = "mysecretkey12345";
+          
+              public String generateToken(UserDetails userDetails) {
+                  return Jwts.builder()
+                          .setSubject(userDetails.getUsername())
+                          .claim("roles", userDetails.getAuthorities())
+                          .setIssuedAt(new Date(System.currentTimeMillis()))
+                          .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // 1 hour
+                          .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+                          .compact();
+              }
+          
+              public boolean validateToken(String token, UserDetails userDetails) {
+                  final String username = extractUsername(token);
+                  return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
+              }
+          
+              public String extractUsername(String token) {
+                  return extractClaim(token, Claims::getSubject);
+              }
+          
+              private boolean isTokenExpired(String token) {
+                  return extractExpiration(token).before(new Date());
+              }
+          
+              private Date extractExpiration(String token) {
+                  return extractAllClaims(token).getExpiration();
+              }
+          
+              private Claims extractAllClaims(String token) {
+                  return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
+              }
+          }
+          ``
+
+     ✅ Step 3: Implement JWT Authentication Filter
+          Intercepts requests and validates JWT.
+
+
+        ``
+        @Component
+          public class JwtRequestFilter extends OncePerRequestFilter {
+          
+              @Autowired
+              private UserDetailsService userDetailsService;
+              @Autowired
+              private JwtUtil jwtUtil;
+          
+              @Override
+              protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+                                              FilterChain chain) throws ServletException, IOException {
+                  final String authHeader = request.getHeader("Authorization");
+          
+                  String username = null;
+                  String jwt = null;
+          
+                  if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                      jwt = authHeader.substring(7);
+                      username = jwtUtil.extractUsername(jwt);
+                  }
+          
+                  if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                      UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                      if (jwtUtil.validateToken(jwt, userDetails)) {
+                          UsernamePasswordAuthenticationToken authToken =
+                                  new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                          authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                          SecurityContextHolder.getContext().setAuthentication(authToken);
+                      }
+                  }
+                  chain.doFilter(request, response);
+              }
+          }``
+
+
+     ✅ Step 4: Configure Spring Security
+
+          
+          ``
+          @Configuration
+          @EnableWebSecurity
+          public class SecurityConfig {
+          
+              @Autowired
+              private JwtRequestFilter jwtRequestFilter;
+          
+              @Bean
+              public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+                  http.csrf().disable()
+                      .authorizeHttpRequests(auth -> auth
+                          .requestMatchers("/auth/login", "/register").permitAll()
+                          .anyRequest().authenticated()
+                      )
+                      .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+          
+                  http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+                  return http.build();
+              }
+          }``
+
+          
+🧠 4. Security Best Practices
+
+     ✅ Use strong, rotated secret keys (preferably in environment variables or HashiCorp Vault).
+     ✅ Use asymmetric encryption (RSA) for better key management.
+     ✅ Keep token lifetime short (e.g., 15–30 minutes).
+     ✅ Implement refresh tokens for re-authentication.
+     ✅ Use HTTPS to prevent token interception.
+     ✅ Consider token blacklisting for logout and compromised tokens.
+     ✅ Validate issuer (iss) and audience (aud) claims.
+
+
+⚡ 5. Optional: Refresh Token Flow
+     Short-lived access token + long-lived refresh token.
+     Refresh token stored securely (HTTP-only cookie).
+     Client requests new token when the old one expires.
+     
+
+✅ Summary
+
+               | Component          | Responsibility                          |
+               | ------------------ | --------------------------------------- |
+               | `JwtUtil`          | Create and validate JWTs                |
+               | `JwtRequestFilter` | Extract and verify tokens from requests |
+               | `SecurityConfig`   | Configure stateless authentication      |
+               | `/auth/login`      | Issue JWT upon valid credentials        |
+
+
 
 ____________________________________________________________________________
  ### Q)  How can Spring Boot applications be made more resilient to failures, especially in Microservices architectures ? 
