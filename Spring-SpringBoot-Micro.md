@@ -7100,6 +7100,16 @@ Spring Boot automatically picks this up when a 404 occurs.
 ____________________________________________________________________________
  ### Q) How can spring boot be used to implement event-driven architectures ?
 
+ 
+     Spring Boot can be effectively used to implement Event-Driven Architectures (EDA) by leveraging Spring’s messaging support, asynchronous processing, and integration with message brokers like Kafka, RabbitMQ, or ActiveMQ.
+
+     🧩 1. What Is Event-Driven Architecture?
+    ⚙️ 2. Spring Boot Components for EDA
+    💡 3. Example 1: Intra-App Event Handling (Simple Case)
+    ⚡ 4. Example 2: Distributed Event-Driven Microservices (Spring Cloud Stream + Kafka)
+    🧠 5. Key Benefits
+    🛠️ 6. Advanced Patterns
+    ✅ 7. Best Practices
 ____________________________________________________________________________
  ### Q) Discuss the integration and use of distributed tracing in spring boot applications for monitoring and troubleshooting.
      - Spring cloud sleut
