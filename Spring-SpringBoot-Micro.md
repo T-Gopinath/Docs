@@ -1,6 +1,7 @@
 ### Q) Interservice communication between Microservices using spring boot 
 
-In Spring Boot, several mechanisms are available to achieve interservice communication, depending on the architecture style (synchronous or asynchronous) and reliability needs.
+In Spring Boot, several mechanisms are available to achieve interservice communication,
+     depending on the architecture style (synchronous or asynchronous) and reliability needs.
 
 1. Synchronous Communication (Request-Response Style)
      one service directly calls another and waits for the response.
@@ -8310,9 +8311,11 @@ ________________________________________________________________________________
 _________________________________________________________________________________________________________________________________
 ### Q) How to convert an application From single tenent to multitenent applicaiton.
 
-     Converting an existing single-tenant application into a multi-tenant application is a significant architectural change that involves isolating tenant data, managing tenant context, and ensuring scalability and security between tenants.
+     Converting an existing single-tenant application into a multi-tenant application is a significant architectural 
+   change that involves isolating tenant data, managing tenant context, and ensuring scalability
+   and security between tenants.
      
-    Here’s a step-by-step breakdown of how to approach this transformation:
+   Here’s a step-by-step breakdown of how to approach this transformation:
     
 🧩 1. Understand Tenant Models
      Before making any code changes, decide how tenants’ data will be separated. There are three common multi-tenancy models:
@@ -8336,12 +8339,14 @@ ________________________________________________________________________________
           ✅ Steps:
                1) Add tenant_id column (if shared schema) to all tenant-specific tables.
                2) Update repositories or DAOs to automatically filter queries by the current tenant.
-               
 
-               ` // Example: Spring Data JPA
-                    @Query("SELECT u FROM User u WHERE u.tenantId = :tenantId")
+               // Example: Spring Data JPA
+
+
+               ` @Query("SELECT u FROM User u WHERE u.tenantId = :tenantId")
                     List<User> findByTenantId(String tenantId);
-`
+                    `
+                    
 
                3) Implement TenantContext (e.g., using ThreadLocal) to store the current tenant identifier.
 
@@ -8351,7 +8356,7 @@ ________________________________________________________________________________
                    public static void setTenant(String tenant) { currentTenant.set(tenant); }
                    public static String getTenant() { return currentTenant.get(); }
                    public static void clear() { currentTenant.remove(); }
-               }
+                }
 `
 
                4) Integrate tenant resolution — from request headers, JWT claims, or subdomain (e.g., tenantA.app.com).
