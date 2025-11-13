@@ -8489,6 +8489,7 @@ ________________________________________________________________________________
 ### Q) AWS Lambda Functions for a serverless architecture ?
 
      AWS Lambda Functions are the backbone of serverless architectures on AWS. They allow you to run backend code without provisioning or managing servers — you simply write your function logic, and AWS handles the rest: provisioning, scaling, and high availability.
+     
 
      🔹 1. What is AWS Lambda?
      
@@ -8499,7 +8500,8 @@ ________________________________________________________________________________
                     * Messages in queues (SNS, SQS, EventBridge
 
            You upload your code (Node.js, Python, Java, Go, C#, etc.), define a handler function,
-           and AWS automatically executes it when triggered.         
+           and AWS automatically executes it when triggered.  
+           
                 
      🔹 2. Key Benefits in a Serverless Architecture
 
@@ -8540,8 +8542,7 @@ ________________________________________________________________________________
                          * Lambda contains the logic for each API endpoint.
                          * DynamoDB / S3 store and retrieve data.
                          * CloudWatch logs and monitors the Lambda execution.
-                         
-                    
+                                          
                                    
      🔹 4. Example: Lambda Function (Node.js)
 
@@ -8559,8 +8560,8 @@ ________________________________________________________________________________
           };
 `
 
+
      How it works:
-     
           * Deployed through AWS Lambda Console, AWS CLI, or Serverless Framework.
           * Triggered via API Gateway HTTP endpoint.
           * Returns a JSON response.
@@ -8579,6 +8580,7 @@ ________________________________________________________________________________
 
                
      🔹 6. Best Practices
+     
 
           ✅ Keep functions lightweight – modular and short-running.
           ✅ Use environment variables – for configs/secrets.
@@ -8589,6 +8591,7 @@ ________________________________________________________________________________
 
           
      🔹 7. Related AWS Services in Serverless Ecosystem
+     
 
      | Service                     | Purpose                                          |
      | --------------------------- | ------------------------------------------------ |
@@ -8603,7 +8606,6 @@ ________________________________________________________________________________
      ✅ Summary
      
           AWS Lambda enables truly serverless architectures by eliminating the need for managing servers. It allows you to:
-
           * Focus purely on business logic
           * Scale automatically
           * Pay only for what you use
