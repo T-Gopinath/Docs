@@ -8278,13 +8278,37 @@ ____________________________________________________________________________
      ❌ Debugging and Monitoring – More difficult than synchronous architectures.
      ❌ Duplicate Event Handling – Must ensure idempotency.
 ____________________________________________________________________________
- ### Q) 
+### Q) what is HLD and LLD.
 
-____________________________________________________________________________
- ### Q) 
+     HLD (High-Level Design) and LLD (Low-Level Design) are two key stages in the software design phase of the Software Development Life Cycle (SDLC).
 
-____________________________________________________________________________
- ### Q) 
+     🧱 1. High-Level Design (HLD)
+          To provide an overall architectural view of the system — focusing on what the system will do and how its major components interact.
+          
+ Typical Artifacts:
+     System Architecture Diagram     
+     Module/Component Diagram     
+     Data Flow Diagram (Level 1)     
+     Database schema (conceptual)     
+     Technology stack choices
 
+⚙️ 2. Low-Level Design (LLD)
+     
+     Purpose:
+          To describe the detailed internal logic of each component/module defined in HLD — focusing on how exactly each part will be implemented.
+
+Typical Artifacts:
+     Class Diagrams / Sequence Diagrams
+     Pseudo code / Method definitions
+     Detailed ER Diagrams
+     Interface specifications (API contracts)
+________________________________________________________________________________________________________________________________
+ ### Q) Defining architectural blueprints ? 
+
+     Defining architectural blueprints means creating a high-level, structured plan that outlines how the different components of a software system (or enterprise system) will be organized, interact, and evolve. It serves as a guide for developers, architects, and stakeholders to ensure consistency, scalability, and maintainability in system design and implementation.
+
+_________________________________________________________________________________________________________________________________
+### Q) 
+     
 ____________________________________________________________________________
 
