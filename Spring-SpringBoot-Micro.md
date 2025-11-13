@@ -8394,12 +8394,14 @@ List<User> findByTenantId(String tenantId);
                * For JWT tokens, include tenant_id in claims and validate it on each request.               
           
 🧰 5. Manage Tenant Configurations
+
      Different tenants may have different configurations (themes, limits, features).
           * Store configuration in a TenantConfig table.
           * Cache tenant configuration in memory for performance.
           * Load configurations dynamically based on tenant_id.               
      
 📦 6. Migrate Existing Data
+
           You must migrate existing single-tenant data into a tenant model.
           * Assign a default tenant_id for existing data (e.g., "defaultTenant").
           * Validate data consistency after migration.
@@ -8407,6 +8409,7 @@ List<User> findByTenantId(String tenantId);
           
      
 🧠 7. Refactor Caching, Logging, and Metrics
+
       Make these tenant-aware:
            * Cache keys should include tenant_id (e.g., userCache:tenantA:user123).
            * Logs should record tenant_id for traceability.
@@ -8414,22 +8417,26 @@ List<User> findByTenantId(String tenantId);
            
            
 🧮 8. Testing & Validation
+
      Test thoroughly across tenants:
           * Create multiple tenants with isolated data.
           * Verify no tenant’s data leaks into another.
           * Perform performance testing with multiple concurrent tenants.
           
 ☁️ 9. Deployment & DevOps Considerations     
+
        * Use configurable environments (tenant-specific config from a central config service like Spring Cloud Config).
        * Enable auto-provisioning for new tenants (e.g., automatically create schema or database).
        * Back up tenant data separately if using DB-per-tenant.
      
 🚀 10. Example: Spring Boot Multi-Tenant Setup
+
      If you’re using Spring Boot with Hibernate, you can use:
           * AbstractDataSourceBasedMultiTenantConnectionProviderImpl
           * CurrentTenantIdentifierResolver
 
      Example config:
+     
 
                ` @Configuration
                     public class MultiTenantConfig {
@@ -8462,15 +8469,15 @@ List<User> findByTenantId(String tenantId);
 ✅ Summary Checklist
 
      
-     `| Area            | Change Required                      |
-     | --------------- | ------------------------------------ |
-     | Database        | Add tenant isolation (DB/Schema/Row) |
-     | Data Layer      | Tenant-aware repositories            |
-     | Authentication  | Tenant-aware users & tokens          |
-     | Configuration   | Tenant-specific settings             |
-     | Caching/Logging | Include tenant context               |
-     | Deployment      | Tenant provisioning strategy         |
-     `
+    ` | Area            | Change Required                      |
+      | --------------- | ------------------------------------ |
+      | Database        | Add tenant isolation (DB/Schema/Row) |
+      | Data Layer      | Tenant-aware repositories            |
+      | Authentication  | Tenant-aware users & tokens          |
+      | Configuration   | Tenant-specific settings             |
+      | Caching/Logging | Include tenant context               |
+      | Deployment      | Tenant provisioning strategy         |
+`
 
 _________________________________________________________________________________________________________________________________
 
