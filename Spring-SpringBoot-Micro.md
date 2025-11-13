@@ -7103,26 +7103,723 @@ ____________________________________________________________________________
  
      Spring Boot can be effectively used to implement Event-Driven Architectures (EDA) by leveraging Spring’s messaging support, asynchronous processing, and integration with message brokers like Kafka, RabbitMQ, or ActiveMQ.
 
-     🧩 1. What Is Event-Driven Architecture?
+    🧩 1. What Is Event-Driven Architecture?
+         Event-Driven Architecture (EDA) is a design pattern where services communicate via events rather than direct API calls.
+         
+          **Producers** publish events (e.g., “OrderPlaced”, “PaymentCompleted”).
+          **Consumers** subscribe and react to these events asynchronously.
+
+          This leads to loosely coupled, scalable, and resilient systems — perfect for microservices.
+         
     ⚙️ 2. Spring Boot Components for EDA
+         Spring Boot provides multiple ways to build EDA systems:
+
+
+| Use Case                          | Spring Module / Library     | Description                                                   |
+| --------------------------------- | --------------------------- | ------------------------------------------------------------- |
+| Simple in-memory event handling   | `ApplicationEventPublisher` | Built-in event mechanism for intra-application communication  |
+| Asynchronous event processing     | `@Async` + `@EventListener` | Makes event listeners non-blocking                            |
+| Messaging between microservices   | **Spring Cloud Stream**     | Abstracts message broker interactions (Kafka, RabbitMQ, etc.) |
+| Integration with external systems | **Spring Integration**      | Provides enterprise integration patterns and adapters         |
+| Reactive event pipelines          | **Project Reactor**         | Supports backpressure and reactive streams (Flux/Mono)        |
+
+          
+         
     💡 3. Example 1: Intra-App Event Handling (Simple Case)
+
+          Step 1: Create an event class
+          
+
+          ` public class OrderCreatedEvent {
+              private final String orderId;
+              public OrderCreatedEvent(String orderId) {
+                  this.orderId = orderId;
+              }
+              public String getOrderId() { return orderId; }
+          }
+`
+
+
+          Step 2: Publish the event
+
+
+               ` @Autowired
+                    private ApplicationEventPublisher publisher;
+                    
+                    public void createOrder(String orderId) {
+                    // Business logic
+                    publisher.publishEvent(new OrderCreatedEvent(orderId));
+                    }
+`
+
+     Step 3: Listen for the event
+
+          ` @Component
+               public class OrderEventListener {
+               
+                   @EventListener
+                   public void handleOrderCreated(OrderCreatedEvent event) {
+                       System.out.println("Received order event for ID: " + event.getOrderId());
+                   }
+               }
+`
+
+              
     ⚡ 4. Example 2: Distributed Event-Driven Microservices (Spring Cloud Stream + Kafka)
+    
+
+         application.yml
+
+          ` spring:
+                 cloud:
+                   stream:
+                     bindings:
+                       orderCreated-out-0:
+                         destination: orders-topic
+                       orderCreated-in-0:
+                         destination: orders-topic
+                     kafka:
+                       binder:
+                         brokers: localhost:9092
+`
+
+     Producer Service
+     
+
+          ` @EnableBinding(Source.class)
+               public class OrderProducer {
+                   @Autowired
+                   private MessageChannel orderCreatedOut;
+               
+                   public void publishOrderCreated(String orderId) {
+                       orderCreatedOut.send(MessageBuilder.withPayload(orderId).build());
+                   }
+               }
+               `
+
+
+       Consumer Service
+       
+
+      ` @EnableBinding(Sink.class)
+          public class OrderConsumer {
+              @StreamListener(Sink.INPUT)
+              public void consumeOrderCreated(String orderId) {
+                  System.out.println("Consumed Order ID: " + orderId);
+              }
+          }
+`
+
+         (In modern Spring Cloud Stream, you can use functional style with Supplier,
+         Function, Consumer beans instead of @EnableBinding.)
+              
+         
     🧠 5. Key Benefits
+         * Loose Coupling: Producers and consumers are independent.
+         * Scalability: Consumers can scale horizontally.
+         * Fault Tolerance: Events can be retried or persisted
+         * Asynchronous Processing: Improves responsiveness.
+         
     🛠️ 6. Advanced Patterns
+        
+          * Event Sourcing: Store state changes as a sequence of events.
+          * CQRS (Command Query Responsibility Segregation): Separate read and write models.
+          * Saga Pattern: Handle distributed transactions using events.
+         
     ✅ 7. Best Practices
+    
+         * Use Spring Cloud Stream for microservices.
+         * Ensure idempotency in event consumers.
+         * Include correlation IDs and trace IDs for observability.
+         * Use Dead Letter Queues (DLQ) to handle failed messages.
+         * Combine with Spring Boot Actuator + Micrometer for monitoring.
+    
 ____________________________________________________________________________
- ### Q) Discuss the integration and use of distributed tracing in spring boot applications for monitoring and troubleshooting.
+### Q) Discuss the integration and use of distributed tracing in spring boot applications for monitoring and troubleshooting.
+
+     Distributed tracing is an essential technique for monitoring and troubleshooting microservices-based Spring Boot applications, where a single user request often spans multiple services. It provides visibility into end-to-end request flows, helping developers pinpoint bottlenecks, latency, and failures across distributed systems.
+     
+
+     🔍 1. What is Distributed Tracing ?
+     
+               Distributed tracing tracks requests as they propagate through different microservices.
+          Each trace is made up of spans — representing a single operation (like a REST call, DB query, etc.).
+          A trace ID uniquely identifies the entire request journey, and span IDs identify individual operations.
+
+          Example:
+
+               ` Trace ID: 12345
+                      ├── Span 1: API Gateway -> Order Service
+                      ├── Span 2: Order Service -> Payment Service
+                      └── Span 3: Payment Service -> Database
+                      `
+
+          
+     ⚙️ 2. Integration in Spring Boot
+               Spring Boot provides seamless integration with distributed tracing through Spring Cloud Sleuth
+               and visualization tools like Zipkin, Jaeger, or OpenTelemetry.
+
+               A. Using Spring Cloud Sleuth + Zipkin
+               
+                    Step 1: Add dependencies
+
+                    ` <dependency>
+                        <groupId>org.springframework.cloud</groupId>
+                        <artifactId>spring-cloud-starter-sleuth</artifactId>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.springframework.cloud</groupId>
+                        <artifactId>spring-cloud-starter-zipkin</artifactId>
+                    </dependency>
+`
+                         
+                    Step 2: Configure application properties
+                         ` spring:
+                           zipkin:
+                             base-url: http://localhost:9411
+                           sleuth:
+                             sampler:
+                               probability: 1.0   # 100% sampling for demo; reduce in production
+`
+                    Step 3: Run Zipkin
+
+                         ` docker run -d -p 9411:9411 openzipkin/zipkin
+`
+                         
+                    Step 4: Observe traces
+                         Open Zipkin UI → http://localhost:9411
+                         You’ll see trace graphs showing latency per service and timing between spans.
+                    
+               
+     🌐 3. Using OpenTelemetry (Modern Approach)
+
+              Spring Boot 3.2+ and Spring Cloud 2023+ recommend OpenTelemetry (OTel),
+              a vendor-neutral standard supported by major observability platforms (Grafana Tempo, Jaeger, Datadog, etc.).
+
+              Step 1: Add dependencies
+
+              ` <dependency>
+                   <groupId>io.opentelemetry.instrumentation</groupId>
+                   <artifactId>opentelemetry-spring-boot-starter</artifactId>
+                   <version>2.0.0</version>
+               </dependency>
+               `
+               
+                   
+              Step 2: Configure exporter (example: OTLP / Jaeger)
+
+                    ` otel:
+                           traces:
+                             exporter: otlp
+                           exporter:
+                             otlp:
+                               endpoint: http://localhost:4317
+                           resource:
+                             attributes:
+                               service.name: order-service
+`                    
+                   
+              Step 3: Run Jaeger or Tempo
+
+              
+                    ` docker run -d --name jaeger -e COLLECTOR_ZIPKIN_HTTP_PORT=9411 -p 16686:16686 -p 4317:4317 jaegertracing/all-in-one:latest
+`             
+
+              Step 4: View Traces
+                     Visit http://localhost:16686
+                     You can see request flows, latency breakdowns, and failure spans.
+                     
+          
+     📊 4. Key Benefits
+
+
+     | Benefit                      | Description                                                              |
+     | ---------------------------- | ------------------------------------------------------------------------ |
+     | **End-to-End Visibility**    | See how a request travels through all services.                          |
+     | **Latency Analysis**         | Identify slow components or network hops.                                |
+     | **Failure Diagnosis**        | Pinpoint where exceptions or timeouts occur.                             |
+     | **Performance Optimization** | Find and fix bottlenecks efficiently.                                    |
+     | **Correlation with Logs**    | Sleuth adds trace IDs to logs → easy correlation in ELK or Grafana Loki. |
+
+          
+          
+     🧩 5. Log Correlation Example
+          
+          Spring Cloud Sleuth automatically adds trace and span IDs to log statements:
+
+
+          `
+          2025-11-13 10:15:24 [traceId=12345, spanId=6789] INFO OrderService - Processing order
+`
+          
+          This lets you cross-reference logs with trace data in Zipkin or Jaeger.
+                         
+          
+     🚨 6. Best Practices
+          Use Sampling: Don’t trace every request in production (e.g., probability: 0.1 for 10% sampling
+          Propagate Contexts: Ensure all services propagate headers like traceparent, X-B3-TraceId, etc
+          Integrate with Metrics: Combine tracing with Micrometer for unified observability
+          Use Centralized Storage: Store traces in distributed tracing backends for analysis
+          Instrument Custom Code: Use @NewSpan (Sleuth) or Tracer.spanBuilder() (OpenTelemetry) for custom spans.
+          
+          
+          
+     🧠 7. Example: Custom Span with Sleuth
+     
+
+          ` @Autowired
+          private Tracer tracer;
+          
+          public void processPayment() {
+              Span newSpan = tracer.nextSpan().name("payment-processing").start();
+              try (Tracer.SpanInScope ws = tracer.withSpan(newSpan.start())) {
+                  // business logic
+                  Thread.sleep(200);
+              } finally {
+                  newSpan.end();
+              }
+          }`
+
+     
+     ✅ Summary
+
+          
+          | Technology                  | Purpose                                        |
+          | --------------------------- | ---------------------------------------------- |
+          | **Spring Cloud Sleuth**     | Auto-instrumentation for distributed tracing   |
+          | **Zipkin / Jaeger**         | Trace visualization and analysis               |
+          | **OpenTelemetry**           | Standardized tracing framework                 |
+          | **Micrometer + Prometheus** | Metrics integration for performance monitoring |
+
+
+          Netx Level : Would you like me to show a complete example project setup (Order–Payment–Inventory microservices) demonstrating distributed tracing with OpenTelemetry + Jaeger?
+      
      - Spring cloud sleut
      - Zipkin
 ____________________________________________________________________________
  ### Q) Your app need to store and retrieve files from a cloud storage service. Describe how you would integrate this functionality into a Spring Boot App ?
 
-____________________________________________________________________________
- ### Q) To protect ur application from abuse and ensure fair usage, you decide to implement rate limiting on ur API endpoints. Describe a simple approach to achieve this in Spring Boot.
+     Integrating cloud storage into a Spring Boot application allows you to upload, download, and manage files (like images, documents, or logs) in a scalable and reliable way. Let’s walk through how you would design and implement this functionality step by step.
 
+     1. Choose a Cloud Storage Provider
+          Depending on your infrastructure or preference, common options include:
+               Amazon S3 (AWS
+               Google Cloud Storage (GCS)
+               Azure Blob Storage
+         Each provides an SDK and REST API for integration.      
+          
+     2. Add Required Dependencies
+          Example — for AWS S3 using the AWS SDK v2
+
+
+          `<dependency>
+              <groupId>software.amazon.awssdk</groupId>
+              <artifactId>s3</artifactId>
+          </dependency>
+          `
+     
+     3. Configure Cloud Credentials and Bucket Info
+          Use application.yml or application.properties
+
+               `cloud:
+                 aws:
+                   s3:
+                     bucket-name: my-app-files
+                   region: ap-south-1
+                   credentials:
+                     access-key: YOUR_ACCESS_KEY
+                     secret-key: YOUR_SECRET_KEY
+`
+     
+     🔒 Best Practice: Never hardcode credentials.
+     Use environment variables or cloud IAM roles instead.
+
+          
+     4. Create a Cloud Storage Service
+
+
+               ` import org.springframework.stereotype.Service;
+               import org.springframework.web.multipart.MultipartFile;
+               import software.amazon.awssdk.services.s3.S3Client;
+               import software.amazon.awssdk.services.s3.model.*;
+               
+               import java.io.IOException;
+               import java.net.URL;
+               import java.time.Duration;
+               
+               @Service
+               public class S3StorageService {
+               
+                   private final S3Client s3Client;
+                   private final String bucketName = "my-app-files";
+               
+                   public S3StorageService(S3Client s3Client) {
+                       this.s3Client = s3Client;
+                   }
+               
+                   public String uploadFile(MultipartFile file) throws IOException {
+                       String key = "uploads/" + file.getOriginalFilename();
+               
+                       s3Client.putObject(PutObjectRequest.builder()
+                                       .bucket(bucketName)
+                                       .key(key)
+                                       .contentType(file.getContentType())
+                                       .build(),
+                               software.amazon.awssdk.core.sync.RequestBody.fromBytes(file.getBytes()));
+               
+                       return key;
+                   }
+               
+                   public byte[] downloadFile(String key) {
+                       GetObjectResponse response = s3Client.getObject(
+                               GetObjectRequest.builder().bucket(bucketName).key(key).build());
+                       return response.readAllBytes();
+                   }
+               
+                   public URL generatePresignedUrl(String key) {
+                       return s3Client.utilities()
+                               .getUrl(builder -> builder.bucket(bucketName).key(key));
+                   }
+               }
+               `
+
+                                             
+     5. Expose REST Endpoints
+          Create a controller to handle file uploads and downloads
+
+
+               ` import org.springframework.web.bind.annotation.*;
+     import org.springframework.web.multipart.MultipartFile;
+     
+     @RestController
+     @RequestMapping("/api/files")
+     public class FileController {
+     
+         private final S3StorageService storageService;
+     
+         public FileController(S3StorageService storageService) {
+             this.storageService = storageService;
+         }
+     
+         @PostMapping("/upload")
+         public String upload(@RequestParam("file") MultipartFile file) throws Exception {
+             return storageService.uploadFile(file);
+         }
+     
+         @GetMapping("/download/{filename}")
+         public byte[] download(@PathVariable String filename) {
+             return storageService.downloadFile("uploads/" + filename);
+         }
+     }
+     `
+               
+     6.Secure File Access
+          Implement authentication and authorization using Spring Security
+          Use pre-signed URLs for time-limited, controlled file access
+          Apply encryption at rest and in transit (S3 handles this automatically if enabled).
+          
+     7.(Optional) Add Monitoring and Error
+          Use Spring AOP or ControllerAdvice for global exception handling.
+          Log upload/download operations using SLF4J
+          Add retry mechanisms or use Spring Retry for transient failures.
+          
+     8. Testing
+               Use LocalStack to emulate AWS services locally for integration testing
+               Mock the storage service in unit tests using Mockito.
+          
+          ✅ Summary
+
+          
+          | Step | Description                                      |
+          | ---- | ------------------------------------------------ |
+          | 1    | Choose provider (S3, GCS, Azure)                 |
+          | 2    | Add SDK dependencies                             |
+          | 3    | Configure credentials & bucket info              |
+          | 4    | Implement a `StorageService` for upload/download |
+          | 5    | Expose REST endpoints                            |
+          | 6    | Add logging & error handling                     |
+          | 7    | Secure and monitor usage                         |
+          | 8    | Test using mocks or local emulators              |
+
+               
+     
+     
+_______________________________________________________________________________________________________________________________
+
+### Q) To protect ur application from abuse and ensure fair usage, you decide to implement rate limiting on ur API endpoints. Describe a simple approach to achieve this in Spring Boot.
+
+     To implement rate limiting in a Spring Boot application and protect APIs from abuse, you can use several approaches — from in-memory counters to distributed solutions like Redis or API gateways. Here's a simple, effective in-application approach using the Bucket4j library.
+
+          
+✅ Approach: Using Bucket4j (Token Bucket Algorithm) 
+
+     1. Add the dependency
+          If you’re using Maven:
+
+          ` <dependency>
+              <groupId>com.github.vladimir-bukhtoyarov</groupId>
+              <artifactId>bucket4j-core</artifactId>
+              <version>8.4.0</version>
+          </dependency>
+          `
+
+          For Gradle:
+
+          ` implementation 'com.github.vladimir-bukhtoyarov:bucket4j-core:8.4.0'
+`
+   2. Create a Rate Limiting Filter
+   
+          `import io.github.bucket4j.*;
+          import jakarta.servlet.*;
+          import jakarta.servlet.http.HttpServletRequest;
+          import jakarta.servlet.http.HttpServletResponse;
+          import org.springframework.stereotype.Component;
+          
+          import java.io.IOException;
+          import java.time.Duration;
+          import java.util.Map;
+          import java.util.concurrent.ConcurrentHashMap;
+          
+          @Component
+          public class RateLimitingFilter implements Filter {
+          
+              private final Map<String, Bucket> cache = new ConcurrentHashMap<>();
+          
+              private Bucket createNewBucket() {
+                  Refill refill = Refill.intervally(5, Duration.ofMinutes(1)); // 5 requests per minute
+                  Bandwidth limit = Bandwidth.classic(5, refill);
+                  return Bucket.builder().addLimit(limit).build();
+              }
+          
+              @Override
+              public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+                      throws IOException, ServletException {
+          
+                  HttpServletRequest httpRequest = (HttpServletRequest) request;
+                  String clientIp = httpRequest.getRemoteAddr(); // can also use API key or user ID
+          
+                  Bucket bucket = cache.computeIfAbsent(clientIp, k -> createNewBucket());
+          
+                  if (bucket.tryConsume(1)) {
+                      chain.doFilter(request, response);
+                  } else {
+                      HttpServletResponse httpResponse = (HttpServletResponse) response;
+                      httpResponse.setStatus(429); // Too Many Requests
+                      httpResponse.getWriter().write("Rate limit exceeded. Try again later.");
+                  }
+              }
+          }`
+          
+     3. Register the Filter
+
+          You can register the filter in your Spring Boot application class:
+
+        ` import org.springframework.boot.web.servlet.FilterRegistrationBean;
+          import org.springframework.context.annotation.Bean;
+          import org.springframework.context.annotation.Configuration;
+          
+          @Configuration
+          public class FilterConfig {
+          
+              @Bean
+              public FilterRegistrationBean<RateLimitingFilter> rateLimitingFilter() {
+                  FilterRegistrationBean<RateLimitingFilter> registrationBean = new FilterRegistrationBean<>();
+                  registrationBean.setFilter(new RateLimitingFilter());
+                  registrationBean.addUrlPatterns("/api/*"); // apply to API endpoints
+                  return registrationBean;
+              }
+          }
+`
+
+⚙️ How It Works
+     Each client (identified by IP or token) gets its own bucket.
+     Each bucket allows a fixed number of requests (e.g., 5 per minute).
+     Once the limit is reached, further requests are blocked with HTTP 429.
+     Buckets automatically refill after the defined time window.
+     
+     
+🧠 Alternative Approaches
+     Spring Cloud Gateway – Use RequestRateLimiter filter backed by Redis for distributed rate limiting.
+     Redis-based Bucket4j – Store rate limits centrally for a cluster of microservices.
+     API Gateway / Reverse Proxy – Use tools like NGINX, Kong, or AWS API Gateway for large-scale rate limiting.
+     
+     
+✅ Summary
+     
+     | Method               | Suitable For         | Notes                         |
+     | -------------------- | -------------------- | ----------------------------- |
+     | Bucket4j (in-memory) | Single-instance apps | Fast and easy to set up       |
+     | Redis-based Bucket4j | Distributed apps     | Centralized rate tracking     |
+     | Spring Cloud Gateway | Microservices        | Built-in rate limiter support |
+
+
+     
 ____________________________________________________________________________
  ### Q) Your are tasked with building a non-blocking , reactive REST API that can handle a high volume of concurrent requests efficiently. Describe how would use spring webFlux to achieve this ?
 
+          To build a non-blocking, reactive REST API capable of handling a high volume of concurrent requests efficiently, you would use Spring WebFlux, which is Spring’s reactive web framework built on Project Reactor.
+
+     Here’s how you can design and implement it:
+
+     
+     🧩 1. Why Spring WebFlux
+     
+           Spring WebFlux is built on a reactive, non-blocking I/O model, using the Reactor library (Mono and Flux types).
+           
+           This allows
+               Efficient use of system resources (threads, memory)
+               High concurrency without thread blocking
+               Backpressure handling to avoid overload
+               
+          
+     ⚙️ 2. Project Setup
+            Dependencies (in pom.xml or build.gradle):
+                    ` <dependency>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-starter-webflux</artifactId>
+                    </dependency>
+                    `                    
+            
+     🧠 3. Core Concepts
+           Spring WebFlux uses Reactive Streams:
+           Mono<T> → Emits 0 or 1 element
+           Flux<T> → Emits 0…N elements
+
+           Everything in the chain is non-blocking and supports backpressure.
+           
+           
+     🧱 4. Example Reactive Controller
+
+               ` @RestController
+                    @RequestMapping("/api/users")
+                    public class UserController {
+                    
+                        private final UserService userService;
+                        
+                        public UserController(UserService userService) {
+                            this.userService = userService;
+                        }
+                    
+                        @GetMapping
+                        public Flux<User> getAllUsers() {
+                            return userService.getAllUsers();
+                        }
+                    
+                        @GetMapping("/{id}")
+                        public Mono<ResponseEntity<User>> getUserById(@PathVariable String id) {
+                            return userService.getUserById(id)
+                                    .map(ResponseEntity::ok)
+                                    .defaultIfEmpty(ResponseEntity.notFound().build());
+                        }
+                    
+                        @PostMapping
+                        public Mono<User> createUser(@RequestBody Mono<User> userMono) {
+                            return userMono.flatMap(userService::createUser);
+                        }
+                    }
+                    `
+               ✅ No blocking calls — all endpoints return Mono or Flux
+               ✅ Backpressure support — Reactor handles subscriber demand automatically
+               
+     🧩 5. Reactive Service Layer
+
+              ` @Service
+               public class UserService {
+                   private final UserRepository repo;
+               
+                   public UserService(UserRepository repo) {
+                       this.repo = repo;
+                   }
+               
+                   public Flux<User> getAllUsers() {
+                       return repo.findAll();
+                   }
+               
+                   public Mono<User> getUserById(String id) {
+                       return repo.findById(id);
+                   }
+               
+                   public Mono<User> createUser(User user) {
+                       return repo.save(user);
+                   }
+               }
+               `
+          If using a non-blocking database (e.g. R2DBC, Mongo Reactive
+
+
+          `@Repository
+          public interface UserRepository extends ReactiveCrudRepository<User, String> { }
+          `
+                         
+     ⚡ 6. Reactive Database Access
+               Use R2DBC for relational databases
+                        (Reactive alternative to JDBC which is blocking)
+               Or use Spring Data Reactive MongoDB for NoSQL
+
+               Example (R2DBC config):
+
+                        ` spring.r2dbc.url=r2dbc:postgresql://localhost:5432/usersdb
+                         spring.r2dbc.username=postgres
+                         spring.r2dbc.password=secret
+                         ` 
+               
+     🔁 7. WebClient for Non-blocking External Calls
+                   Use WebClient instead of RestTemplate:
+
+
+                    `@Service
+                    public class ExternalApiService {
+                        private final WebClient webClient = WebClient.create("https://api.example.com");
+                    
+                        public Mono<String> getData() {
+                            return webClient.get()
+                                            .uri("/data")
+                                            .retrieve()
+                                            .bodyToMono(String.class);
+                        }
+                    }
+`
+                   
+     🛡️ 8. Thread Model & Performance
+            Uses Netty (default) or Undertow as non-blocking servers.   
+            Small fixed-size event loop threads handle massive concurrency.
+            Avoid using any blocking operations (like Thread.sleep() or JDBC calls).
+            
+     📈 9. Monitoring and Backpressure
+          Use Spring Boot Actuator for metrics
+          Use Hooks.onOperatorDebug() in development for debugging
+          Apply backpressure using Reactor operators
+
+
+               ` flux.onBackpressureDrop()
+                   .limitRate(100);
+`
+
+
+     🧮 10. Example Reactive Flow
+
+          Client makes 10K concurrent requests
+          Spring WebFlux event loop handles requests asynchronously
+          Non-blocking DB calls via R2DBC
+          Results are streamed reactively via Flux/Mono
+          System maintains low resource usage and high throughput
+          
+
+     ✅ Summary
+
+          
+          | Aspect                  | Spring WebFlux Approach                |
+          | ----------------------- | -------------------------------------- |
+          | **Concurrency Model**   | Event-loop, non-blocking I/O           |
+          | **Return Types**        | `Mono<T>` and `Flux<T>`                |
+          | **Database**            | R2DBC / Reactive MongoDB               |
+          | **HTTP Client**         | WebClient                              |
+          | **Server**              | Netty (default)                        |
+          | **Performance Benefit** | High scalability with fewer threads    |
+          | **Caution**             | Avoid blocking code in reactive chains |
+
+
+     
 ____________________________________________________________________________
  ### Q) Can you explain the Blue-Green deployment strategy ?
 
