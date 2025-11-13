@@ -7985,12 +7985,263 @@ Optimizing memory management in a Java application is crucial for performance, s
 
 
      
-____________________________________________________________________________
- ### Q)  What are the ways to adjust JVM memory settings during runtime in a Java application?
+___________________________________________________________________________________________________________________________
+### Q)  What are the ways to adjust JVM memory settings during runtime in a Java application?
+
+     Good question — JVM memory settings are usually configured at startup, but there are some ways to adjust or manage memory behavior during runtime, though not all parameters can be changed dynamically. Let’s go over this carefully.
+
+          
+🧠 1. Using jcmd, jconsole, or JMX for live tuning
+
+       You can’t directly change the heap size (-Xmx, -Xms) during runtime, 
+       but you can tune certain GC and diagnostic parameters while the JVM is running.
+
+       Examples:
+
+                 `jcmd <pid> VM.flags                # Check current flags
+                    jcmd <pid> VM.set_flag MaxHeapFreeRatio 70
+                    jcmd <pid> VM.set_flag MinHeapFreeRatio 40
+`
+
+            These commands allow adjusting some flags marked as manageable (i.e., those that support dynamic changes).
+            You can find which flags are manageable with:
+
+               `java -XX:+PrintFlagsFinal | grep manageable
+`
+          
+         Use cases:
+              Tuning GC thresholds
+              Adjusting metaspace growth limits
+              Modifying JIT compiler options         
+                   
+⚙️ 2. Using Java Management Extensions (JMX Through JMX beans (e.g., MemoryMXBean, GarbageCollectorMXBean), you can:
+
+          Monitor heap/non-heap memory
+          Trigger garbage collection manually
+          Adjust UsageThresholds for memory pools
+
+          Example:
+
+          ` MemoryMXBean memoryMXBean = ManagementFactory.getMemoryMXBean();
+memoryMXBean.gc(); // Trigger GC manually
+`
+
+   You can’t increase heap size via JMX, but you can programmatically monitor and react (e.g., freeing caches or throttling threads) when memory gets tight.
+
+
+💻 3. Dynamic memory management in application code
+
+     You can design your application to adapt its memory usage dynamically:
+     Dynamic caches (e.g., adjust ConcurrentHashMap sizes or Caffeine cache limits based on available memory)
+     Adaptive data loading (load fewer objects when memory is low)
+     Use Runtime.getRuntime() to observe available memory:
+
+          `long freeMem = Runtime.getRuntime().freeMemory();
+          long totalMem = Runtime.getRuntime().totalMemory();
+          long maxMem = Runtime.getRuntime().maxMemory();
+`
+
+       These techniques don’t change JVM settings but let your app self-regulate.   
+     
+🧩 4. Using tools like VisualVM or JConsole
+     These GUI tools connect to a running JVM and let you:
+          Inspect heap and GC behavior
+          Change manageable JVM options dynamically
+          Run jcmd operations from a graphical interface
+          
+          
+     
+🧰 5. Containerized Environments (like Docker or Kubernetes
+          You can update memory limits (--memory flag or Kubernetes resource limits).
+          The JVM (from Java 10+) will auto-adjust its heap sizing based on available container memory.
+          
+     This is indirect runtime adjustment—JVM adapts automatically to new container limits.
+
+     
+⚠️ Limitations
+     Heap size (-Xmx / -Xms) cannot be changed after JVM startup.
+     Permanent generation (Java 7) or metaspace (Java 8+) also have static upper limits.
+     Only flags with manageable = true can be changed live.
+
+
+✅ Summary Table
+     
+          | Technique                   | Can change heap size? | Can adjust GC / thresholds? | Can influence memory use? |
+          | --------------------------- | --------------------- | --------------------------- | ------------------------- |
+          | `jcmd` / `JMX`              | ❌                     | ✅                           | ✅                         |
+          | Dynamic app logic           | ❌                     | ❌                           | ✅                         |
+          | Container limits (Java 10+) | ✅ (indirectly)        | ✅                           | ✅                         |
+          | Restart with new flags      | ✅                     | ✅                           | ✅                         |     
+
 
 ____________________________________________________________________________
- ### Q) How to apply Testcontainers in TDD and BDD test development?
+### Q) How to apply Testcontainers in TDD and BDD test development?
+     
+     Applying Testcontainers in TDD (Test-Driven Development) and BDD (Behavior-Driven Development) enhances test reliability by running integration and end-to-end tests against real, containerized dependencies (like databases, Kafka, Redis, etc.), ensuring consistent test environments. Let’s go step-by-step.
 
+     🧩 What is Testcontainers?
+          Testcontainers is a Java library that provides lightweight, throwaway instances of databases,
+          message brokers, or any Docker container for integration testing.
+          
+          It ensures tests are environment-independent and replicable across machines or CI pipelines.
+          
+          
+     ⚙️ Using Testcontainers in TDD
+          🔁 Typical TDD Flow
+                 Write a failing test — define behavior before implementing logic.
+                 Write code to make the test pass.
+                 Refactor and repeat.
+                                  
+          🧪 Where Testcontainers Fits
+               Testcontainers helps you move from unit testing (mocking) to integration testing with real dependencies
+               early in TDD, validating both business logic and integration correctness.
+
+               Example: Testing Repository Layer with PostgreSQL
+                    1. Add Dependencies (Gradle Example) 
+
+               
+                    ` testImplementation 'org.testcontainers:junit-jupiter'
+                    testImplementation 'org.testcontainers:postgresql'
+                    testImplementation 'org.postgresql:postgresql'
+                    `
+
+                    2. Write the Failing Test First
+
+                    ` @Testcontainers
+                    @SpringBootTest
+                    public class UserRepositoryTest {
+                    
+                        @Container
+                        static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:15-alpine")
+                                .withDatabaseName("testdb")
+                                .withUsername("test")
+                                .withPassword("test");
+                    
+                        @Autowired
+                        private UserRepository userRepository;
+                    
+                        @DynamicPropertySource
+                        static void setDatasourceProperties(DynamicPropertyRegistry registry) {
+                            registry.add("spring.datasource.url", postgres::getJdbcUrl);
+                            registry.add("spring.datasource.username", postgres::getUsername);
+                            registry.add("spring.datasource.password", postgres::getPassword);
+                        }
+                    
+                        @Test
+                        void shouldSaveAndRetrieveUser() {
+                            User user = new User(null, "Alice");
+                            userRepository.save(user);
+                    
+                            Optional<User> found = userRepository.findByName("Alice");
+                            assertTrue(found.isPresent());
+                        }
+                    }
+                    `
+
+                    3. Implement Code Until Test Passes
+                         Implement the UserRepository and entity to pass this integration test.
+                         
+                    4. Refactor and Repeat
+                         ✅ Benefits in TDD:
+                               Early feedback on real integrations
+                               No reliance on local DB setup
+                               Consistent CI/CD test results
+                               
+     🧠 Applying Testcontainers in BDD
+          🗂️ BDD Structure
+               Given some initial context
+               When an action occurs
+               Then verify expected outcomes
+
+               You can use Cucumber or JUnit 5 with BDD-style naming.
+               Testcontainers ensures the environment matches production behavior.
+
+          Example: Testing Business Flow with MySQL + Kafka
+               
+          Dependencies:
+
+
+          ` testImplementation 'org.testcontainers:kafka'
+          testImplementation 'org.testcontainers:mysql'
+          testImplementation 'io.cucumber:cucumber-java'
+          testImplementation 'io.cucumber:cucumber-junit-platform-engine'
+          `
+
+     1. Define Feature (Cucumber)
+               
+               `Feature: User registration flow
+
+                 Scenario: New user successfully registers
+                   Given the user service is running
+                   When a registration request is sent
+                   Then a registration event should be published to Kafka
+                   `
+
+     2. Implement Step Definitions
+
+          `@Testcontainers
+          public class UserRegistrationSteps {
+          
+              @Container
+              static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:8.0");
+              
+              @Container
+              static KafkaContainer kafka = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.4.0"));
+          
+              @Autowired
+              private MockMvc mockMvc;
+          
+              @Autowired
+              private KafkaConsumer<String, String> kafkaConsumer;
+          
+              @Given("the user service is running")
+              public void serviceIsRunning() {
+                  assertTrue(mysql.isRunning());
+                  assertTrue(kafka.isRunning());
+              }
+          
+              @When("a registration request is sent")
+              public void sendRegistrationRequest() throws Exception {
+                  mockMvc.perform(post("/users")
+                          .content("{\"name\":\"Bob\"}")
+                          .contentType(MediaType.APPLICATION_JSON))
+                          .andExpect(status().isOk());
+              }
+          
+              @Then("a registration event should be published to Kafka")
+              public void verifyKafkaEvent() {
+                  ConsumerRecord<String, String> record = pollKafkaTopic("user-registrations");
+                  assertEquals("Bob", extractName(record.value()));
+              }
+          }
+          `
+          ✅ Benefits in BDD:
+               Each Given/When/Then step runs in a realistic, containerized environment.
+               Your system’s full behavior (e.g., DB writes, Kafka events) is verifiable.
+               Simplifies setup/teardown — Testcontainers auto-cleans environments.
+                              
+     🧰 Best Practices
+     
+          Use Reusable Containers:
+               Use @Container static fields or Singleton containers to avoid repeated startup costs.
+          Combine with Test Slices:
+               For example, use @DataJpaTest + Testcontainers for repository-level integration.
+          Parallel Tests:
+               Use unique ports or networks to isolate parallel test runs.
+          Integrate into CI/CD:
+               Testcontainers works seamlessly in GitHub Actions, Jenkins, or GitLab CI (Docker-in-Docker mode).
+
+           
+     🚀 Summary
+
+| Stage   | Approach                                           | Role of Testcontainers                                                 |
+| ------- | -------------------------------------------------- | ---------------------------------------------------------------------- |
+| **TDD** | Write test → fail → implement → pass               | Provides real, disposable test dependencies for integration validation |
+| **BDD** | Define feature → implement steps → verify behavior | Ensures realistic environment for end-to-end scenario validation       |          
+
+
+     
+     
 ____________________________________________________________________________
  ### Q) 
 
