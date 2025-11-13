@@ -8325,6 +8325,7 @@ ________________________________________________________________________________
      
 
      👉 Recommendation:
+     
           * For early-stage SaaS, start with shared schema (tenant_id) for simplicity.
           * For enterprise-level apps, consider schema or database per tenant for isolation.
                
@@ -8338,19 +8339,19 @@ ________________________________________________________________________________
                
 
                ` // Example: Spring Data JPA
-@Query("SELECT u FROM User u WHERE u.tenantId = :tenantId")
-List<User> findByTenantId(String tenantId);
+                    @Query("SELECT u FROM User u WHERE u.tenantId = :tenantId")
+                    List<User> findByTenantId(String tenantId);
 `
 
                3) Implement TenantContext (e.g., using ThreadLocal) to store the current tenant identifier.
 
 
                ` public class TenantContext {
-    private static final ThreadLocal<String> currentTenant = new ThreadLocal<>();
-    public static void setTenant(String tenant) { currentTenant.set(tenant); }
-    public static String getTenant() { return currentTenant.get(); }
-    public static void clear() { currentTenant.remove(); }
-}
+                   private static final ThreadLocal<String> currentTenant = new ThreadLocal<>();
+                   public static void setTenant(String tenant) { currentTenant.set(tenant); }
+                   public static String getTenant() { return currentTenant.get(); }
+                   public static void clear() { currentTenant.remove(); }
+               }
 `
 
                4) Integrate tenant resolution — from request headers, JWT claims, or subdomain (e.g., tenantA.app.com).
@@ -8469,7 +8470,7 @@ List<User> findByTenantId(String tenantId);
 ✅ Summary Checklist
 
      
-    ` | Area            | Change Required                      |
+      | Area            | Change Required                      |
       | --------------- | ------------------------------------ |
       | Database        | Add tenant isolation (DB/Schema/Row) |
       | Data Layer      | Tenant-aware repositories            |
@@ -8477,7 +8478,7 @@ List<User> findByTenantId(String tenantId);
       | Configuration   | Tenant-specific settings             |
       | Caching/Logging | Include tenant context               |
       | Deployment      | Tenant provisioning strategy         |
-`
+
 
 _________________________________________________________________________________________________________________________________
 
