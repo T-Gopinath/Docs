@@ -9092,9 +9092,89 @@ ________________________________________________________________________________
           ✔ Routing, filtering, and transformation support      
 
 _____________________________________________________________________________________________________________________________________________
+### Q)  AWS SES
 
-     
+     Overview of AWS SES (Simple Email Service):
+
+     🚀 AWS SES (Simple Email Service) — Overview
+          AWS Simple Email Service (SES) is a scalable, reliable, and cost-effective email sending service used to send:
+               Transactional emails
+               Marketing communications
+               Notifications
+               Bulk emails
+               Inbound email processing
+
+          It is fully managed by AWS and designed to integrate easily with applications.     
+
           
+     ⭐ Key Features
+          1. Send Transactional Emails
+          2. Marketing & Bulk Emails
+          3. Highly Scalable
+          4. Multiple Sending Methods
+          5. Inbound Email Handling
+          6. High Deliverability
+          7. Pay-as-you-go Pricing
+          
+          
+     🔐 Security & Authentication
+          * SES supports:
+          * SPF
+          * DKIM (DomainKeys Identified Mail)
+          * DMARC
+          * Access control via IAM
+          * API keys / SMTP credentials
+
+               
+     🧩 Common Use Cases
+     
+          ✔ Application notifications
+          ✔ Password resets, OTPs
+          ✔ Newsletters, promotions
+          ✔ System alerts
+          ✔ User onboarding emails
+          ✔ Inbound email automation
+          ✔ Customer support workflows
+
+          
+     🏗️ How SES Works — Flow
+     
+          Outgoing Email Flow
+               Application → SES API/SMTP → SES MTA → Recipient Mailbox
+         Incoming Email Flow  
+              Internet Mail → SES → S3/SNS/Lambda → Application
+
+              
+     🛠️ Example: Sending Email from Java
+
+          ` SesV2Client client = SesV2Client.builder().region(Region.US_EAST_1).build();
+               
+               SendEmailRequest request = SendEmailRequest.builder()
+                   .destination(Destination.builder().toAddresses("user@example.com").build())
+                   .content(EmailContent.builder()
+                       .simple(
+                           Message.builder()
+                               .subject(Content.builder().data("Test Email").build())
+                               .body(Body.builder()
+                                   .text(Content.builder().data("Hello from AWS SES!").build())
+                                   .build())
+                               .build()
+                       ).build())
+                   .fromEmailAddress("sender@yourdomain.com")
+                   .build();
+               
+client.sendEmail(request);
+`
+
+     📌 SES SandBox vs Production
+     Sandbox Mode
+          Limited sending limits
+          You can send only to verified emails
+     Production Mode     
+          No such restrictions
+          * Can send to any email
+          * Higher sending quotas
+          * Need to request production access from AWS Support.     
 
      
                     
