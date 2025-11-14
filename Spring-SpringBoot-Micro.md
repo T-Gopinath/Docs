@@ -9164,7 +9164,10 @@ ________________________________________________________________________________
                    .build();
                
 client.sendEmail(request);
+
+
 `
+
 
      📌 SES SandBox vs Production
      Sandbox Mode
