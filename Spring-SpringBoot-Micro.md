@@ -9270,3 +9270,37 @@ ________________________________________________________________________________
           | Resource        | CPU/memory, cost                     |
           | Observability   | Tracing, metrics, logs               |
 
+_________________________________________________________________________________________________________________________________
+### Q) AWS IAM
+
+AWS Identity and Access Management (IAM) is a core AWS service that helps you securely control access to AWS resources. It determines who can access what and how.
+
+     🛡️ What Is AWS IAM?
+          AWS IAM is a security service that lets you manage users, groups, roles, and permissions to AWS
+               services and resources. It ensures the right people or systems have the appropriate level of access.
+
+_______________________________________________________________________________________________________________________________________________
+### Q) AWS CloudFormation ?
+
+     AWS CloudFormation is an Infrastructure-as-Code (IaC) service that lets you define, provision, and manage AWS resources automatically using templates.
+
+     🚀 What is AWS CloudFormation?
+     
+AWS CloudFormation allows you to write templates (YAML/JSON) that describe your AWS infrastructure—like EC2, VPC, IAM, Lambda, S3, RDS, etc.—and deploy them as a Stack. CloudFormation will create, update, or delete resources in the correct order and handle dependencies for you.
+
+🧩 How CloudFormation Works
+     * You write a template (YAML/JSON).
+     * Upload it to CloudFormation.
+     * CloudFormation provisions resources as a stack.
+     * You manage updates using Change Sets or stack updates.
+     
+📝 Example CloudFormation Template (YAML)
+
+
+     ` Resources:
+  MyBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: my-sample-bucket-cloudformation-demo
+`
+     
