@@ -9298,9 +9298,12 @@ AWS CloudFormation allows you to write templates (YAML/JSON) that describe your 
 
 
      ` Resources:
-  MyBucket:
-    Type: AWS::S3::Bucket
-    Properties:
-      BucketName: my-sample-bucket-cloudformation-demo
+       MyBucket:
+         Type: AWS::S3::Bucket
+         Properties:
+           BucketName: my-sample-bucket-cloudformation-demo
 `
+
+
+
      
