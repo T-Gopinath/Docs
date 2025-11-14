@@ -8997,7 +8997,7 @@ ________________________________________________________________________________
 
                     EventBridge allows routing based on event patterns:
 
-                    `{
+                    ` {
                            "source": ["app.order"],
                            "detail-type": ["OrderCreated"],
                            "detail": {
@@ -9005,6 +9005,7 @@ ________________________________________________________________________________
                            }
                          }
 `
+
 
                This allows:
                     * Conditional processing
