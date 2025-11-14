@@ -8706,10 +8706,95 @@ ________________________________________________________________________________
                  }
                }
 `
+________________________________________________________________________________________________________________________________________
 
+### Q) AWS SQA
           
+     AWS SQS (Amazon Simple Queue Service):
+     
+     ⭐ What is AWS SQS?
+               AWS SQS (Simple Queue Service) is a fully managed message queuing service that enables communication between
+          different parts of a distributed system, microservices, or serverless applications—without losing messages 
+          and without requiring components to be available at the same time.
+
+          In simple terms:
+               👉 SQS is used to send, store, and receive messages between services in a reliable, scalable way.
+
+               
+     🔧 Why Do We Use SQS?
+               
+          ✔ Decoupling
+                Your systems don’t need to talk to each other directly.
+                Example: Your API receives a request → sends it to SQS → worker processes it later.
+                
+          ✔ Reliability
+                SQS ensures no messages are lost.
+                It stores messages redundantly across multiple servers.
+               
+          ✔ Scalability
+               It can handle any number of messages.
+               Automatically scales with traffic.
+                    
+          ✔ Asynchronous Processing
+               Long-running tasks can be processed in the background.
+               
+     🧺 Types of Queues in SQS
+     
+          1. Standard Queue
+               * High throughput
+               * At-least-once delivery (message might be delivered more than once)
+               * Best-effort ordering (order not guaranteed)
+               
+          2. FIFO Queue (First-In-First-Out)
+               * Ensures exactly-once processing
+               * Preserves order
+               * Lower throughput than standard queues
+               
+          
+     🔄 How SQS Works (Simple Flow)
+     
+          1. Producer sends messages to the queue
+          2. Messages are stored in SQS
+          3. Consumer polls the queue and processes messages
+          4. Message is deleted from the queue after successful processing
+          
+                    
+     🧰 Key Features
+              📌 Message Retention
+                   Messages can be kept for 1 minute to 14 days.                       
+              📌 Visibility Timeout
+                   Once a consumer picks a message, it becomes hidden for a time so other consumers don't pick it simultaneously.
+              📌 Dead-Letter Queues (DLQ)
+                   Failed messages can be moved to a DLQ for analysis.                        
+              📌 Long Polling
+                   Reduces cost and improves efficiency by waiting until a message arrives rather than constantly polling.    
+              
+     🏗 Use Cases
+
+          * Background job processing
+          * Order processing systems
+          * Notification and email systems
+          * Log and telemetry data pipelines
+          * Decoupling microservices
+          * Serverless workflows with Lambda
+     
+_________________________________________________________________________________________________________________________________________________
+
+### Q) How SQS integrates with Lambda.
+
+
+     🚀 How SQS Integrates with AWS Lambda     
+          
+     🔄 End-to-End Flow
+     🧯 Handling Failures
+     📈 Auto Scaling Behavior
+     ⚙️ Configuration Steps (High-Level)
+     🧱 Architecture Diagram (Simple)
+     🎯 When to Use SQS + Lambda
      
      
+
+
      
 
             
