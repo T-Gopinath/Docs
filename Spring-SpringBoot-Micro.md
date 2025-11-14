@@ -9292,6 +9292,8 @@ ________________________________________________________________________________
      or delete resources in the correct order and handle dependencies for you.
 
 🧩 How CloudFormation Works
+
+
      * You write a template (YAML/JSON).
      * Upload it to CloudFormation.
      * CloudFormation provisions resources as a stack.
