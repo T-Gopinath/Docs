@@ -9308,7 +9308,7 @@ ________________________________________________________________________________
          Properties:
            BucketName: my-sample-bucket-cloudformation-demo
 __________________________________________________________________________________________________________________________________________________________
-### Q) Automic variable , parallel and current Difference
+### Q) Automic variable , parallel process and current  process Difference
 
 
      
