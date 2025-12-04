@@ -9326,3 +9326,23 @@ ________________________________________________________________________________
 ___________________________________________________________________________________________________________________________________________________________
 ### Q)  Respose UI Questions.
 ___________________________________________________________________________________________________________________________________________________________
+### Q) Please explain the concept of federated identity, including SAML, OAuth2, Keycloak, and Okta.
+___________________________________________________________________________________________________________________________________________________________
+### Q) What is cloud-native design principles ?_________________________________________________________________________________________________________________________________________________________
+### Q) what is CI/CD pipeline development ?
+👍 Example CI/CD Flow (Simple)
+
+ * Developer pushes code
+ * Pipeline triggers
+ * Code is built
+ * Unit tests run
+ * SonarQube scans code
+ * Docker image is created and pushed to registry
+ * Deployment to Kubernetes cluster
+ * Health checks
+ * Monitoring & alerts
+
+
+
+
+
