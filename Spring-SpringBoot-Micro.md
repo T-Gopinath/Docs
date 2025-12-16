@@ -1,4 +1,4 @@
-### Q) Interservice communication between Microservices using spring boot 
+<img width="32766" height="59" alt="image" src="https://github.com/user-attachments/assets/0dee8c48-a441-42d4-b21a-3d42aa3af306" />### Q) Interservice communication between Microservices using spring boot 
 
 In Spring Boot, several mechanisms are available to achieve interservice communication,
      depending on the architecture style (synchronous or asynchronous) and reliability needs.
@@ -9312,7 +9312,10 @@ ________________________________________________________________________________
 __________________________________________________________________________________________________________________________________________________________
 ### Q) What is S.O.L.I.D Principles
 __________________________________________________________________________________________________________________________________________________________
+
 ### Q) Design patterns in java
+https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
+
 _________________________________________________________________________________________________________________________________________________________
 ### Q) How junit handles static methods.
 ___________________________________________________________________________________________________________________________________________________________
@@ -9415,4 +9418,11 @@ ________________________________________________________________________________
 https://thyanmol.medium.com/using-external-jar-in-springboot-project-7efcf53975b0
 
 __________________________________________________________________________________________________________________________________________________________
+
+### Q) spring data elasticsearch example
+
+
+
+
+
      
