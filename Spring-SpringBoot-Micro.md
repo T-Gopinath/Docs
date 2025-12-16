@@ -9408,3 +9408,11 @@ Here are the key cloud-native design principles explained simply:
      Secrets management (Vault, KMS)
      Policy-based access control
      Encryption at rest and in transit
+
+_________________________________________________________________________________________________________________________________________________________
+### Q)  Using external jar in springboot project ?
+
+https://thyanmol.medium.com/using-external-jar-in-springboot-project-7efcf53975b0
+
+__________________________________________________________________________________________________________________________________________________________
+     
