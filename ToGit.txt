@@ -1,15 +1,43 @@
-1) how to change default Persistet JPA in Spring Boot.
-https://www.google.com/search?q=how+to+chage+default+persistent+ORM+in+spring+boot+%3F&rlz=1C1CHBD_enIN1184IN1184&oq=how+to+chage+default+persistent+ORM+in+spring+boot+%3F&gs_lcrp=EgZjaHJvbWUyBggAEEUYOdIBCjI2MTYxajBqMTWoAgiwAgHxBW0HE5S9DsVr&sourceid=chrome&ie=UTF-8&sei=rjTvaMOaKuGNseMPsd3VsQU
+what is enterprise architecture ?
 
-2) how to migrate from one. version to other. like Angular, React...  (things to keepin mind.)
-3) Respose UI Questions.
+Architected federated identity and secure authentication systems leveraging SAML, OAuth2, JWT, LDAP, Okta, and Keyclocak with deep expertise in SSO and API security best practices.
 
-4)  how to configure two differet database servers in Spring boot
-	https://www.google.com/search?q=ecample+on+how+to+configure+two+differet+database+servers+in+Spring+boot&sca_esv=dd9115a17757454c&rlz=1C1CHBD_enIN1184IN1184&ei=vD_vaLuwC7Lz4-EPmPPykQU&ved=0ahUKEwi7_pSyyqWQAxWy-TgGHZi5PFIQ4dUDCBA&uact=5&oq=ecample+on+how+to+configure+two+differet+database+servers+in+Spring+boot&gs_lp=Egxnd3Mtd2l6LXNlcnAiSGVjYW1wbGUgb24gaG93IHRvIGNvbmZpZ3VyZSB0d28gZGlmZmVyZXQgZGF0YWJhc2Ugc2VydmVycyBpbiBTcHJpbmcgYm9vdEiAQlD4GFiZQHABeACQAQCYAb8DoAH1FKoBCDItMTAuMC4xuAEDyAEA-AEBmAIBoAIKwgIKEAAYsAMY1gQYR5gDAOIDBRIBMSBAiAYBkAYIkgcBMaAHqymyBwC4BwDCBwMyLTHIBwY&sclient=gws-wiz-serp
-	https://www.youtube.com/watch?v=z65J3JPbs9A  (2 Hrs)
-	https://www.youtube.com/watch?v=k-1OboD7X5w  (40minutes)
+TDD/BDD using JUnit 5, Mockito
 
-5)  how to convert single tenent to multi tenent application.
+Testcontainers
 
-6)
+•	Extensive experience in federated identity (SAML, OAuth2, KEYCLOCK, and OKTA) and web services (SOAP, REST, and JMS).
 
+•	Hands-on design and deployment of AWS cloud-native solutions including 	, Event Bridge, Step Functions, SQS.
+
+	AWS(IAM, RDS, EC2, SQS, SES, Lambda, Step Functions, Cloud Formation, aws gateway)
+	Event-Driven Architecture
+	Jprofiler, JMeter, 
+	Python 
+	
+	
+	Project
+		•	Provided technical guidance on Kubernetes-native deployments, observability (logging, tracing, metrics), and performance optimization.
+		clusters
+		
+		AWS(IAM, RDS, EC2, SQS, SES, Lambda, Step Functions, Cloud Formation)
+		
+		
+		https://www.youtube.com/watch?v=upfNrn8g_WE  -- Java Interview| 10+ years experience|
+		
+		https://www.youtube.com/watch?v=lGFX1gY_zUg -Java Interview| 9+ years experience
+		
+
+		https://www.youtube.com/watch?v=6dSkRUIDlDc - solution architecture questions
+		
+		
+		4️⃣ Solutions Architect Professional (MANDATORY for architects)
+
+		2️⃣ Solutions Architect Associate (MANDATORY)
+		
+		AWS Certification:
+		https://chatgpt.com/c/69312748-4b1c-8321-84d5-daf7ce18eca0
+		https://chatgpt.com/c/69315e97-d070-8325-9a21-5e0c8ee52691
+		
+		
+		27/9/2023
