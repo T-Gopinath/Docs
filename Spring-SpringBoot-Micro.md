@@ -1,4 +1,4 @@
-### Q) Interservice communication between Microservices using spring boot 
+<img width="32766" height="59" alt="image" src="https://github.com/user-attachments/assets/0dee8c48-a441-42d4-b21a-3d42aa3af306" />### Q) Interservice communication between Microservices using spring boot 
 
 In Spring Boot, several mechanisms are available to achieve interservice communication,
      depending on the architecture style (synchronous or asynchronous) and reliability needs.
@@ -9309,18 +9309,128 @@ ________________________________________________________________________________
            BucketName: my-sample-bucket-cloudformation-demo
 __________________________________________________________________________________________________________________________________________________________
 ### Q) Automic variable , parallel process and current  process Difference
-
 __________________________________________________________________________________________________________________________________________________________
 ### Q) What is S.O.L.I.D Principles
+__________________________________________________________________________________________________________________________________________________________
+
+### Q) Design patterns in java
+https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
+
+_________________________________________________________________________________________________________________________________________________________
+### Q) How junit handles static methods.
+___________________________________________________________________________________________________________________________________________________________
+### Q) What is the process to switch the default JPA persistence provider in Spring Boot ? 
+___________________________________________________________________________________________________________________________________________________________
+### Q) How do I migrate a Java application from a lower version to a higher version, and what tests are involved in the process
+__________________________________________________________________________________________________________________________________________________________
+### Q) What steps and considerations are involved in migrating from an RDBMS to a NoSQL database?
+__________________________________________________________________________________________________________________________________________________________
+### Q) What is the process for upgrading a React application from a lower React version to a higher version?
+___________________________________________________________________________________________________________________________________________________________
+### Q)  Respose UI Questions.
+___________________________________________________________________________________________________________________________________________________________
+### Q) Please explain the concept of federated identity, including SAML, OAuth2, Keycloak, and Okta.
+___________________________________________________________________________________________________________________________________________________________
+### Q) What is cloud-native design principles ?_________________________________________________________________________________________________________________________________________________________
+### Q) what is CI/CD pipeline development ?
+
+👍 Example CI/CD Flow (Simple)
+
+ * Developer pushes code
+ * Pipeline triggers
+ * Code is built
+ * Unit tests run
+ * SonarQube scans code
+ * Docker image is created and pushed to registry
+ * Deployment to Kubernetes cluster
+ * Health checks
+ * Monitoring & alerts
+__________________________________________________________________________________________________________________________________________________________
+### Q) what is cloud-native design principles ?
+
+Here are the key cloud-native design principles explained simply:
+
+✅ 1. Microservices Architecture
+     Break the application into small, independent services.
+     Each service can be deployed, scaled, and updated independently.
+     Helps avoid monolithic failures.
+     
+✅ 2. Containerization
+     Package each microservice with all its dependencies using containers (Docker).
+     Ensures consistency across environments.
+     Deployment becomes faster and more portable.
+
+✅ 3. API-Based Communication
+     Services communicate using lightweight APIs (REST, gRPC, messaging).
+     Loose coupling enhances scalability and flexibility.
+✅ 4. DevOps & Automation
+     Use CI/CD pipelines for:
+     automated builds
+     automated testing
+     automated deployments
+     Ensures fast and reliable delivery.
+
+✅ 5. Scalability & Elasticity
+     Automatically scale up/down based on load using:
+     Kubernetes HPA
+     cloud auto-scaling groups
+     Optimizes cost and performance.
+
+✅ 6. Immutable Infrastructure
+     Do not modify running servers; instead replace containers/VMs with new versions.
+     Prevents configuration drift and makes deployments predictable.
+✅ 7. Declarative Configurations
+     Store infrastructure and configurations as code (IaC) using:
+     Kubernetes YAML
+     Terraform
+     CloudFormation
+     Provides version control and predictable environments.
+✅ 8. Resilience & Fault Tolerance
+     Design for failures through:
+     retries
+     circuit breakers
+     bulkheads
+     graceful degradation
+     distributed tracing
+     self-healing containers (Kubernetes restarts)
+✅ 9. Observability
+     Every service should be measurable:
+     Logs → centralized logging (ELK, Loki)
+     Metrics → Prometheus, CloudWatch
+     Tracing → Jaeger, Zipkin
+     Improves debugging and performance monitoring.
+✅ 10. Stateless Services
+     Services should avoid storing session or state in memory.
+     Use external stores:
+     Redis
+     Databases
+     Object storage (S3)
+     Facilitates scaling and container restarts.
+✅ 11. Security by Design
+     Zero-trust networking
+     Secrets management (Vault, KMS)
+     Policy-based access control
+     Encryption at rest and in transit
+
+_________________________________________________________________________________________________________________________________________________________
+### Q)  Using external jar in springboot project ?
+
+https://thyanmol.medium.com/using-external-jar-in-springboot-project-7efcf53975b0
 
 __________________________________________________________________________________________________________________________________________________________
-### Q) Design patterns in java
 
-_________________________________________________________________________________________________________________________________
-### Q) How junit handles static methods
+### Q) spring data elasticsearch example
+
+_____________________________________________________________________________________________________________________________________________________
+
+### Q) Redis cacheing
+
+https://www.youtube.com/watch?v=OqCK95AS-YE
 
 
 
-_________________________
+
+
+
 
      
