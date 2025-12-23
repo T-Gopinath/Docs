@@ -9339,8 +9339,16 @@ https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
                               E-commerce order tracking updates.
                               
         
-        ####  Command : 
-        Chain of Responsibility
+        ####  Command : Use Command when you need to encapsulate actions as objects for flexible execution strategies. Supports undo/redo operations,                               command queues, or transaction batching.
+                       It decouples invoker from receiver, allowing actions to be stored, reused, or reversed
+                       
+                       EX:
+                         Text editors performing undo/redo on formatting operations.
+                         Queueing commands in task schedulers or job systems.
+                         Smart home automation defining commands like “Turn on AC,” “Dim Lights,” etc.
+                            
+        
+        ####  Chain of Responsibility
         State
         Template Method
         Iterator
