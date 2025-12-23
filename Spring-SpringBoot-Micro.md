@@ -9331,9 +9331,15 @@ https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
                          Sorting strategies: QuickSort, MergeSort, HeapSort. 
                          
                          
-        ####  Observer : 
+        ####  Observer : Use Observer when one object must notify many dependents about state changes. Ideal for real-time data updates.
+                            It enables event-driven systems with decoupled publishers and subscribers.
+                           EX:
+                              Stock price updates notifying dashboards.
+                              Weather station broadcasting temperature updates.
+                              E-commerce order tracking updates.
+                              
         
-        Command
+        ####  Command : 
         Chain of Responsibility
         State
         Template Method
