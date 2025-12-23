@@ -9316,6 +9316,37 @@ ________________________________________________________________________________
 ### Q) Design patterns in java
 https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
 
+   What is behavioral design pattern
+        
+        Behavioral Design Patterns are a category of software design patterns that focus on how objects interact, communicate, and share responsibilities.
+        They help define clean communication rules between objects, making systems flexible, loosely coupled, and easy to extend.
+
+        Promote Single Responsibility Principle
+        Enable Open/Closed Principle
+        
+        #### Strategy : Use Strategy when multiple algorithms can be chosen at runtime. Keep algorithms independent, interchangeable, and easily                                   extendable.                       
+                        Ex: 
+                         Compression strategies: ZIP, GZIP, RAR.
+                         Payment algorithms: UPI, NetBanking, Card.
+                         Sorting strategies: QuickSort, MergeSort, HeapSort. 
+                         
+                         
+        ####  Observer : 
+        
+        Command
+        Chain of Responsibility
+        State
+        Template Method
+        Iterator
+        Mediator
+        Memento
+        Visitor
+        Interpreter
+
+        
+
+        
+
 _________________________________________________________________________________________________________________________________________________________
 ### Q) How junit handles static methods.
 ___________________________________________________________________________________________________________________________________________________________
