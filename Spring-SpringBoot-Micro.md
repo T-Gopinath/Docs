@@ -9348,8 +9348,13 @@ https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
                          Smart home automation defining commands like “Turn on AC,” “Dim Lights,” etc.
                             
         
-        ####  Chain of Responsibility
-        State
+        ####  Chain of Responsibility : Use this pattern when requests must pass through a series of handlers, each deciding whether to process or pass it                               onward. Ideal when avoiding nested if-else chains.
+                              It decouples sender from receivers and makes request processing flexible and maintainable.
+                              EX:
+                                   Servlet filters: authentication → authorization → logging → validation.
+                                   Loan approval: clerk → manager → director approvals.
+                                   Customer complaints passed through various support tiers (L1 → L2 → L3).                                                
+         ####  State : 
         Template Method
         Iterator
         Mediator
