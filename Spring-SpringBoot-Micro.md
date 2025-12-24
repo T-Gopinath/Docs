@@ -9369,6 +9369,12 @@ https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
                                  Document approval workflows across departments.                    
                                  
         #### Iterator : Use Iterator when you need a standard mechanism to traverse a collection without exposing its internal structure. Perfect                               when collections change but traversal logic should remain consistent.
+                       Iterator simplifies looping and enables multiple traversal strategies independently.                      
+                    Ex
+                         Java iterators on lists, sets, maps.
+                         File system iterating over files and directories
+                         Iterating over database cursor results.
+  
                      
         Mediator
         Memento
