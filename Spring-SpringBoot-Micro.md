@@ -9354,9 +9354,22 @@ https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
                                    Servlet filters: authentication → authorization → logging → validation.
                                    Loan approval: clerk → manager → director approvals.
                                    Customer complaints passed through various support tiers (L1 → L2 → L3).                                                
-         ####  State : 
-        Template Method
-        Iterator
+         ####  State : Use State when an object’s behavior varies based on internal state transitions. Avoids large conditional blocks by encapsulating                          state-specific logic.
+                        Provides cleaner modeling of lifecycle-driven behavior.
+                         Ex
+                           Order lifecycle: Placed → Packed → Shipped → Delivered.
+                           ATM behavior: CardInserted, OutOfCash, Idle
+                           Media player: Play, Pause, Stop states.
+                        
+        #### Template Method : Use Template Method when your algorithm structure is fixed but specific steps may vary across implementations. This helps                                    enforce consistent workflows.
+                            Allows common logic reuse while letting subclasses override specific steps.
+                            Ex
+                                 Online order processing: validate → pay → ship (different gateways override payment step).
+                                 Data parsing templates: CSV vs JSON vs XML parsing.
+                                 Document approval workflows across departments.                    
+                                 
+        #### Iterator : Use Iterator when you need a standard mechanism to traverse a collection without exposing its internal structure. Perfect                               when collections change but traversal logic should remain consistent.
+                     
         Mediator
         Memento
         Visitor
