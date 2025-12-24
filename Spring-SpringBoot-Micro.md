@@ -9316,6 +9316,46 @@ ________________________________________________________________________________
 ### Q) Design patterns in java
 https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
 
+  What is STRUCTURAL DESIGN PATTERNS
+       They focus on how classes and objects are composed to form larger, flexible, and efficient structures.
+       Structural patterns help you assemble objects and classes while keeping the system loosely coupled and easy to maintain.
+            * Reuse existing code without modifying it
+            * Simplify complex class relationships
+            * Decouple abstractions from implementations
+            * Improve flexibility and scalability
+
+            #### Adapter Pattern :
+                           Use Adapter when your system needs to interact with an incompatible interface without modifying existing code.
+                           It’s useful when integrating legacy systems with modern APIs. Works best when you cannot change the target interface
+
+                           Adapter converts one interface into another, enabling smooth collaboration between otherwise incompatible components.
+                           Ex:
+                                Integrating an old XML-based API with a new JSON-based REST service.
+                                Using third-party payment APIs that require format conversion.
+                                Adapting voltage converters conceptually: 220V → 110V device adapter.
+                                
+                    
+                           
+            #### Bridge Pattern : 
+                           Use Bridge when abstraction and implementation must evolve independently. 
+                           It prevents creating numerous classes when you mix multiple combinations of functionality. 
+                           Best suited when your system has multiple dimensions of variation.
+
+                           Bridge reduces class explosion by separating what the object does from how it does it.
+                           
+                           ex:
+                                Remote controls controlling different types of devices (TV, AC, Projector).
+                                Payment system separating payment mode (UPI, Card) from platform (Razorpay, Stripe).
+                           
+            #### Composite Pattern : Use Composite when you need to represent hierarchies where individual items and groups should be treated uniformly.                                        Perfect when operations must be applied to both leaf and composite objects seamlessly
+            
+            #### Decorator Pattern :
+            #### Facade Pattern :
+            #### Flyweight Pattern : 
+            #### Proxy Pattern : 
+            
+       
+
    What is behavioral design pattern
         
         Behavioral Design Patterns are a category of software design patterns that focus on how objects interact, communicate, and share responsibilities.
@@ -9374,12 +9414,42 @@ https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
                          Java iterators on lists, sets, maps.
                          File system iterating over files and directories
                          Iterating over database cursor results.
-  
-                     
-        Mediator
-        Memento
-        Visitor
-        Interpreter
+                       
+        #### Mediator : Use Mediator when communication between components becomes complex, chaotic, or tightly coupled. The mediator centralizes                               interactions and simplifies component relationships.
+                       It promotes loose coupling and simplifies system maintenance.
+                       Ex                      
+                            Chatroom controlling interactions among multiple users.
+                            Air traffic control tower coordinating airplanes
+                            UI dialog box coordinating text fields, buttons, and validation.
+                            
+
+        #### Memento : Use Memento when you need to store and restore object states without violating encapsulation.
+                       Ideal for undo/rollback features.
+                       It allows maintaining historical states separately from core objects.
+                  Ex
+                       Code editors storing snapshots for undo operations.
+                       Game state checkpoints.
+                       Form data recovery after unexpected crashes.
+                       
+        #### Visitor : Use Visitor when new operations must be frequently added to object structures without modifying their classes. Ideal for extending                         behavior.
+                     Visitor separates algorithms from object structures, keeping both clean and scalable.
+
+                     Ex
+                          Compiler visitors: type checking, optimization, code generation.
+                          PDF generation visiting objects like text, tables, images
+                          Data export tool generating CSV, XML, JSON using visitors
+                          
+                  
+       #### Interpreter : Use Interpreter when building grammar-based processing—mini languages, rules engines, or expression evaluators. Best for simple                               grammars, not full-blown programming languages.
+                          It enables defining rules and interpreting custom expressions systematically
+
+                          Ex
+                            SQL-like filters for search systems (e.g., price > 100 AND category = ‘books’).
+                            Chatbot rule definitions like “if user says X then reply Y.
+                            Regex engines internally interpreting expression patterns.
+
+
+                      
 
         
 
