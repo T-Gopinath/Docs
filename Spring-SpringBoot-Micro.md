@@ -9370,7 +9370,8 @@ https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
                                           Spring Boot starter packages simplify complex library configurations.
                                           A video conversion utility hiding codec handling and file operations
                                      
-            #### Flyweight Pattern : 
+            #### Flyweight Pattern :  
+            
             #### Proxy Pattern : 
             
        
