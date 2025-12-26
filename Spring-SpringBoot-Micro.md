@@ -9370,11 +9370,22 @@ https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
                                           Spring Boot starter packages simplify complex library configurations.
                                           A video conversion utility hiding codec handling and file operations
                                      
-            #### Flyweight Pattern :  
+            #### Flyweight Pattern : Use Flyweight when many objects share common internal data, and memory consumption becomes a concern. 
+                                     Perfect when object count may reach thousands or millions.
+                                     Flyweight reduces memory footprint by reusing shared intrinsic state and separating extrinsic state.
+
+                                     Ex
+                                          Text editors storing formatting styles as shared objects.
+                                          Browser caching icons, emojis, or fonts as shared reusable resources.
+                                          Game engines reusing sprite textures across multiple objects.
             
-            #### Proxy Pattern : 
-            
-       
+            #### Proxy Pattern : Use Proxy when controlling access to an object is essential: security, lazy loading, caching, or remote invocation.                                         Useful when working with large or remote objects.
+                                     Proxy acts as a gateway that adds extra behavior before delegating to the real object.
+
+                                     Ex
+                                          Hibernate’s lazy-loading proxy for database entities.
+                                          Authentication proxy checking permissions before accessing sensitive resources.
+                                          Remote proxy connecting clients to remote services via RMI or gRPC.
 
    What is behavioral design pattern
         
