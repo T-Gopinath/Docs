@@ -9354,8 +9354,22 @@ https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
                                    Organizational Hierarchy: CEO → Managers → Employees.
                                    UI components: panels containing buttons, text fields, and nested containers.                                    
             
-            #### Decorator Pattern : 
-            #### Facade Pattern :
+            #### Decorator Pattern :  Use Decorator when you want to add new features dynamically without altering the original class. Ideal when                                                inheritance becomes too rigid or leads to too many subclasses.
+                                      Decorator provides flexible runtime extension by wrapping objects with additional behavior.
+                                      
+                                   EX:
+                                        Coffee shop system: add milk, chocolate, foam, caramel on top of base coffee
+                                        Spring’s HandlerInterceptor adding logging/authentication layers.
+                                        Adding encryption, compression, or caching to streams dynamically.
+
+            #### Facade Pattern :     Use Facade when you want to provide a simplified interface to a complex subsystem. Ideal when clients must be                                              shielded from heavy initialization and dependencies.
+                                     Facade reduces complexity, improves readability, and creates a single entry point to multiple components.
+
+                                     Ex
+                                          Hotel booking hides allocation, payment, and housekeeping APIs.
+                                          Spring Boot starter packages simplify complex library configurations.
+                                          A video conversion utility hiding codec handling and file operations
+                                     
             #### Flyweight Pattern : 
             #### Proxy Pattern : 
             
