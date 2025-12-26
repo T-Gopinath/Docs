@@ -9347,9 +9347,14 @@ https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
                                 Remote controls controlling different types of devices (TV, AC, Projector).
                                 Payment system separating payment mode (UPI, Card) from platform (Razorpay, Stripe).
                            
-            #### Composite Pattern : Use Composite when you need to represent hierarchies where individual items and groups should be treated uniformly.                                        Perfect when operations must be applied to both leaf and composite objects seamlessly
+            #### Composite Pattern : Use Composite when you need to represent hierarchies where individual items and groups should be treated uniformly.                                        Perfect when operations must be applied to both leaf and composite objects seamlessly.
+                                     Composite simplifies tree structure management by letting clients treat both single objects and groups the same way.
+                              ex
+                                   File Explorer: File and Folder handled through one interface.
+                                   Organizational Hierarchy: CEO → Managers → Employees.
+                                   UI components: panels containing buttons, text fields, and nested containers.                                    
             
-            #### Decorator Pattern :
+            #### Decorator Pattern : 
             #### Facade Pattern :
             #### Flyweight Pattern : 
             #### Proxy Pattern : 
