@@ -9348,16 +9348,18 @@ https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
                                              AWS vs Azure cloud resource factories, ensuring consistent resource creation across vendors.
                                              Vehicle part factories—ElectricCarFactory and PetrolCarFactory producing compatible parts only.
                                              
-                      ##### Builder Pattern : Use Builder for constructing objects that require many optional fields or multi-step configuration.                                                        It helps when constructors become too complex, overloaded, or unclear.
-                                              This is extremely helpful when building immutable objects.
+     ##### Builder Pattern : Use Builder for constructing objects that require many optional fields or multi-step configuration.                                                        It helps when constructors become too complex, overloaded, or unclear.
+                          This is extremely helpful when building immutable objects.
 
-                                              Builder improves readability, enforces step-by-step controlled construction, and avoids telescoping                                                        constructors
+                          Builder improves readability, enforces step-by-step controlled construction, and avoids telescoping                                                        constructors
 
-                                        Ex
-                                        Creating complex HTTP requests with headers, params, cookies, and authentication.
-                                        Building User objects during registration where fields like address and preferences are optional.
-                                        Creating SQL queries dynamically with multiple conditions and joins.
+                         Ex
+                         * Creating complex HTTP requests with headers, params, cookies, and authentication.
+                         * Building User objects during registration where fields like address and preferences are optional.
+                         * Creating SQL queries dynamically with multiple conditions and joins.
                                              
+
+
 
   #### What is STRUCTURAL DESIGN PATTERNS
        They focus on how classes and objects are composed to form larger, flexible, and efficient structures.
