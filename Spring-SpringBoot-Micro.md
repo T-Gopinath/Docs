@@ -9463,6 +9463,7 @@ https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
           Compression strategies: ZIP, GZIP, RAR.
           Payment algorithms: UPI, NetBanking, Card.
           Sorting strategies: QuickSort, MergeSort, HeapSort. 
+          In spring boot : @Qualifier, @Primary, or Map-based injection
                                                   
         ##### Observer : 
           Use Observer when one object must notify many dependents about state changes. Ideal for real-time data updates.
@@ -9475,7 +9476,7 @@ https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
                               
         
         #####  Command : 
-          Use Command when you need to encapsulate actions as objects for flexible execution strategies. Supports undo/redo operations,                               command queues, or transaction batching.
+          Use Command when you need to encapsulate actions as objects for flexible execution strategies. Supports undo/redo operations, command queues, or transaction batching.
           It decouples invoker from receiver, allowing actions to be stored, reused, or reversed
           
           EX:
@@ -9490,7 +9491,9 @@ https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
                               EX:
                                    Servlet filters: authentication → authorization → logging → validation.
                                    Loan approval: clerk → manager → director approvals.
-                                   Customer complaints passed through various support tiers (L1 → L2 → L3).                                                
+                                   Customer complaints passed through various support tiers (L1 → L2 → L3).  
+                                   In Spring Boot and microservices, this pattern is very common for filters, validations, security, workflows, and request processing pipelines.
+                                   
          #####  State : Use State when an object’s behavior varies based on internal state transitions. Avoids large conditional blocks by encapsulating                          state-specific logic.
                         Provides cleaner modeling of lifecycle-driven behavior.
                          Ex
