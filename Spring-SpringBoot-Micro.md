@@ -9314,6 +9314,7 @@ ________________________________________________________________________________
 __________________________________________________________________________________________________________________________________________________________
 
 ### Q) Design patterns in java
+
 https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
 
   #### What is CREATIONAL DESIGN PATTERNS.
@@ -9357,7 +9358,7 @@ https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
      
                Builder improves readability, enforces step-by-step controlled construction, and avoids telescoping constructors.
 
-               Ex
+               Exddd
                * Creating complex HTTP requests with headers, params, cookies, and authentication.
                * Building User objects during registration where fields like address and preferences are optional.
                * Creating SQL queries dynamically with multiple conditions and joins.
@@ -9386,6 +9387,10 @@ https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
             Use Adapter when your system needs to interact with an incompatible interface without modifying existing code.
             It’s useful when integrating legacy systems with modern APIs. Works best when you cannot change the target interface
             Adapter converts one interface into another, enabling smooth collaboration between otherwise incompatible components.
+
+            Adapter: A class that implements the Target interface and adapts the Adaptee to it. 
+            Adaptee: An existing class with an incompatible interface that needs adapting.
+            Adaptee is an existing class with an incompatible interface that needs adapting. 
             
             Ex:
             Integrating an old XML-based API with a new JSON-based REST service.
@@ -9548,6 +9553,16 @@ https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
                             Chatbot rule definitions like “if user says X then reply Y.
                             Regex engines internally interpreting expression patterns.
 
+     Senario based questions :
+     
+    1) In a chat application, you want users to receive updates about messages in a chat room only when they’re subscribed to that room. The system should also manage the communication between different chat rooms. Which combination of patterns is suitable?
+     Mediator and Obserable.
+
+     2) Provides Real-Time Recommendations: As users browse, the system recommends similar items based on categories like "frequently bought together," "similar items," and "recently viewed."   Stratergy pattern
+     3) Allows Custom Recommendation Algorithms: Developers can plug in various recommendation algorithms without altering the main recommendation flow, such as collaborative filtering, content-based filtering, and user-based filtering.  Stratergy patter
+     4) Logs Recommendation Events: The system logs user interactions with recommended items (e.g., clicks, add-to-cart actions) to analyze engagement data, and it should be extensible to add more logging features without modifying existing code.  - Decorator
+
+     5) 
 _________________________________________________________________________________________________________________________________________________________
 ### Q) How junit handles static methods.
 ___________________________________________________________________________________________________________________________________________________________
