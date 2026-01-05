@@ -9573,6 +9573,10 @@ https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
           B) It minimizes dependencies by hiding report creation details from the 
 client.      
           c)  It allows switching report types without modifying client code.
+
+     7) You are implementing a travel booking system where each booking type (flights, hotels) has varying methods. You need a flexible way to switch between booking providers for each type. Which pattern should you use?
+           Abstract Factory Pattern 
+    8)       
 _________________________________________________________________________________________________________________________________________________________
 ### Q) How junit handles static methods.
 ___________________________________________________________________________________________________________________________________________________________
