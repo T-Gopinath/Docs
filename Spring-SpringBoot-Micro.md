@@ -9409,6 +9409,8 @@ https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
             * It prevents creating numerous classes when you mix multiple combinations of functionality. 
             * Best suited when your system has multiple dimensions of variation.
             * Bridge reduces class explosion by separating what the object does from how it does it.
+            Abstraction : contains a reference to the implementor interface
+                      (The Abstraction class has a reference to the implementor interface, which allows abstraction to delegate operations to the implementor. )
             
             ex:
             Remote controls controlling different types of devices (TV, AC, Projector).
@@ -9446,6 +9448,12 @@ https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
           Use Flyweight when many objects share common internal data, and memory consumption becomes a concern. 
           Perfect when object count may reach thousands or millions.
           Flyweight reduces memory footprint by reusing shared intrinsic state and separating extrinsic state.
+          following components are typically part of the Flyweight Pattern
+          
+          Flyweight Interface : The Flyweight Interface defines the operations for Flyweight objects.
+          Concrete Flyweight :  Concrete Flyweights implement the Flyweight interface and manage shared state.
+          Client : The Client uses Flyweights to perform operations. 
+          Flyweight Factory : The Flyweight Factory creates and manages Flyweight objects. 
           
           Ex
           Text editors storing formatting styles as shared objects.
@@ -9593,7 +9601,8 @@ client.
 
      7) You are implementing a travel booking system where each booking type (flights, hotels) has varying methods. You need a flexible way to switch between booking providers for each type. Which pattern should you use?
            Abstract Factory Pattern 
-    8)       
+    8)   A graphical application allows users to create shapes, groups of shapes, and nested groups of shapes. Which design pattern would best suit this 
+scenario?   Composite pattern.
 _________________________________________________________________________________________________________________________________________________________
 ### Q) How junit handles static methods.
 ___________________________________________________________________________________________________________________________________________________________
