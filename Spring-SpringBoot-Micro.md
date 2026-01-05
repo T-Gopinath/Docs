@@ -9508,6 +9508,7 @@ https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
                                    
          #####  State : Use State when an object’s behavior varies based on internal state transitions. Avoids large conditional blocks by encapsulating                          state-specific logic.
                         Provides cleaner modeling of lifecycle-driven behavior.
+                         Changing behaviour at runtime describes the Strategy Pattern. 
                          Ex
                            Order lifecycle: Placed → Packed → Shipped → Delivered.
                            ATM behavior: CardInserted, OutOfCash, Idle
@@ -9560,7 +9561,16 @@ https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
                             Chatbot rule definitions like “if user says X then reply Y.
                             Regex engines internally interpreting expression patterns.
 
-     Senario based questions :
+       ##### Composite Pattern  Use Composite when you need to represent hierarchies where individual items and groups should be treated uniformly.                                        Perfect when operations must be applied to both leaf and composite objects seamlessly      
+                                The Composite Pattern is designed to compose objects into tree structures, representing part-whole hierarchies effectively.
+                                Composite simplifies tree structure management by letting clients treat both single objects and groups the same way.
+
+          Real-Time Scenarios
+                    File Explorer: File and Folder handled through one interface.  
+                    Organizational Hierarchy: CEO → Managers → Employees.
+                    UI components: panels containing buttons, text fields, and nested containers.              
+
+     ##### Senario based questions :
      
     1) In a chat application, you want users to receive updates about messages in a chat room only when they’re subscribed to that room. The system should also manage the communication between different chat rooms. Which combination of patterns is suitable?
      Mediator and Obserable.
