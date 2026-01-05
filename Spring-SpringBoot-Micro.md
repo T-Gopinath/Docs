@@ -9565,6 +9565,10 @@ https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
                                 The Composite Pattern is designed to compose objects into tree structures, representing part-whole hierarchies effectively.
                                 Composite simplifies tree structure management by letting clients treat both single objects and groups the same way.
 
+                                Both leaf and composite can implement the same interface ( Both leaf and composite components typically implement the 
+same interface, allowing clients to interact with them uniformly. )
+                                Only composite nodes are responsible for managing child nodes.
+
           Real-Time Scenarios
                     File Explorer: File and Folder handled through one interface.  
                     Organizational Hierarchy: CEO → Managers → Employees.
