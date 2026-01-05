@@ -9371,6 +9371,8 @@ https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
           Use Prototype when object creation is expensive and cloning an existing object is more efficient.
           It is ideal when objects involve deep copying or heavy initialization logic
           Perfect when the system needs duplicate instances with minor variations.
+           It reduces the overhead of creating objects with complex initialization
+            It supports cloning objects with various configurations 
           
           Prototype bypasses costly creation processes, promoting performance optimization and reusability.
           
@@ -9394,7 +9396,8 @@ https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
 
             Adapter: A class that implements the Target interface and adapts the Adaptee to it. 
             Adaptee: An existing class with an incompatible interface that needs adapting.
-            Adaptee is an existing class with an incompatible interface that needs adapting. 
+            Adaptee is an existing class with an incompatible interface that needs adapting.
+            The Adapter, Target, and Client are essential roles in the Adapter Pattern. 
             
             Ex:
             Integrating an old XML-based API with a new JSON-based REST service.
