@@ -9347,6 +9347,8 @@ https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
                It is perfect when enforcing product consistency is necessary. 
                This helps when multiple product variants share a theme (e.g., UI themes, OS-specific widgets).
                It groups related objects under a single factory, ensuring compatibility and preventing mismatched combinations of                                         components.
+               It allows for the creation of families of related or dependent objects without specifying their concrete classes.
+
                
                Ex
                * Dark Theme vs Light Theme UI toolkit, ensuring all components match (buttons, checkboxes, menus)
@@ -9355,9 +9357,11 @@ https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
                                              
      ##### Builder Pattern : 
                Use Builder for constructing objects that require many optional fields or multi-step configuration.                                                        It helps when constructors become too complex, overloaded, or unclear. This is extremely helpful when building immutable objects.
-     
+               
                Builder improves readability, enforces step-by-step controlled construction, and avoids telescoping constructors.
-
+               The Builder pattern helps separate object construction from its representation. 
+               The Builder pattern enables method chaining. 
+               
                Exddd
                * Creating complex HTTP requests with headers, params, cookies, and authentication.
                * Building User objects during registration where fields like address and preferences are optional.
@@ -9398,10 +9402,10 @@ https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
             Adapting voltage converters conceptually: 220V → 110V device adapter.                                                  
                            
   ##### Bridge Pattern : 
-            Use Bridge when abstraction and implementation must evolve independently. 
-            It prevents creating numerous classes when you mix multiple combinations of functionality. 
-            Best suited when your system has multiple dimensions of variation.
-            Bridge reduces class explosion by separating what the object does from how it does it.
+            * Use Bridge when abstraction and implementation must evolve independently. 
+            * It prevents creating numerous classes when you mix multiple combinations of functionality. 
+            * Best suited when your system has multiple dimensions of variation.
+            * Bridge reduces class explosion by separating what the object does from how it does it.
             
             ex:
             Remote controls controlling different types of devices (TV, AC, Projector).
@@ -9562,7 +9566,13 @@ https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
      3) Allows Custom Recommendation Algorithms: Developers can plug in various recommendation algorithms without altering the main recommendation flow, such as collaborative filtering, content-based filtering, and user-based filtering.  Stratergy patter
      4) Logs Recommendation Events: The system logs user interactions with recommended items (e.g., clicks, add-to-cart actions) to analyze engagement data, and it should be extensible to add more logging features without modifying existing code.  - Decorator
 
-     5) 
+     5) A developer needs to build a Pizza object with various options, like crust type, toppings, size, and extra cheese. The developer wants to avoid a large number of constructors for each configuration. Which design pattern would be ideal for this scenario?  Builder design patteren.
+
+     6) You are developing a software system that needs to generate multiple types of reports (e.g., PDF, Excel, HTML). The specific report type required is only known at runtime, and each report type has a distinct creation process. Which of the following reasons justify using the Factory pattern in this scenario? 
+          A) It allows for dynamic creation of report types at runtime.
+          B) It minimizes dependencies by hiding report creation details from the 
+client.      
+          c)  It allows switching report types without modifying client code.
 _________________________________________________________________________________________________________________________________________________________
 ### Q) How junit handles static methods.
 ___________________________________________________________________________________________________________________________________________________________
