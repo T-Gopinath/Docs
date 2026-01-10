@@ -9314,6 +9314,7 @@ ________________________________________________________________________________
 __________________________________________________________________________________________________________________________________________________________
 
 ### Q) Design patterns in java
+
 https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
 
   #### What is CREATIONAL DESIGN PATTERNS.
@@ -9346,6 +9347,8 @@ https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
                It is perfect when enforcing product consistency is necessary. 
                This helps when multiple product variants share a theme (e.g., UI themes, OS-specific widgets).
                It groups related objects under a single factory, ensuring compatibility and preventing mismatched combinations of                                         components.
+               It allows for the creation of families of related or dependent objects without specifying their concrete classes.
+
                
                Ex
                * Dark Theme vs Light Theme UI toolkit, ensuring all components match (buttons, checkboxes, menus)
@@ -9354,10 +9357,12 @@ https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
                                              
      ##### Builder Pattern : 
                Use Builder for constructing objects that require many optional fields or multi-step configuration.                                                        It helps when constructors become too complex, overloaded, or unclear. This is extremely helpful when building immutable objects.
-     
+               
                Builder improves readability, enforces step-by-step controlled construction, and avoids telescoping constructors.
-
-               Ex
+               The Builder pattern helps separate object construction from its representation. 
+               The Builder pattern enables method chaining. 
+               
+               Exddd
                * Creating complex HTTP requests with headers, params, cookies, and authentication.
                * Building User objects during registration where fields like address and preferences are optional.
                * Creating SQL queries dynamically with multiple conditions and joins.
@@ -9366,6 +9371,8 @@ https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
           Use Prototype when object creation is expensive and cloning an existing object is more efficient.
           It is ideal when objects involve deep copying or heavy initialization logic
           Perfect when the system needs duplicate instances with minor variations.
+           It reduces the overhead of creating objects with complex initialization
+            It supports cloning objects with various configurations 
           
           Prototype bypasses costly creation processes, promoting performance optimization and reusability.
           
@@ -9386,6 +9393,11 @@ https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
             Use Adapter when your system needs to interact with an incompatible interface without modifying existing code.
             It’s useful when integrating legacy systems with modern APIs. Works best when you cannot change the target interface
             Adapter converts one interface into another, enabling smooth collaboration between otherwise incompatible components.
+
+            Adapter: A class that implements the Target interface and adapts the Adaptee to it. 
+            Adaptee: An existing class with an incompatible interface that needs adapting.
+            Adaptee is an existing class with an incompatible interface that needs adapting.
+            The Adapter, Target, and Client are essential roles in the Adapter Pattern. 
             
             Ex:
             Integrating an old XML-based API with a new JSON-based REST service.
@@ -9393,10 +9405,12 @@ https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
             Adapting voltage converters conceptually: 220V → 110V device adapter.                                                  
                            
   ##### Bridge Pattern : 
-            Use Bridge when abstraction and implementation must evolve independently. 
-            It prevents creating numerous classes when you mix multiple combinations of functionality. 
-            Best suited when your system has multiple dimensions of variation.
-            Bridge reduces class explosion by separating what the object does from how it does it.
+            * Use Bridge when abstraction and implementation must evolve independently. 
+            * It prevents creating numerous classes when you mix multiple combinations of functionality. 
+            * Best suited when your system has multiple dimensions of variation.
+            * Bridge reduces class explosion by separating what the object does from how it does it.
+            Abstraction : contains a reference to the implementor interface
+                      (The Abstraction class has a reference to the implementor interface, which allows abstraction to delegate operations to the implementor. )
             
             ex:
             Remote controls controlling different types of devices (TV, AC, Projector).
@@ -9434,6 +9448,12 @@ https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
           Use Flyweight when many objects share common internal data, and memory consumption becomes a concern. 
           Perfect when object count may reach thousands or millions.
           Flyweight reduces memory footprint by reusing shared intrinsic state and separating extrinsic state.
+          following components are typically part of the Flyweight Pattern
+          
+          Flyweight Interface : The Flyweight Interface defines the operations for Flyweight objects.
+          Concrete Flyweight :  Concrete Flyweights implement the Flyweight interface and manage shared state.
+          Client : The Client uses Flyweights to perform operations. 
+          Flyweight Factory : The Flyweight Factory creates and manages Flyweight objects. 
           
           Ex
           Text editors storing formatting styles as shared objects.
@@ -9496,6 +9516,7 @@ https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
                                    
          #####  State : Use State when an object’s behavior varies based on internal state transitions. Avoids large conditional blocks by encapsulating                          state-specific logic.
                         Provides cleaner modeling of lifecycle-driven behavior.
+                         Changing behaviour at runtime describes the Strategy Pattern. 
                          Ex
                            Order lifecycle: Placed → Packed → Shipped → Delivered.
                            ATM behavior: CardInserted, OutOfCash, Idle
@@ -9548,6 +9569,40 @@ https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
                             Chatbot rule definitions like “if user says X then reply Y.
                             Regex engines internally interpreting expression patterns.
 
+       ##### Composite Pattern  Use Composite when you need to represent hierarchies where individual items and groups should be treated uniformly.                                        Perfect when operations must be applied to both leaf and composite objects seamlessly      
+                                The Composite Pattern is designed to compose objects into tree structures, representing part-whole hierarchies effectively.
+                                Composite simplifies tree structure management by letting clients treat both single objects and groups the same way.
+
+                                Both leaf and composite can implement the same interface ( Both leaf and composite components typically implement the 
+same interface, allowing clients to interact with them uniformly. )
+                                Only composite nodes are responsible for managing child nodes.
+
+          Real-Time Scenarios
+                    File Explorer: File and Folder handled through one interface.  
+                    Organizational Hierarchy: CEO → Managers → Employees.
+                    UI components: panels containing buttons, text fields, and nested containers.              
+
+     ##### Senario based questions :
+     
+    1) In a chat application, you want users to receive updates about messages in a chat room only when they’re subscribed to that room. The system should also manage the communication between different chat rooms. Which combination of patterns is suitable?
+     Mediator and Obserable.
+
+     2) Provides Real-Time Recommendations: As users browse, the system recommends similar items based on categories like "frequently bought together," "similar items," and "recently viewed."   Stratergy pattern
+     3) Allows Custom Recommendation Algorithms: Developers can plug in various recommendation algorithms without altering the main recommendation flow, such as collaborative filtering, content-based filtering, and user-based filtering.  Stratergy patter
+     4) Logs Recommendation Events: The system logs user interactions with recommended items (e.g., clicks, add-to-cart actions) to analyze engagement data, and it should be extensible to add more logging features without modifying existing code.  - Decorator
+
+     5) A developer needs to build a Pizza object with various options, like crust type, toppings, size, and extra cheese. The developer wants to avoid a large number of constructors for each configuration. Which design pattern would be ideal for this scenario?  Builder design patteren.
+
+     6) You are developing a software system that needs to generate multiple types of reports (e.g., PDF, Excel, HTML). The specific report type required is only known at runtime, and each report type has a distinct creation process. Which of the following reasons justify using the Factory pattern in this scenario? 
+          A) It allows for dynamic creation of report types at runtime.
+          B) It minimizes dependencies by hiding report creation details from the 
+client.      
+          c)  It allows switching report types without modifying client code.
+
+     7) You are implementing a travel booking system where each booking type (flights, hotels) has varying methods. You need a flexible way to switch between booking providers for each type. Which pattern should you use?
+           Abstract Factory Pattern 
+    8)   A graphical application allows users to create shapes, groups of shapes, and nested groups of shapes. Which design pattern would best suit this 
+scenario?   Composite pattern.
 _________________________________________________________________________________________________________________________________________________________
 ### Q) How junit handles static methods.
 ___________________________________________________________________________________________________________________________________________________________
