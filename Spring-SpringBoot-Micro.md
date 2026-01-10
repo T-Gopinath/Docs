@@ -9996,9 +9996,231 @@ Event Consumer → Projection Builder
               }
           }
 
-          
 
+     Production CQRS + Kafka + Elasticsearch (Spring Boot)
+
+     1️⃣ Architecture (Production-Ready)
+     
+                                   ┌────────────┐
+                                   │   Client   │
+                                   └─────┬──────┘
+                                         │
+                               ┌─────────▼─────────┐
+                               │  API Gateway       │
+                               └─────────┬─────────┘
+                                         │
+                       ┌─────────────────┴─────────────────┐
+                       │                                   │
+               ┌───────▼────────┐                  ┌───────▼────────┐
+               │ Command Service │                  │ Query Service   │
+               │ (Write Model)   │                  │ (Read Model)    │
+               │                 │                  │                 │
+               │ MySQL/Postgres  │                  │ Elasticsearch   │
+               │ JPA             │                  │                 │
+               │ Outbox Table    │                  │ Kafka Consumer  │
+               └───────┬────────┘                  └────────┬────────┘
+                       │                                      │
+                       │ Kafka Producer                      │
+                       └──────────────► Kafka ◄──────────────┘
+               
+
+
+          3️⃣ Command Service (WRITE SIDE)
+
+               Order Entity
+               
+                    @Entity
+                    @Table(name = "orders")
+                    public class Order {
+                    
+                        @Id
+                        @GeneratedValue(strategy = GenerationType.IDENTITY)
+                        private Long id;
+                    
+                        private String customerName;
+                        private BigDecimal totalAmount;
+                        private String status;
+                    
+                        protected Order() {}
+                    
+                        public Order(String customerName, BigDecimal totalAmount) {
+                            this.customerName = customerName;
+                            this.totalAmount = totalAmount;
+                            this.status = "CREATED";
+                        }
+                    }
+
+
+          Outbox Entity (CRITICAL)
+
+               @Entity
+               @Table(name = "outbox_events")
+               public class OutboxEvent {
+               
+                   @Id
+                   @GeneratedValue
+                   private UUID id;
+               
+                   private String aggregateType;
+                   private String aggregateId;
+                   private String eventType;
+               
+                   @Lob
+                   private String payload;
+               
+                   private Instant createdAt = Instant.now();
+                   private boolean published = false;
+               }
+
+
+Command Service (Transactional)
+
+          @Service
+          public class OrderCommandService {
           
+              private final OrderRepository orderRepo;
+              private final OutboxRepository outboxRepo;
+              private final ObjectMapper objectMapper;
+          
+              public OrderCommandService(OrderRepository orderRepo,
+                                         OutboxRepository outboxRepo,
+                                         ObjectMapper objectMapper) {
+                  this.orderRepo = orderRepo;
+                  this.outboxRepo = outboxRepo;
+                  this.objectMapper = objectMapper;
+              }
+          
+              @Transactional
+              public void createOrder(String customerName, BigDecimal amount) {
+          
+                  Order order = new Order(customerName, amount);
+                  orderRepo.save(order);
+          
+                  OrderCreatedEvent event = new OrderCreatedEvent(
+                          order.getId(),
+                          customerName,
+                          amount,
+                          order.getStatus()
+                  );
+          
+                  OutboxEvent outbox = new OutboxEvent();
+                  outbox.setAggregateType("Order");
+                  outbox.setAggregateId(order.getId().toString());
+                  outbox.setEventType("OrderCreated");
+                  outbox.setPayload(serialize(event));
+          
+                  outboxRepo.save(outbox);
+              }
+          
+              private String serialize(Object event) {
+                  try {
+                      return objectMapper.writeValueAsString(event);
+                  } catch (Exception e) {
+                      throw new RuntimeException(e);
+                  }
+              }
+          }
+
+
+     4️⃣ Kafka Publisher (Reliable)
+          Scheduled Publisher
+
+               @Component
+               public class OutboxPublisher {
+               
+                   private final OutboxRepository repository;
+                   private final KafkaTemplate<String, String> kafkaTemplate;
+               
+                   @Scheduled(fixedDelay = 3000)
+                   public void publish() {
+                       List<OutboxEvent> events =
+                               repository.findTop50ByPublishedFalseOrderByCreatedAt();
+               
+                       for (OutboxEvent event : events) {
+                           kafkaTemplate.send(
+                                   "order-events",
+                                   event.getAggregateId(),
+                                   event.getPayload()
+                           );
+                           event.setPublished(true);
+                       }
+               
+                       repository.saveAll(events);
+                   }
+               }
+
+
+
+     5️⃣ Kafka Configuration (Producer)
+
+               spring:
+                 kafka:
+                   bootstrap-servers: localhost:9092
+                   producer:
+                     key-serializer: org.apache.kafka.common.serialization.StringSerializer
+                     value-serializer: org.apache.kafka.common.serialization.StringSerializer
+                     acks: all
+                     retries: 3
+
+
+     6️⃣ Shared Event (Schema-Stable)
+               public record OrderCreatedEvent(
+                  Long orderId,
+                  String customerName,
+                  BigDecimal totalAmount,
+                  String status
+          ) {}
+
+
+     7️⃣ Query Service (READ SIDE)
+          Elasticsearch Projection
+
+               @Document(indexName = "orders")
+               public class OrderView {
+               
+                   @Id
+                   private Long orderId;
+               
+                   private String customerName;
+                   private BigDecimal totalAmount;
+                   private String status;
+                   private Instant createdAt;
+               }
+
+
+     Kafka Consumer → ES
+
+               @Component
+          public class OrderEventConsumer {
+          
+              private final OrderViewRepository repository;
+              private final ObjectMapper mapper;
+          
+              @KafkaListener(topics = "order-events", groupId = "order-query")
+              public void consume(String message) throws Exception {
+          
+                  OrderCreatedEvent event =
+                          mapper.readValue(message, OrderCreatedEvent.class);
+          
+                  OrderView view = new OrderView();
+                  view.setOrderId(event.orderId());
+                  view.setCustomerName(event.customerName());
+                  view.setTotalAmount(event.totalAmount());
+                  view.setStatus(event.status());
+                  view.setCreatedAt(Instant.now());
+          
+                  repository.save(view);
+              }
+          }
+
+     8️⃣ Query API
+               @GetMapping("/orders/search")
+               public List<OrderView> search(@RequestParam String status) {
+                   return repository.findByStatus(status);
+               }
+
+
+     “We use CQRS with MySQL as the write model and Elasticsearch as a read projection. Domain events are persisted via a transactional outbox and published to Kafka, ensuring reliability and eventual consistency.”
 _________________________________________________________________________________________________________________________________
 ### Q) Redis cacheing ? 
 
