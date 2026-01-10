@@ -9650,6 +9650,7 @@ Here are the key cloud-native design principles explained simply:
 ✅ 3. API-Based Communication
      Services communicate using lightweight APIs (REST, gRPC, messaging).
      Loose coupling enhances scalability and flexibility.
+     
 ✅ 4. DevOps & Automation
      Use CI/CD pipelines for:
      automated builds
@@ -9666,12 +9667,14 @@ Here are the key cloud-native design principles explained simply:
 ✅ 6. Immutable Infrastructure
      Do not modify running servers; instead replace containers/VMs with new versions.
      Prevents configuration drift and makes deployments predictable.
+     
 ✅ 7. Declarative Configurations
      Store infrastructure and configurations as code (IaC) using:
      Kubernetes YAML
      Terraform
      CloudFormation
      Provides version control and predictable environments.
+     
 ✅ 8. Resilience & Fault Tolerance
      Design for failures through:
      retries
@@ -9680,12 +9683,14 @@ Here are the key cloud-native design principles explained simply:
      graceful degradation
      distributed tracing
      self-healing containers (Kubernetes restarts)
+     
 ✅ 9. Observability
      Every service should be measurable:
      Logs → centralized logging (ELK, Loki)
      Metrics → Prometheus, CloudWatch
      Tracing → Jaeger, Zipkin
      Improves debugging and performance monitoring.
+     
 ✅ 10. Stateless Services
      Services should avoid storing session or state in memory.
      Use external stores:
@@ -9693,24 +9698,121 @@ Here are the key cloud-native design principles explained simply:
      Databases
      Object storage (S3)
      Facilitates scaling and container restarts.
+     
 ✅ 11. Security by Design
      Zero-trust networking
      Secrets management (Vault, KMS)
      Policy-based access control
      Encryption at rest and in transit
 
-_________________________________________________________________________________________________________________________________________________________
+_________________________________________________________________________________________________________________________________
 ### Q)  Using external jar in springboot project ?
 
 https://thyanmol.medium.com/using-external-jar-in-springboot-project-7efcf53975b0
 
-__________________________________________________________________________________________________________________________________________________________
+_________________________________________________________________________________________________________________________________
+### Q) spring data elasticsearch example ?
 
-### Q) spring data elasticsearch example
+          Client
+            |
+          Spring Boot
+            |
+          MySQL / PostgreSQL  ✅ (Primary DB)
+            |
+          Async Sync (Kafka / Events)
+            |
+          Elasticsearch (Search Index)
 
-_____________________________________________________________________________________________________________________________________________________
+          ✅ Correct Design
 
-### Q) Redis cacheing
+               Save order in MySQL               
+               Commit transaction               
+               Publish event               
+               Index order in Elasticsearch               
+               If Elasticsearch is down:               
+                    Order is still safe in DB               
+                    Index can be rebuilt later
+
+
+          When Elasticsearch Data Can Be Lost (and It’s OK)
+               You can always rebuild Elasticsearch from the DB
+
+Example (Spring Boot)
+
+     @Transactional
+     public void createOrder(Order order) {
+         orderRepository.save(order);
+         applicationEventPublisher.publishEvent(
+             new OrderCreatedEvent(order.getId())
+         );
+     }
+
+    Async ES Update
+     
+    @Async
+     @EventListener
+     public void onOrderCreated(OrderCreatedEvent event) {
+         Order order = orderRepository.findById(event.getOrderId()).orElseThrow();
+         elasticsearchRepository.save(order);
+     }
+
+Debezium is an open-source Change Data Capture (CDC) platform that lets you stream database changes (INSERT, UPDATE, DELETE) in real time to other systems—most commonly Apache Kafka.
+
+
+1️⃣ What is CQRS?
+
+     CQRS (Command Query Responsibility Segregation) separates:
+     Commands → change system state (write)
+     Queries → read system state (read)
+     👉 Instead of one model/database doing both, writes and reads are optimized independently.
+
+
+                    
+                                   ┌───────────────┐
+                                   │   Client      │
+                                   └──────┬────────┘
+                                          │
+                                 ┌────────▼─────────┐
+                                 │ API Gateway       │
+                                 └──────┬─────┬─────┘
+                                        │     │
+                                Commands │     │ Queries
+                                        │     │
+                         ┌──────────────▼─┐   ┌──────────────▼────────┐
+                         │ Write Service   │   │ Read Service           │
+                         │ (Spring Boot)   │   │ (Spring Boot)          │
+                         │                 │   │                        │
+                         │ JPA → MySQL     │   │ Elasticsearch          │
+                         └───────┬─────────┘   └──────────────┬────────┘
+                                 │                             │
+                                 │ Domain Events               │
+                                 ▼                             ▼
+                            Kafka / RabbitMQ             ES Index
+
+
+                            
+
+          @Transactional
+          public void createOrder(CreateOrderCommand cmd) {
+              Order order = new Order(cmd);
+              orderRepository.save(order);
+          
+              eventPublisher.publish(
+                  new OrderCreatedEvent(order.getId())
+              );
+          }
+
+
+          
+          @KafkaListener(topics = "order-events")
+          public void handle(OrderCreatedEvent event) {
+              OrderView view = projectionMapper.toView(event);
+              elasticsearchRepository.save(view);
+          }
+
+
+_________________________________________________________________________________________________________________________________
+### Q) Redis cacheing ? 
 
 https://www.youtube.com/watch?v=OqCK95AS-YE
 
