@@ -9811,6 +9811,194 @@ Debezium is an open-source Change Data Capture (CDC) platform that lets you stre
           }
 
 
+
+     cqrs-elasticsearch-demo
+          │
+          ├── order-command-service   (WRITE SIDE)
+          │   ├── controller
+          │   ├── command
+          │   ├── domain
+          │   ├── repository (JPA)
+          │   ├── service
+          │   └── event
+          │
+          ├── order-query-service     (READ SIDE)
+          │   ├── controller
+          │   ├── projection
+          │   ├── repository (Elasticsearch)
+          │   └── consumer
+          │
+          └── common-events
+              └── OrderCreatedEvent
+
+
+     @Entity
+     @Table(name = "orders")
+     public class Order {
+     
+         @Id
+         @GeneratedValue
+         private Long id;
+     
+         private String customerName;
+         private BigDecimal totalAmount;
+         private String status;
+     
+         protected Order() {}
+     
+         public Order(String customerName, BigDecimal totalAmount) {
+             this.customerName = customerName;
+             this.totalAmount = totalAmount;
+             this.status = "CREATED";
+         }
+     }
+
+
+     Command Object
+          public record CreateOrderCommand(String customerName, BigDecimal totalAmount) {}
+
+      Repository (JPA)
+           public interface OrderRepository        extends JpaRepository<Order, Long> {
+          }
+
+
+     Service 
+
+          @Service
+          public class OrderCommandService {
+          
+              private final OrderRepository repository;
+              private final ApplicationEventPublisher publisher;
+          
+              public OrderCommandService(OrderRepository repository,  ApplicationEventPublisher publisher) {
+                  this.repository = repository;
+                  this.publisher = publisher;
+              }
+          
+              @Transactional
+              public void createOrder(CreateOrderCommand command) {
+                  Order order = new Order(
+                          command.customerName(),
+                          command.totalAmount()
+                  );
+          
+                  repository.save(order);
+          
+                  publisher.publishEvent(
+                      new OrderCreatedEvent(
+                          order.getId(),
+                          order.getCustomerName(),
+                          order.getTotalAmount(),
+                          order.getStatus()
+                      )
+                  );
+              }
+          }
+
+
+
+     REST Controller (Command API)
+
+     
+          @RestController
+          @RequestMapping("/orders")
+          public class OrderCommandController {
+          
+              private final OrderCommandService service;
+          
+              public OrderCommandController(OrderCommandService service) {
+                  this.service = service;
+              }
+          
+              @PostMapping
+              public ResponseEntity<Void> create(
+                      @RequestBody CreateOrderCommand command) {
+          
+                  service.createOrder(command);
+                  return ResponseEntity.accepted().build();
+              }
+          }
+
+
+Domain Event (Shared)
+
+     public record OrderCreatedEvent(Long orderId, String customerName, BigDecimal totalAmount,  String status) {}
+
+
+
+Projection (Read Mode)
+
+     @Document(indexName = "orders")
+     public class OrderView {
+     
+         @Id
+         private Long orderId;
+     
+         private String customerName;
+         private BigDecimal totalAmount;
+         private String status;
+     
+         private Instant createdAt;
+     }
+
+
+     Elasticsearch Repository
+
+          public interface OrderViewRepository
+             extends ElasticsearchRepository<OrderView, Long> {     
+                   List<OrderView> findByStatus(String status);
+               }
+
+
+Event Consumer → Projection Builder
+
+     @Component
+     public class OrderEventConsumer {
+     
+         private final OrderViewRepository repository;
+     
+         public OrderEventConsumer(OrderViewRepository repository) {
+             this.repository = repository;
+         }
+     
+         @EventListener
+         public void on(OrderCreatedEvent event) {
+     
+             OrderView view = new OrderView();
+             view.setOrderId(event.orderId());
+             view.setCustomerName(event.customerName());
+             view.setTotalAmount(event.totalAmount());
+             view.setStatus(event.status());
+             view.setCreatedAt(Instant.now());
+     
+             repository.save(view);
+         }
+     }
+     
+
+     Query Controller (Read API)
+     
+          @RestController
+          @RequestMapping("/orders/search")
+          public class OrderQueryController {
+          
+              private final OrderViewRepository repository;
+          
+              public OrderQueryController(OrderViewRepository repository) {
+                  this.repository = repository;
+              }
+          
+              @GetMapping
+              public List<OrderView> search(
+                      @RequestParam String status) {
+          
+                  return repository.findByStatus(status);
+              }
+          }
+
+          
+
+          
 _________________________________________________________________________________________________________________________________
 ### Q) Redis cacheing ? 
 
