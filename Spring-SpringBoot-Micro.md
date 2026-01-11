@@ -10251,6 +10251,7 @@ Imagine you have documents like this:
                Kafka → page 12, 45
                Elasticsearch → page 3, 18
               You don’t read the whole book to find a word, this is how inverted index is working
+              
 
 
 _________________________________________________________________________________________________________________________________
