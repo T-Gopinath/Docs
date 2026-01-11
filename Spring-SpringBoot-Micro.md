@@ -9605,6 +9605,29 @@ client.
 scenario?   Composite pattern.
 _________________________________________________________________________________________________________________________________________________________
 ### Q) How junit handles static methods.
+
+     import static org.mockito.Mockito.*;
+     import static org.junit.jupiter.api.Assertions.*;
+     import org.junit.jupiter.api.Test;
+     import org.mockito.MockedStatic;
+
+          class OrderServiceTest {
+          
+              @Test
+              void shouldDetectExpiredOrder() {
+                  try (MockedStatic<DateUtil> mocked = mockStatic(DateUtil.class)) {
+                      mocked.when(DateUtil::today)
+                            .thenReturn(LocalDate.of(2025, 1, 1));
+          
+                      OrderService service = new OrderService();
+                      boolean expired = service.isOrderExpired(
+                              LocalDate.of(2024, 12, 31));
+          
+                      assertTrue(expired);
+                  }
+              }
+          }
+
 ___________________________________________________________________________________________________________________________________________________________
 ### Q) What is the process to switch the default JPA persistence provider in Spring Boot ? 
 ___________________________________________________________________________________________________________________________________________________________
