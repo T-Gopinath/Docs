@@ -9611,6 +9611,95 @@ ________________________________________________________________________________
 ### Q) How do I migrate a Java application from a lower version to a higher version, and what tests are involved in the process
 __________________________________________________________________________________________________________________________________________________________
 ### Q) What steps and considerations are involved in migrating from an RDBMS to a NoSQL database?
+     
+     👉 Mapping RDBMS → NoSQL
+          OLTP with complex joins → Document DB          
+          Event logs / time-series → Wide-column          
+          Session storage → Key-value
+
+          3. Data Modeling: The Biggest Change
+               RDBMS (Normalized)
+                    Tables                    
+                    Foreign keys                    
+                    JOINs                    
+                    ACID transactions
+                    
+               NoSQL (Denormalized)
+                    Aggregates               
+                    Embedded data               
+                    Query-driven design               
+                    Eventual consistency
+
+               Example: Orders
+                    Order
+                    OrderItem
+                    Customer
+                    Product
+
+                    Document (MongoDB)
+                    {
+                      "orderId": "O123",
+                      "customer": {
+                        "id": "C1",
+                        "name": "Gopinath"
+                      },
+                      "items": [
+                        { "productId": "P1", "price": 100, "qty": 2 }
+                      ],
+                      "status": "SHIPPED"
+                    }
+
+          4. Query & Access Pattern Analysis (Critical Step)
+               Before migration, answer:
+
+               What are the top 10 queries?               
+               Read-heavy or write-heavy?               
+               Latency expectations?               
+               Query by ID? Range? Aggregation?               
+               NoSQL cannot support ad-hoc joins efficiently.               
+               👉 Design schema around queries, not entities
+               
+         5. Consistency & Transactions  
+              RDBMS
+
+               Strong consistency               
+               Multi-table transactions
+
+               NoSQL
+
+          Often eventual consistency
+          Limited transactions (document-level or partition-level)
+
+          6. Migration Strategy (How to Move Data)
+               1️⃣ Big Bang Migration
+               2️⃣ Dual Write (Recommended)
+               3️⃣ CDC (Change Data Capture)
+         7. Data Transformation & ETL
+              ETL tools:(Extract,transform,Load)
+
+               Apache Spark               
+               Kafka Streams               
+               Custom batch jobs
+         8. Application Code Changes 
+              SELECT * FROM orders WHERE customer_id = ?
+              to
+                   db.orders.find({ "customer.id": "C1" })
+
+          9. Indexing & Performance Tuning
+          10. Testing & Validation
+          11. Monitoring & Operations
+
+
+               14. Migration Checklist (Quick Summary)
+
+               ✔ Clear business justification
+               ✔ Correct NoSQL type
+               ✔ Query-driven schema
+               ✔ Consistency trade-offs accepted
+               ✔ CDC-based migration
+               ✔ Application refactoring planned
+               ✔ Performance tested
+               ✔ Monitoring ready
 __________________________________________________________________________________________________________________________________________________________
 ### Q) What is the process for upgrading a React application from a lower React version to a higher version?
 
