@@ -9700,6 +9700,11 @@ ________________________________________________________________________________
                ✔ Application refactoring planned
                ✔ Performance tested
                ✔ Monitoring ready
+
+
+               hot partitio Simple Definition
+
+                    A hot partition occurs when a single partition (or shard) becomes overloaded because too many requests target the same partition key or range of keys.
 __________________________________________________________________________________________________________________________________________________________
 ### Q) What is the process for upgrading a React application from a lower React version to a higher version?
 
