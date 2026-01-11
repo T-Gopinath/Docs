@@ -10221,6 +10221,38 @@ Command Service (Transactional)
 
 
      “We use CQRS with MySQL as the write model and Elasticsearch as a read projection. Domain events are persisted via a transactional outbox and published to Kafka, ensuring reliability and eventual consistency.”
+
+
+
+In Elastic search is based on inverted intex (Think of it as a reverse lookup from content → documents, instead of documents → content)
+
+example
+Imagine you have documents like this:
+     
+     | Doc ID | Content                     |
+     | ------ | --------------------------- |
+     | 1      | "spring boot elasticsearch" |
+     | 2      | "spring boot kafka"         |
+     | 3      | "elasticsearch kafka"       |
+
+     With an inverted index (fast way ✅)
+          Elasticsearch stores data like this:
+
+          | Term          | Document IDs |
+          | ------------- | ------------ |
+          | spring        | 1, 2         |
+          | boot          | 1, 2         |
+          | elasticsearch | 1, 3         |
+          | kafka         | 2, 3         |
+
+
+          example - Booking indexing
+               
+               Kafka → page 12, 45
+               Elasticsearch → page 3, 18
+              You don’t read the whole book to find a word, this is how inverted index is working
+
+
 _________________________________________________________________________________________________________________________________
 ### Q) Redis cacheing ? 
 
