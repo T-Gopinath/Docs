@@ -9311,6 +9311,151 @@ ________________________________________________________________________________
 ### Q) Automic variable , parallel process and current  process Difference
 __________________________________________________________________________________________________________________________________________________________
 ### Q) What is S.O.L.I.D Principles
+
+          They help you write clean, maintainable, scalable, and testable code—especially important in Java, Spring Boot, and microservices architectures.
+          
+
+          | Letter | Principle                       | Meaning                                        |
+          | ------ | ------------------------------- | ---------------------------------------------- |
+          | **S**  | Single Responsibility Principle | One class = one reason to change               |
+          | **O**  | Open/Closed Principle           | Open for extension, closed for modification    |
+          | **L**  | Liskov Substitution Principle   | Subtypes must be replaceable for base types    |
+          | **I**  | Interface Segregation Principle | Many small interfaces over one large interface |
+          | **D**  | Dependency Inversion Principle  | Depend on abstractions, not concrete classes   |
+
+     
+          1️⃣ S — Single Responsibility Principle (SRP)
+                    A class should have only one reason to change.
+                    ❌ Bad Example
+                         class UserService {
+                             void saveUser() {}
+                             void sendEmail() {}
+                             void generateReport() {}
+                         }
+                   ✔ Good Example
+                        class UserService {
+                             void saveUser() {}
+                         }
+                         
+                         class EmailService {
+                             void sendEmail() {}
+                         }
+                         
+                         class ReportService {
+                             void generateReport() {}
+                         }
+
+
+                    📌 Why it matters
+
+                         Easier maintenance                         
+                         Less impact when requirements change                         
+                         Better testability
+
+          2️⃣ O — Open/Closed Principle (OCP)
+               Software entities should be open for extension but closed for modification.
+               
+                    ❌ Bad Example
+                         class DiscountService {
+                             double getDiscount(String type) {
+                                 if (type.equals("PREMIUM")) return 20;
+                                 if (type.equals("BASIC")) return 10;
+                                 return 0;
+                             }
+                         }
+
+
+                    ✔ Good Example
+                         interface DiscountStrategy {
+                             double getDiscount();
+                         }
+                         
+                         class PremiumDiscount implements DiscountStrategy {
+                             public double getDiscount() { return 20; }
+                         }
+                         
+                         class BasicDiscount implements DiscountStrategy {
+                             public double getDiscount() { return 10; }
+                         }
+
+                         📌 Add new discounts without modifying existing code
+
+          3️⃣ L — Liskov Substitution Principle (LSP)
+                    Objects of a superclass should be replaceable with objects of its subclasses without breaking the application.
+                    
+                         ❌ Bad Example
+                         
+                              class Bird {
+                                  void fly() {}
+                              }
+                              
+                              class Penguin extends Bird {
+                                  void fly() {
+                                      throw new UnsupportedOperationException();
+                                  }
+                              }
+
+                         ✔ Good Example
+                              interface Bird {}
+
+                              interface FlyingBird extends Bird {
+                                  void fly();
+                              }
+                              
+                              class Sparrow implements FlyingBird {
+                                  public void fly() {}
+                              }
+                              
+                              class Penguin implements Bird {}
+
+                              📌 Prevents runtime surprises
+
+          4️⃣ I — Interface Segregation Principle (ISP)
+               Clients should not be forced to depend on methods they do not use.
+                    ❌ Bad Example
+                         interface Worker {
+                             void work();
+                             void eat();
+                         }
+
+                     ✔ Good Example
+                          interface Workable {
+                             void work();
+                         }
+                         
+                         interface Eatable {
+                             void eat();
+                         }
+
+                    📌 Leads to cleaner APIs
+
+
+     5️⃣ D — Dependency Inversion Principle (DIP)
+          High-level modules should not depend on low-level modules. Both should depend on abstractions.
+          
+          ❌ Bad Example
+               class OrderService {
+                   private MySQLDatabase db = new MySQLDatabase();
+               }
+               
+          ✔ Good Example
+               interface Database {
+                   void save();
+               }
+               
+               class MySQLDatabase implements Database {
+                   public void save() {}
+               }
+               
+               class OrderService {
+                   private Database db;
+               
+                   OrderService(Database db) {
+                       this.db = db;
+                   }
+               }
+
+               📌 This is the foundation of Spring’s Dependency Injection
 __________________________________________________________________________________________________________________________________________________________
 
 ### Q) Design patterns in java
