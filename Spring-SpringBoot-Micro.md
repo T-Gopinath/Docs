@@ -9180,7 +9180,7 @@ client.sendEmail(request);
           * Need to request production access from AWS Support.     
           
 _________________________________________________________________________________________________________________________________________
-### Q) What is API API orchestration
+### Q) What is API orchestration
 
      API orchestration refers to coordinating multiple API calls across different services and combining their outputs to produce a single, meaningful response or complete a business workflow.
 
