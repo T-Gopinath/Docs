@@ -10180,7 +10180,23 @@ ________________________________________________________________________________
 _________________________________________________________________________________________________________________________________
 ### Q) Please explain the concept of federated identity, including SAML, OAuth2, Keycloak, and Okta.
 _________________________________________________________________________________________________________________________________
-### Q) What is cloud-native design principles ?_________________________________________________________________________________________________________________________________
+### Q) What is cloud-native design principles ?
+
+     Cloud-native design principles are a set of architectural and engineering practices used to build applications that fully leverage cloud platforms (AWS, Azure, GCP) for scalability, resilience, agility, and cost efficiency.
+     1️⃣ Designed for the Cloud (Not Lift-and-Shift)
+     2️⃣ Microservices Architecture
+     3️⃣ Stateless Services
+     4️⃣ Horizontal Scalability (Scale Out, Not Up)
+     5️⃣ Resilience & Fault Tolerance
+     6️⃣ Loose Coupling via APIs & Events
+     7️⃣ Infrastructure as Code (IaC)
+     8️⃣ Automated CI/CD Pipelines
+     9️⃣ Observability Built-In
+     🔟 Security by Design (Shift-Left Security)
+     1️⃣1️⃣ Managed Services First
+     1️⃣2️⃣ Cost Awareness & Optimization
+     
+________________________________________________________________________________________________________________________________
 ### Q) what is CI/CD pipeline development ?
 
 👍 Example CI/CD Flow (Simple)
