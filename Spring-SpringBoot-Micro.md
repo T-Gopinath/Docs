@@ -9905,6 +9905,43 @@ ________________________________________________________________________________
 
 ___________________________________________________________________________________________________________________________________________________________
 ### Q) What is the process to switch the default JPA persistence provider in Spring Boot ? 
+
+     Exclude Hibernate from Spring Boot Starter
+
+          <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <exclusions>
+              <exclusion>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-core</artifactId>
+              </exclusion>
+            </exclusions>
+          </dependency>
+
+     3️⃣ Add the Desired JPA Provider
+          <dependency>
+            <groupId>org.eclipse.persistence</groupId>
+            <artifactId>eclipselink</artifactId>
+            <version>4.0.2</version>
+          </dependency>
+
+     4️⃣ Configure JPA Provider in application.yml / properties
+
+          ' spring:
+                 jpa:
+                   database-platform: org.eclipse.persistence.platform.database.PostgreSQLPlatform
+                   properties:
+                     jakarta.persistence.provider: org.eclipse.persistence.jpa.PersistenceProvider
+'
+
+     🔑 Summary
+          Steps to switch JPA provider in Spring Boot:          
+               1) Exclude Hibernate          
+               2) Add alternative JPA provider dependency          
+               3) Set jakarta.persistence.provider          
+               4) Configure provider-specific properties          
+               5) Verify at startup
 ___________________________________________________________________________________________________________________________________________________________
 ### Q) How do I migrate a Java application from a lower version to a higher version, and what tests are involved in the process
 __________________________________________________________________________________________________________________________________________________________
