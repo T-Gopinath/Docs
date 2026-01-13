@@ -10986,6 +10986,31 @@ ________________________________________________________________________________
 
 https://www.youtube.com/watch?v=OqCK95AS-YE
 
+__________________________________________________________________________________________________________________________________
+
+### Q) What is EAGLE Architecture  ? 
+
+     something like but not standard
+          Event-driven
+          API-first
+          Global scalability
+          Loosely coupled services
+          Edge + Cloud processing 
+
+
+          '      Clients / Edge
+                    ↓
+               API Gateway
+                    ↓
+               Event Bus (Kafka / Pulsar)
+                    ↓
+               Microservices
+                    ↓
+               Datastores + Analytics
+               '
+
+
+
 
 
 
