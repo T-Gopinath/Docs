@@ -10177,8 +10177,67 @@ ________________________________________________________________________________
           ✔ Media queries only when needed
           ✔ Responsive images
           ✔ Tested on real devices    
+          
 _________________________________________________________________________________________________________________________________
-### Q) Please explain the concept of federated identity, including SAML, OAuth2, Keycloak, and Okta.
+### Q) Please explain the concept of Federated identity, including SAML, OAuth2, Keycloak, and Okta.
+     
+     Federated Identity → One identity, many systems.
+               Gmail → then access → YouTube, Google Drive, Google Cloud Console without logging in again.
+               
+     Authentication is centralized, access is distributed.
+
+     Federated Identity allows a user to authenticate once with a trusted Identity Provider (IdP) and then access 
+     multiple independent systems without creating separate accounts for each one.
+
+
+          ' | Role                        | Description                                             |
+          | --------------------------- | ------------------------------------------------------- |
+          | **User**                    | Person or system trying to access a resource            |
+          | **Identity Provider (IdP)** | Authenticates the user (Okta, Keycloak, Azure AD)       |
+          | **Service Provider (SP)**   | Application that trusts the IdP                         |
+          | **Federation Protocol**     | Rules for exchanging identity data (SAML, OAuth2, OIDC) |'
+
+
+
+     SAML (Security Assertion Markup Language)
+          SAML is an XML-based standard used mainly for enterprise SSO.
+          
+          How SAML works (high-level)
+
+                    1) User tries to access an application (Service Provider)                    
+                    2) SP redirects user to IdP                    
+                    3) User authenticates with IdP                    
+                    4) IdP sends a SAML Assertion (signed XML) to SP                    
+                    5) SP grants acces
+
+          OAuth 2.0
+
+
+                    Core OAuth2 components
+
+                         '    | Component            | Role          |
+                              | -------------------- | ------------- |
+                              | Resource Owner       | User          |
+                              | Client               | Application   |
+                              | Authorization Server | Issues tokens |
+                              | Resource Server      | API           |
+ 
+                         '
+               OAuth2 Tokens
+                    Access Token → Used to call APIs               
+                    Refresh Token → Get new access tokens
+                    
+
+          OpenID Connect (OIDC) – OAuth2 + Identity
+                    OIDC = Authentication layer on top of OAuth2
+                    OIDC introduces:
+                         ID Token (JWT) → contains user identity
+                         Standard scopes (openid, profile, email )
+
+          Keycloak is an open-source Identity and Access Management (IAM) platform.
+
+          Okta
+               Okta is a cloud-based Identity-as-a-Service (IDaaS) platform.
 _________________________________________________________________________________________________________________________________
 ### Q) What is cloud-native design principles ?
 
