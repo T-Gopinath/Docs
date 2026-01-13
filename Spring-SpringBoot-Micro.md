@@ -9308,7 +9308,7 @@ ________________________________________________________________________________
          Properties:
            BucketName: my-sample-bucket-cloudformation-demo
 __________________________________________________________________________________________________________________________________________________________
-### Q) Atomic Variable (java.util.concurrent.atomic) , parallel process and current  process Difference
+### Q) Atomic Variable (java.util.concurrent.atomic), parallel process and current  process Difference.
      
      Atomic Variable :  Java is a variable that supports lock-free, thread-safe operations on a single value, And are designed to handle concurrent updates without using synchronized or explicit locks.
 
@@ -9438,6 +9438,7 @@ ________________________________________________________________________________
                     Instead of acquiring a lock, they rely on CPU-level atomic instructions, most commonly Compare-And-Swap (CAS).
                     
                     ➡️ No thread ever blocks or waits for a lock.
+                    
 __________________________________________________________________________________________________________________________________________________________
 ### Q) What is S.O.L.I.D Principles
 
