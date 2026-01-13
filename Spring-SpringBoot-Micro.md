@@ -9308,7 +9308,9 @@ ________________________________________________________________________________
          Properties:
            BucketName: my-sample-bucket-cloudformation-demo
 __________________________________________________________________________________________________________________________________________________________
-### Q) Automic variable , parallel process and current  process Difference
+### Q) Atomic Variable , parallel process and current  process Difference
+
+     
 __________________________________________________________________________________________________________________________________________________________
 ### Q) What is S.O.L.I.D Principles
 
