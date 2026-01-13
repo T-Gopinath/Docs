@@ -9308,9 +9308,136 @@ ________________________________________________________________________________
          Properties:
            BucketName: my-sample-bucket-cloudformation-demo
 __________________________________________________________________________________________________________________________________________________________
-### Q) Atomic Variable , parallel process and current  process Difference
-
+### Q) Atomic Variable (java.util.concurrent.atomic) , parallel process and current  process Difference
      
+     Atomic Variable :  Java is a variable that supports lock-free, thread-safe operations on a single value, And are designed to handle concurrent updates without using synchronized or explicit locks.
+
+               Why Atomic variable :  In a multithreaded environment, operations like count++ are not atomic:
+                    count++; // read → increment → write (3 steps)
+                    Multiple threads can interleave these steps and cause race conditions.
+
+                    Atomic variables solve this problem by performing operations atomically using CPU-level CAS (Compare-And-Swap) instructions.
+
+                         | Class                | Description                            |
+                         | -------------------- | -------------------------------------- |
+                         | `AtomicInteger`      | Atomic operations on `int`             |
+                         | `AtomicLong`         | Atomic operations on `long`            |
+                         | `AtomicBoolean`      | Atomic operations on `boolean`         |
+                         | `AtomicReference<T>` | Atomic operations on object references |
+                         | `AtomicIntegerArray` | Atomic array of integers               |
+                         | `AtomicLongArray`    | Atomic array of longs                  |
+
+
+                         //Not thread safe
+                         
+                         ' class Counter {
+                                  int count = 0;
+                              
+                                  void increment() {
+                                      count++; // NOT atomic
+                                  }
+                              }
+
+                         '
+
+
+                         thread safe atomic variable
+
+                         ' import java.util.concurrent.atomic.AtomicInteger;
+
+                              class Counter {
+                                  AtomicInteger count = new AtomicInteger(0);
+                              
+                                  void increment() {
+                                      count.incrementAndGet(); // atomic
+                                  }
+                              }
+
+                         '
+
+                         Common operations on Atomic variable
+
+                         ' AtomicInteger ai = new AtomicInteger(10);
+
+                              ai.get();                     // 10
+                              ai.set(20);                   // set value
+                              ai.incrementAndGet();         // ++value
+                              ai.getAndIncrement();         // value++
+                              ai.decrementAndGet();         // --value
+                              ai.compareAndSet(20, 30);     // CAS operation
+
+                         '
+
+
+                         Atomic Variable vs synchronized
+
+                         ' 
+                              | Aspect        | Atomic Variable | synchronized              |
+                              | ------------- | --------------- | ------------------------- |
+                              | Blocking      | ❌ No            | ✅ Yes                     |
+                              | Performance   | Faster          | Slower                    |
+                              | Deadlock risk | ❌ No            | ✅ Possible                |
+                              | Best for      | Single variable | Complex critical sections |
+
+                         '
+
+
+                         ' class RequestMetrics {
+                             private final AtomicLong totalRequests = new AtomicLong();
+                         
+                             public void recordRequest() {
+                                 totalRequests.incrementAndGet();
+                             }
+                         
+                             public long getTotalRequests() {
+                                 return totalRequests.get();
+                             }
+                         }
+
+                         '
+
+
+
+                           '  | Feature            | volatile  | Atomic              | synchronized |
+                              | ------------------ | --------- | --------------      | ------------ |
+                              | Visibility         | ✅         | ✅              | ✅            |
+                              | Atomicity          | ❌         | ✅ (single var) | ✅            |
+                              | Lock-free          | ✅         | ✅              | ❌            |
+                              | Blocking           | ❌         | ❌              | ✅            |
+                              | Deadlock risk      | ❌         | ❌              | ✅            |
+                              | Performance        | Very fast  | Fast             | Slower        |
+                              | Multiple variables | ❌         | ❌              | ✅            |
+     '
+
+                         Note : When an atomic operation is running, no other thread can see a half-done state. (They prevent race conditions without locks)
+                         
+               
+               What problem does an atomic variable solve in multithreaded programming?
+                    Atomic variables solve race conditions for single-variable updates by providing lock-free, atomic, and visible operations in multithreaded                     environments.
+                    
+               What are the commonly used atomic classes in Java?
+
+               '    
+                         | Category          | Common Classes                                 |
+                         | ----------------- | ---------------------------------------------- |
+                         | Primitive atomics | `AtomicInteger`, `AtomicLong`, `AtomicBoolean` |
+                         | Reference atomics | `AtomicReference`, `AtomicStampedReference`    |
+                         | Arrays            | `AtomicIntegerArray`, `AtomicLongArray`        |
+                         | High-throughput   | `LongAdder`, `DoubleAdder`                     |
+                         | Accumulators      | `LongAccumulator`, `DoubleAccumulator`         |
+                         | Field updaters    | `AtomicIntegerFieldUpdater`                    |
+
+               '
+                    
+                            
+               Are atomic variables blocking or non-blocking?
+                    Atomic variables are non-blocking.
+                    
+               Can atomic variables be used safely in distributed systems
+                    Atomic variables (like AtomicInteger, AtomicLong, AtomicReference, etc.) use lock-free algorithms under the hood. 
+                    Instead of acquiring a lock, they rely on CPU-level atomic instructions, most commonly Compare-And-Swap (CAS).
+                    
+                    ➡️ No thread ever blocks or waits for a lock.
 __________________________________________________________________________________________________________________________________________________________
 ### Q) What is S.O.L.I.D Principles
 
