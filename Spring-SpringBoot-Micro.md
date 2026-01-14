@@ -9438,6 +9438,13 @@ ________________________________________________________________________________
                     Instead of acquiring a lock, they rely on CPU-level atomic instructions, most commonly Compare-And-Swap (CAS).
                     
                     ➡️ No thread ever blocks or waits for a lock.
+
+
+                    note :
+                         Volatile guarantees visibility of changes across threads, while atomic variables guarantee visibility and atomic (lock-free) read–modify–write operations.
+
+                         A volatile variable is used when multiple threads need to read the latest value of a variable, but no compound (read–modify–write) operations are required,
+                         such as for status flags, configuration updates, or stop signals between threads.
                     
 __________________________________________________________________________________________________________________________________________________________
 ### Q) What is S.O.L.I.D Principles
