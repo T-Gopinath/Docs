@@ -11162,7 +11162,7 @@ ________________________________________________________________________________
                Datastores + Analytics
                '
 
-
+#### Q) Optimistic Locking and Pessimistic Locking.
 
 
 
