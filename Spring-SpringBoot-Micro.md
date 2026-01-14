@@ -11165,6 +11165,10 @@ ________________________________________________________________________________
 #### Q) Optimistic Locking and Pessimistic Locking.
 
 
+#### Q) How you will design payment Microservices.
+
+
+
 
 
 
