@@ -1,4 +1,6 @@
-          <img width="32766" height="59" alt="image" src="https://github.com/user-attachments/assets/0dee8c48-a441-42d4-b21a-3d42aa3af306" />### Q) Interservice communication between Microservices using spring boot 
+          <img width="32766" height="59" alt="image" src="https://github.com/user-attachments/assets/0dee8c48-a441-42d4-b21a-3d42aa3af306" />
+          
+### Q) Interservice communication between Microservices using spring boot ?
 
 In Spring Boot, several mechanisms are available to achieve interservice communication,
      depending on the architecture style (synchronous or asynchronous) and reliability needs.
@@ -85,15 +87,15 @@ public class UserServiceApplication {
 
      Producer Service:
         @Service
-public class OrderEventProducer {
-
-    @Autowired
-    private KafkaTemplate<String, String> kafkaTemplate;
-
-    public void publishOrderCreatedEvent(String orderJson) {
-        kafkaTemplate.send("order-topic", orderJson);
-    }
-}
+          public class OrderEventProducer {
+          
+              @Autowired
+              private KafkaTemplate<String, String> kafkaTemplate;
+          
+              public void publishOrderCreatedEvent(String orderJson) {
+                  kafkaTemplate.send("order-topic", orderJson);
+              }
+          }
 
 Consumer Service:
 
@@ -111,6 +113,8 @@ Benefits:
      Loosely coupled microservices.
      Services can continue functioning even if other services are down.
      Better for scalability and eventual consistency.
+
+     note: Evental Consisency : All systems will become consistent over time, but not immediately after a change.
 
   3. Service Discovery   
 
