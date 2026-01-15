@@ -1,4 +1,4 @@
-<img width="32766" height="59" alt="image" src="https://github.com/user-attachments/assets/0dee8c48-a441-42d4-b21a-3d42aa3af306" />### Q) Interservice communication between Microservices using spring boot 
+          <img width="32766" height="59" alt="image" src="https://github.com/user-attachments/assets/0dee8c48-a441-42d4-b21a-3d42aa3af306" />### Q) Interservice communication between Microservices using spring boot 
 
 In Spring Boot, several mechanisms are available to achieve interservice communication,
      depending on the architecture style (synchronous or asynchronous) and reliability needs.
@@ -11242,18 +11242,198 @@ ________________________________________________________________________________
 
           🎯 One-line Summary (Interview-ready)
 
-              * Optimistic locking detects conflicts at commit time using versioning               
-              * Pessimistic locking prevents conflicts by locking data upfront
+              * Optimistic locking detects conflicts at commit time using versioning.               
+              * Pessimistic locking prevents conflicts by locking data upfront.
 
               'Contention' means competition for the same limited resource.
+              
 
 #### Q) How you will design payment Microservices.
 
 #### Q) what is CompletableFuture.
 
+   ##### java.util.concurrent
+      CompletableFuture is a Java concurrency API (java.util.concurrent) used to write asynchronous, non-blocking code and to compose multiple async tasks easily.
+
+      CompletableFuture enables asynchronous, non-blocking programming with powerful composition and error handling support.
+
+      CompletableFuture does not create threads by itself — it uses a thread pool to execute async tasks.
+      Understanding this is critical for production systems.
+      
+      
+      1️⃣ Why CompletableFuture?
+           Before Java 8:
+                * Future → blocking (get() blocks)
+                * No easy way to chain or combine async tasks
+
+                CompletableFuture solves this by
+
+                * Running tasks asynchronously
+                * Supporting callbacks
+                * Allowing chaining, combining, and error handling
+                
+      2️⃣ Basic Example – Run async task
+
+      
+
+           ' CompletableFuture<Void> future =
+                   CompletableFuture.runAsync(() -> {
+                       System.out.println("Running async task");
+                   });
+               
+               future.join(); // wait for completion
+'
+
+     ✔ No return value
+     ✔ Runs in ForkJoinPool.commonPool
 
 
+     3️⃣ Async task with return value
 
 
+     ' CompletableFuture<String> future =
+               CompletableFuture.supplyAsync(() -> {
+                    return "Hello CompletableFuture";
+               });
+               
+     String result = future.join();
+     System.out.println(result);
+     '
+
+     ✔ supplyAsync() → returns value
+     ✔ join() → waits (unchecked exception)
+     ✔ uses ForkJoinPool.commonPool()
+
+
+     4️⃣ Transform result (thenApply)
+
+    
+          ' CompletableFuture<String> future =
+              CompletableFuture.supplyAsync(() -> "Java")
+                  .thenApply(result -> result + " CompletableFuture");
+          
+          System.out.println(future.join());
+          '
+
+     ✔ Used when output of one step feeds next
+          
+     5️⃣ Chain async calls (thenCompose)
+
+          ' CompletableFuture<String> future =
+              CompletableFuture.supplyAsync(() -> "OrderId-123")
+                  .thenCompose(orderId ->
+                      CompletableFuture.supplyAsync(() -> "Payment done for " + orderId)
+                  );
+          
+          System.out.println(future.join());
+          '
+
+     ✔ Used when next step returns another CompletableFuture
+
+  6️⃣ Run independent tasks in parallel (thenCombine)
+
+            ' CompletableFuture<Integer> price =
+                   CompletableFuture.supplyAsync(() -> 100);
+               
+               CompletableFuture<Integer> tax =
+                   CompletableFuture.supplyAsync(() -> 20);
+               
+               CompletableFuture<Integer> total =
+                   price.thenCombine(tax, Integer::sum);
+               
+               System.out.println(total.join()); // 120
+               '
+
+               ✔ Parallel execution
+               ✔ Combine results
+
+     7️⃣ Run after completion (thenAccept / thenRun)
+
+          ' CompletableFuture
+              .supplyAsync(() -> "Email Sent")
+              .thenAccept(result -> System.out.println(result));
+          '
+
+          * thenAccept() → consumes result
+          * thenRun() → no access to result
+
+     8️⃣ Exception handling
+
+
+          ' CompletableFuture<Integer> future =
+              CompletableFuture.supplyAsync(() -> {
+                  if (true) throw new RuntimeException("Error");
+                  return 10;
+              }).exceptionally(ex -> {
+                  System.out.println(ex.getMessage());
+                  return 0;
+              });
+          
+          System.out.println(future.join());
+
+          '
+     9️⃣ Handle success + failure (handle)
+
+          ' CompletableFuture<Integer> future =
+              CompletableFuture.supplyAsync(() -> 10)
+                  .handle((result, ex) -> {
+                      if (ex != null) return 0;
+                      return result * 2;
+                  });
+          
+          System.out.println(future.join());
+          '
+
+          ✔ Handles both success and failure
+
+     🔟 Wait for multiple tasks (allOf / anyOf)
+
+          'CompletableFuture<Void> all =
+              CompletableFuture.allOf(f1, f2, f3);
+
+          all.join(); // wait for all
+
+
+          CompletableFuture<Object> any =
+         CompletableFuture.anyOf(f1, f2);
+
+          System.out.println(any.join());
+
+     '
+
+     11 Providing Your Own Thread Pool (BEST PRACTICE)
+          ExecutorService executor =  Executors.newFixedThreadPool(10);
+
+          
+          Use it with CompletableFuture
+               '  CompletableFuture<String> future =
+                        CompletableFuture.supplyAsync(() -> {
+                            return "Running in custom pool";
+                        }, executor);
+                    
+                    System.out.println(future.join());
+                    executor.shutdown();
+               '
+
+     12. Different pools for different stages
+          ' ExecutorService dbPool = Executors.newFixedThreadPool(20);
+               ExecutorService cpuPool = Executors.newWorkStealingPool();
+               
+               CompletableFuture<String> future =
+                   CompletableFuture.supplyAsync(() -> fetchFromDB(), dbPool)
+                       .thenApplyAsync(data -> processData(data), cpuPool)
+                       .thenApply(result -> result.toUpperCase());
+               
+               System.out.println(future.join());
+'
+
+     🧠 Real-world Use Cases
+          ✔ Parallel API calls
+          ✔ Async DB + REST calls
+          ✔ Microservices orchestration
+          ✔ Non-blocking background jobs
+          ✔ Performance optimization
 
      
+
+          
