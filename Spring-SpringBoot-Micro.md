@@ -11250,6 +11250,85 @@ ________________________________________________________________________________
 
 #### Q) How you will design payment Microservices.
 
+          Architectural view defines how services are structured and interact, while design view defines how a specific service is internally implemented.
+
+
+          Payment Microservice – Architectural View Example
+                    Components
+                    API Gateway                    
+                    Payment Service                    
+                    Order Service                    
+                    Fraud Detection Service                    
+                    Notification Service                    
+                    Payment Gateway (external: Stripe/PayPal)                    
+                    Message Broker (Kafka)                    
+                    Database per service
+
+
+                              Client
+                                ↓
+                              API Gateway
+                                ↓
+                              Payment Service ──→ Fraud Service
+                                ↓                    ↓
+                              Order Service      Kafka Events
+                                ↓
+                              External Payment Gateway
+
+
+                              Key Architectural Decisions
+                                        Microservices over monolith                                        
+                                        REST + async events (Kafka)                                        
+                                        Database-per-service                                        
+                                        Circuit breakers & retries                                        
+                                        Idempotency for payment APIs                                        
+                                        PCI-DSS compliance boundaries
+                                        
+                              Non-functional concerns
+                                        Scalability (horizontal scaling)                                        
+                                        High availability                                        
+                                        Security (OAuth2, mTLS)                                        
+                                        Observability (logs, metrics, tracing)
+
+          Payment Microservice – Design View Example
+                                        
+               Inside Payment Servic
+                    Modules
+                    Controller Layer                    
+                    Service Layer                    
+                    Domain Layer                    
+                    Repository Layer                    
+                    Integration Layer
+
+
+                Class-Level Design
+
+                    PaymentController
+                     └── PaymentService
+                          ├── PaymentValidator
+                          ├── FraudClient
+                          ├── PaymentGatewayClient
+                          ├── PaymentRepository
+                          └── PaymentEventPublisher  
+          Key Design Decisions
+
+                    Saga pattern for payment workflow                    
+                    Idempotency key stored in DB                    
+                    State machine for payment states:                    
+                    INITIATED → AUTHORIZED → CAPTURED → FAILED                    
+                    Retry with exponential backoff                    
+                    Domain-driven design (Aggregates, Value Objects)
+
+
+          4️⃣ Simple Analogy 💡
+
+                    * Architectural View = City map 🏙️
+                      (Roads, zones, connections)
+                    
+                    * Design View = House blueprint 🏠
+                    (Rooms, wiring, plumbing)
+                    
+                          
 #### Q) what is CompletableFuture.
 
    ##### java.util.concurrent
