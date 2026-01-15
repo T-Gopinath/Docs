@@ -1,4 +1,3 @@
-          <img width="32766" height="59" alt="image" src="https://github.com/user-attachments/assets/0dee8c48-a441-42d4-b21a-3d42aa3af306" />
           
 ### Q) Interservice communication between Microservices using spring boot ?
 
