@@ -11164,6 +11164,88 @@ ________________________________________________________________________________
 
 #### Q) Optimistic Locking and Pessimistic Locking.
 
+     Both are concurrency control mechanisms used to prevent data inconsistency when multiple transactions access the same data.
+     
+     🔓 Optimistic Locking          
+          Assumption: Conflicts are rare
+
+          How it works
+               * No lock is placed when reading data
+               * Before updating, the system checks if data was modified by another transaction
+               * If modified → update fails → retry or abort
+
+        Implementation     
+             * Uses version number / timestamp
+             * Common in JPA/Hibernate
+
+             @Version
+             private Long version;
+
+             Example
+                  1) User A reads record (version = 1)
+                  2) User B reads same record (version = 1)
+                  3) User A updates → version becomes 2
+                  4) User B updates → fails (version mismatch)
+
+          ✅ Pros
+               * High performance
+               * No blocking
+               * Best for read-heavy systems
+          ❌ Cons
+               * Update failures possible
+               * Retry logic needed
+          🔥 Use when
+               * Low contention
+               * REST APIs, microservices
+               * High scalability required
+
+               
+     🔒 Pessimistic Locking
+          Assumption: Conflicts are common
+               How it works
+                    * Locks data as soon as it is read
+                    * Other transactions must wait until lock is released
+               Implementation
+                    * Uses database locks
+                    * JPA example:
+                         @Lock(LockModeType.PESSIMISTIC_WRITE)
+               Example
+                    1) User A reads record → lock acquired
+                    2) User B tries to read/update → blocked
+                    3) User A commits → lock released
+                    4) User B proceeds
+                    
+               ✅ Pros
+                    * Strong consistency
+                    * No update conflicts
+               ❌ Cons
+                    * Blocking
+                    * Deadlock risk
+                    * Lower performance
+                    
+               🔥 Use when
+                    * High contention
+                    * Financial systems
+                    * Inventory / seat booking
+
+
+
+               | Feature           | Optimistic          | Pessimistic      |
+               | ----------------- | ------------------- | ---------------- |
+               | Lock timing       | At update           | At read          |
+               | Blocking          | ❌ No              | ✅ Yes           |
+               | Performance       | High                | Lower            |
+               | Conflict handling | Detect & retry      | Prevent          |
+               | Scalability       | Excellent           | Limited          |
+               | Typical usage     | APIs, microservices | Banking, booking |
+
+
+          🎯 One-line Summary (Interview-ready)
+
+              * Optimistic locking detects conflicts at commit time using versioning               
+              * Pessimistic locking prevents conflicts by locking data upfront
+
+              'Contention' means competition for the same limited resource.
 
 #### Q) How you will design payment Microservices.
 
