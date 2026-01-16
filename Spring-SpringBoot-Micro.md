@@ -1907,36 +1907,35 @@ _______________________________________________________________________
 🛡️ 2. Java Security Configuration (ActuatorSecurityConfig.java)
 
 
-`` 
-package com.example.config;
-
-import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.web.SecurityFilterChain;
-
-@Configuration
-public class ActuatorSecurityConfig {
-
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-            .authorizeHttpRequests(auth -> auth
-                // Allow health and info without authentication
-                .requestMatchers(EndpointRequest.to("health", "info")).permitAll()
-                // Restrict all other actuator endpoints to ADMIN role
-                .requestMatchers(EndpointRequest.toAnyEndpoint()).hasRole("ADMIN")
-                // Require authentication for other app endpoints if needed
-                .anyRequest().authenticated()
-            )
-            .httpBasic()   // Use HTTP Basic Auth for simplicity
-            .and()
-            .csrf().disable();  // Disable CSRF for actuator API access (safe if using HTTPS)
-
-        return http.build();
-    }
-}
+``         
+          package com.example.config;          
+          import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
+          import org.springframework.context.annotation.Bean;
+          import org.springframework.context.annotation.Configuration;
+          import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+          import org.springframework.security.web.SecurityFilterChain;
+          
+          @Configuration
+          public class ActuatorSecurityConfig {
+          
+              @Bean
+              public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+                  http
+                      .authorizeHttpRequests(auth -> auth
+                          // Allow health and info without authentication
+                          .requestMatchers(EndpointRequest.to("health", "info")).permitAll()
+                          // Restrict all other actuator endpoints to ADMIN role
+                          .requestMatchers(EndpointRequest.toAnyEndpoint()).hasRole("ADMIN")
+                          // Require authentication for other app endpoints if needed
+                          .anyRequest().authenticated()
+                      )
+                      .httpBasic()   // Use HTTP Basic Auth for simplicity
+                      .and()
+                      .csrf().disable();  // Disable CSRF for actuator API access (safe if using HTTPS)
+          
+                  return http.build();
+              }
+          }
 ``
 
 _____________________________________________________________________________
@@ -1952,7 +1951,7 @@ _____________________________________________________________________________
      2. Improve Database Performance
           * **Connection Pooling**: Use efficient pools like HikariCP (default in Spring Boot). 
                Tune properties such as maximumPoolSize, connectionTimeout, etc.
-          * **Batch Operations**: Use batch inserts/updates for large datasets (spring.jpa.properties.hibernate.jdbc.batch_size).
+          * **Batch Operations**: Use batch inserts/updates for large datasets                                                                       (spring.jpa.properties.hibernate.jdbc.batch_size).
           * **Pagination**: Use pagination and projections for large data queries instead of fetching all records.
           * **Caching**: Leverage Hibernate 2nd-level cache and query cache with providers like Ehcache or Redis
           * **Indexing**: Add appropriate DB indexes to reduce query execution time.
@@ -2014,7 +2013,7 @@ ____________________________________________________________________________
            * Prefer declarative over programmatic transaction managemen
            * Apply @Transactional at the service layer, not at the controller or repository level.
 
-           ``@Service
+           `` @Service
                public class OrderService {
                
                    @Transactional
@@ -2030,7 +2029,7 @@ ____________________________________________________________________________
           
           Example (❌ Bad):
 
-          ``@Transactional
+          `` @Transactional
                public void updateOrder() {
                    callExternalAPI();  // Slow call
                    orderRepository.save(order);
@@ -2063,7 +2062,7 @@ ____________________________________________________________________________
          * By default, only unchecked (Runtime) exceptions trigger rollbacks.
          * To rollback for checked exceptions, specify explicitly:
 
-         ``@Transactional(rollbackFor = Exception.class)
+         `` @Transactional(rollbackFor = Exception.class)
           public void processOrder() throws Exception {
               // logic
           }
@@ -2082,7 +2081,7 @@ ____________________________________________________________________________
 
      Example:
      
-          ``@Transactional(isolation = Isolation.REPEATABLE_READ)
+          `` @Transactional(isolation = Isolation.REPEATABLE_READ)
                public void getAccountDetails() {
                    // ensures repeatable reads
                }
@@ -2095,7 +2094,7 @@ ____________________________________________________________________________
    7. Use Read-Only Transactions for Queries
        * For queries that don’t modify data, use:
        * 
-              ``@Transactional(readOnly = true)
+              `` @Transactional(readOnly = true)
                     public List<Customer> findAll() {
                         return customerRepository.findAll();
                     }
@@ -2110,8 +2109,8 @@ ____________________________________________________________________________
   9. Monitor and Debug Transactions
        * Enable SQL logging and transaction traces for debugging:
 
-               ``spring.jpa.show-sql=true
-                 logging.level.org.springframework.transaction=DEBUG
+               `` spring.jpa.show-sql=true
+                  logging.level.org.springframework.transaction=DEBUG
 ``
 
    Use tools like Actuator, Micrometer, or p6spy to track transaction metrics.
