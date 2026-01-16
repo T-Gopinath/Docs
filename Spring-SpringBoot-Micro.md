@@ -1459,14 +1459,14 @@ Following these practices ensures consistency, performance, and maintainability.
 
 ✅ Summary
 
+          * Prefer declarative transactions (@Transactional) at service layer.
+          * Use proper propagation, isolation, and rollback settings.
+          * Keep transactions short and read-only where possible.
+          * Avoid transactions on private methods.
+          * Integrate with a connection pool for efficiency.
 
-* Prefer declarative transactions (@Transactional) at service layer.
-* Use proper propagation, isolation, and rollback settings.
-* Keep transactions short and read-only where possible.
-* Avoid transactions on private methods.
-* Integrate with a connection pool for efficiency.
-  
 _____________________________________________________________________________________________________________________________
+
 
 ### Q) How do you approach testing in springboot application ?
 
