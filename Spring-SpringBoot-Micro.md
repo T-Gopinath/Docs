@@ -1790,76 +1790,87 @@ _______________________________________________________________________
 
      2. Use Spring Security for Authentication & Authorization
 
-     ``import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
-@Configuration
-public class ActuatorSecurityConfig {
-
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-            .authorizeHttpRequests(requests -> requests
-                .requestMatchers(EndpointRequest.to("health", "info")).permitAll()
-                .requestMatchers(EndpointRequest.toAnyEndpoint()).hasRole("ADMIN")
-                .anyRequest().authenticated()
-            )
-            .httpBasic(); // or .formLogin() if needed
-        return http.build();
-    }
-}
+     ``
+     
+          import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
+          import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+          import org.springframework.security.web.SecurityFilterChain;
+          import org.springframework.context.annotation.Bean;
+          import org.springframework.context.annotation.Configuration;
+          
+          @Configuration
+          public class ActuatorSecurityConfig {
+          
+              @Bean
+              public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+                           http.
+                           authorizeHttpRequests(requests -> requests
+                          .requestMatchers(EndpointRequest.to("health", "info")).permitAll()
+                          .requestMatchers(EndpointRequest.toAnyEndpoint()).hasRole("ADMIN")
+                          .anyRequest().authenticated()
+                      )
+                      .httpBasic(); // or .formLogin() if needed
+                  return http.build();
+              }
+          }
 ``
 
      3. Customize the Actuator Base Path
 
      You can change the default /actuator path to make endpoints less predictable:
 
-     ``management:
-  endpoints:
-    web:
-      base-path: /manage
+     ``
+          management:
+                    endpoints
+                              web:
+                                        base-path: /manage
+
 ``
 
      4. Secure Actuator Over HTTPS
      Always use HTTPS for sensitive actuator endpoints to ensure encrypted communication.
 
+
      ``server:
-  ssl:
-    enabled: true
-    key-store: classpath:keystore.p12
-    key-store-password: secret
-    key-store-type: PKCS12
+            ssl:
+              enabled: true
+              key-store: classpath:keystore.p12
+              key-store-password: secret
+              key-store-type: PKCS12
 ``
+
 
 5. Limit Network Access
      You can restrict actuator endpoints to be accessible only from specific IPs or internal networks using a reverse proxy or firewall rules.
 
 6. Use Management Port Separation
+
  
-   ``management:
-  server:
-    port: 9001
+   ``
+   management:
+            server:
+              port: 9001
 ``
 
-7. Hide Sensitive Details
+8. Hide Sensitive Details
 
-        ``management:
-  endpoint:
-    health:
-      show-details: when_authorized
+
+        ``
+   management:
+            endpoint:
+              health:
+                show-details: when_authorized
 ``
 
 
-| Practice                           | Description                         |
-| ---------------------------------- | ----------------------------------- |
-| **Expose only required endpoints** | Avoid `*` exposure                  |
-| **Use Spring Security**            | Protect with roles & authentication |
-| **Use HTTPS**                      | Encrypt communication               |
-| **Limit access by network**        | Allow only trusted hosts            |
-| **Separate management port**       | Isolate operational endpoints       |
+          |           Practice                 | Description                         |
+          | ---------------------------------- | ----------------------------------- |
+          | **Expose only required endpoints** | Avoid `*` exposure                  |
+          | **Use Spring Security**            | Protect with roles & authentication |
+          | **Use HTTPS**                      | Encrypt communication               |
+          | **Limit access by network**        | Allow only trusted hosts            |
+          | **Separate management port**       | Isolate operational endpoints       |
 
 
 
@@ -1867,34 +1878,36 @@ public class ActuatorSecurityConfig {
 
    🧩 1. YAML Configuration (application.yml)
 
-        ``server:
-  port: 8080
-
-management:
-  server:
-    port: 9001              # Run actuator endpoints on a separate management port
-  endpoints:
-    web:
-      base-path: /manage    # Custom base path instead of /actuator
-      exposure:
-        include: health, info, metrics, prometheus  # Expose only selected endpoints
-  endpoint:
-    health:
-      show-details: when_authorized   # Show detailed health info only to authorized users
-  security:
-    enabled: true
-
-spring:
-  security:
-    user:
-      name: admin           # Default admin username
-      password: Admin@123   # Strong password (should be encrypted in production)
-      roles: ADMIN
-``
+        ``
+   server:
+            port: 8080
+          
+          management:
+            server:
+              port: 9001              # Run actuator endpoints on a separate management port
+            endpoints:
+              web:
+                base-path: /manage    # Custom base path instead of /actuator
+                exposure:
+                  include: health, info, metrics, prometheus  # Expose only selected endpoints
+            endpoint:
+              health:
+                show-details: when_authorized   # Show detailed health info only to authorized users
+            security:
+              enabled: true
+          
+          spring:
+            security:
+              user:
+                name: admin           # Default admin username
+                password: Admin@123   # Strong password (should be encrypted in production)
+                roles: ADMIN
+   ``
 
 🛡️ 2. Java Security Configuration (ActuatorSecurityConfig.java)
 
-``
+
+`` 
 package com.example.config;
 
 import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
@@ -1925,13 +1938,16 @@ public class ActuatorSecurityConfig {
     }
 }
 ``
+
 _____________________________________________________________________________
+
+
 ### Q) What strategies would you use to optimize the performance of a spring boot application ? 
 
      1. Optimize Application Startup and Memory Usage
           * **Lazy Initialization**: Enable spring.main.lazy-initialization=true to delay bean creation until required.
           * **Remove Unused Auto-Configuration**: Use @SpringBootApplication(exclude = { ... }) to disable unused components.
-          * **Profile-Based Configuration**: Define environment-specific configurations using @Profile (e.g., dev, prod) to load only necessary beans.
+          * **Profile-Based Configuration**: Define environment-specific configurations using @Profile (e.g., dev, prod) to                     load only necessary beans.
           
      2. Improve Database Performance
           * **Connection Pooling**: Use efficient pools like HikariCP (default in Spring Boot). 
