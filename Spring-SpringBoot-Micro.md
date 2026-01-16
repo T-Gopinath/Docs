@@ -1028,9 +1028,13 @@ application.yml
      Use **HTTPS** for all Actuator traffic.
      **Integrate with your organization’s centralized monitoring and authentication system (e.g., OAuth2, LDAP).**
 ____________________________________________________________________________________________________________________________ 
+
+
 ### Q) how to create connetion pool in SpringBoot applicaiton.
 
-In Spring Boot, connection pooling is automatically configured when you include a database dependency (like H2, MySQL, PostgreSQL, etc.). However, you can also explicitly configure it for better performance and control.
+In Spring Boot, connection pooling is automatically configured when you include a database dependency (like H2, MySQL, PostgreSQL, etc.).
+
+However, you can also explicitly configure it for better performance and control.
 
 #### 1. Understanding Connection Pooling
 
@@ -1150,6 +1154,8 @@ In Spring Boot, connection pooling is automatically configured when you include 
 | Key Properties      | maxPoolSize, idleTimeout, maxLifetime | spring.datasource.hikari.*     |
 
 _____________________________________________________________________________________________________________________________
+
+
 ### Q) What strategies we use to optimize Spring boot application.
 
 Here are some key strategies to optimize a Spring Boot application for better performance, scalability, and resource efficiency:
@@ -1157,13 +1163,22 @@ Here are some key strategies to optimize a Spring Boot application for better pe
 #### 01. Optimize Application Startup
 
      * **Lazy Initialization:** Enable lazy bean loading (spring.main.lazy-initialization=true) to reduce startup time.
+                    * deferring bean creation until the moment they are actually needed, instead of creating everything eagerly at startup.
+
      * **Exclude Unused Auto-configurations**: Use @SpringBootApplication(exclude = {...}) or spring.autoconfigure.exclude to skip unnecessary modules.
+          Ex:  WebMvcAutoConfiguration,DispatcherServlet are not needed when
+                    * You build only a batch job
+                    * You build Kafka consumers / schedulers
+                    * You expose gRPC only
+                    @SpringBootApplication(exclude = { WebMvcAutoConfiguration.class})
+
      * **Profile-based Configuration**: Load only required beans/configurations using @Profile
      
 #### 02. Tune JVM and Memory
 
      * Configure JVM heap size and garbage collector (GC) for your environment (-Xms, -Xmx, -XX:+UseG1GC, etc.).
-     * Use tools like VisualVM, JConsole, or Micrometer metrics to monitor memory usage
+
+     * Use tools like VisualVM, JConsole, or Micrometer metrics to monitor memory usage.
           
 #### 03. Optimize Database Access
 
@@ -1171,7 +1186,20 @@ Here are some key strategies to optimize a Spring Boot application for better pe
     * Optimize JPA/Hibernate:
          * Enable batch fetching and lazy loading.
          * **Avoid N+1** query problems using **@EntityGraph** or JOIN FETCH.
+                    * One query to load parent entities + N additional queries to load related entities
+                              * SELECT * FROM orders;
+                                        SELECT * FROM order_items WHERE order_id = 1;
+                                        SELECT * FROM order_items WHERE order_id = 2;
+                                        SELECT * FROM order_items WHERE order_id = 3;
+                              Total 1 + N queris
+...
+
          * Use DTO projections for read-heavy queries
+                    *DTO Projection is a technique where you fetch only selected fields from an entity and map them directly                     into a DTO, instead of loading the full entity from the database.
+                   *  Native Query Projection
+                              @Query(value = "SELECT id, name FROM users", nativeQuery = true)
+                              List<Object[]> findUsers()          
+
      * Indexing and query tuning: 
           Ensure DB queries are indexed properly and optimized.
      
@@ -1191,32 +1219,109 @@ Here are some key strategies to optimize a Spring Boot application for better pe
      I/O operations include disk reads/writes, network calls, database queries, and file access. 
      These are typically slower than in-memory operations. Optimization strategies:
 
-#### 07. Profile and Monitor Regularly
+#### 07. Profile and Monitor Regularly.
           
      * Spring Boot Actuator: Monitor metrics, health, and traces.
      * Profiling tools: Use VisualVM, YourKit, or JFR to identify bottlenecks.
+                    A profiler monitors a running application and collects runtime data such as:
+                             * CPU usage
+                             * Memory allocation
+                             * Garbage Collection activity
+                             * Thread behavior
+                             * I/O and lock contention
+
      * Log efficiently: Avoid excessive logging in production; use appropriate log levels.
           
 #### 08. Optimize Deployment
 
     * Spring Boot layered jars: Use layered jars to speed up container builds.
+                    Spring Boot separates the JAR into independent layers:
+                              dependencies/
+                              snapshot-dependencies/
+                              spring-boot-loader/
+                              application/
+
+                    | Layer                   | Contains               |
+                    | ----------------------- | ---------------------- |
+                    | `dependencies`          | Stable 3rd-party libs  |
+                    | `snapshot-dependencies` | Changing SNAPSHOT deps |
+                    | `spring-boot-loader`    | Boot launcher classes  |
+                    | `application`           | Your application code  |
+
+
+                     👉 Your code changes only affect the application layer
+
+
+                    <plugin>
+                      <groupId>org.springframework.boot</groupId>
+                      <artifactId>spring-boot-maven-plugin</artifactId>
+                      <configuration>
+                        <layers>
+                          <enabled>true</enabled>
+                        </layers>
+                      </configuration>
+                    </plugin>
+
+                    Dockerfile Using Layered JAR
+
+                     FROM eclipse-temurin:17-jre
+                    
+                    WORKDIR /app
+                    
+                    COPY target/app.jar app.jar
+                    RUN java -Djarmode=layertools -jar app.jar extract
+                    
+                    COPY dependencies/ ./
+                    COPY snapshot-dependencies/ ./
+                    COPY spring-boot-loader/ ./
+                    COPY application/ ./
+                    
+                    ENTRYPOINT ["java","org.springframework.boot.loader.JarLauncher"]
+
+                    Each COPY → separate Docker layer ✅
+
+                    Note : Layered JARs split a Spring Boot fat JAR into cacheable layers
+                              so Docker rebuilds only what changed, dramatically speeding up container builds
+
     * Remove unused dependencies: Reduce application size and startup time.
     * Ahead-of-Time (AOT) compilation: With GraalVM native images for fast startup
+                    What Spring Boot AOT does
+                              During build time, Spring:
+                                        * Analyzes your application context
+                                        * Pre-computes bean definitions
+                                        * Generates Java source code for:
+                                                  Bean wiring
+                                                  Dependency injection
+                                                  Configuration properties binding
+                                        * Replaces reflection with direct method calls
 
+                                         ➡️ At runtime, Spring just loads pre-generated code.         
+                                        
 
 #### 09. Implement Asynchronous and Non-blocking Processing 
 
     * @Async methods: For tasks that don’t need to block the main thread.
     * Messaging queues: Offload heavy processing to Kafka, RabbitMQ, or similar.    
-    
+
+          1️⃣ Asynchronous vs Non-blocking (Quick clarity)
+
+  
+| Concept                  | Meaning                                                         | Example                       |
+| ------------------------ | --------------------------------------------------------------- | ----------------------------- |
+| **Asynchronous**         | Work runs on a **different thread** so the caller isn’t blocked | `@Async`, `CompletableFuture` |
+| **Non-blocking**         | Thread is **not waiting** at all; uses event-loop style         | WebFlux (`Mono`, `Flux`)      |
+| **Async but blocking**   | Separate thread still blocks (DB, REST call)                    | `@Async + RestTemplate`       |
+| **Async & non-blocking** | No thread waits                                                 | WebFlux + Reactive DB         |
+                
       
 #### 10. Use Proper Data Serialization
-
 
      * Messaging (Kafka, RabbitMQ): Use Protobuf or Avro for better performance than JSON.
      * Combine serialization with compression (GZIP) for large payloads sent over network.
      * Don’t serialize heavy objects like database connections, file handles, or large in-memory caches.
+
 _____________________________________________________________________________________________________________________________
+
 ### Q) What are the best practices for managing transactions in a Spring Boot application?
 
 Spring Boot leverages Spring’s powerful transaction management framework, which can be declarative or programmatic.
@@ -1225,7 +1330,7 @@ Following these practices ensures consistency, performance, and maintainability.
 #### 01. Prefer Declarative Transaction Management
 
 
-     * Use <b>@Transactional</b> annotations on service layer methods rather than managing transactions manually.
+     * Use @Transactional annotations on service layer methods rather than managing transactions manually.
      * Advantages
           * Less boilerplate code.
           * Easier to maintain and test.
@@ -1240,7 +1345,7 @@ Following these practices ensures consistency, performance, and maintainability.
                   userRepository.save(user);
                   // Additional logic
               }
-          }
+          
 ```
 
 
@@ -1256,7 +1361,11 @@ Following these practices ensures consistency, performance, and maintainability.
      * Understand and use transaction propagation wisely:
           * REQUIRED (default) – join existing transaction or create new one.
           * REQUIRES_NEW – always start a new transaction, suspending any existing one.
+          * NESTED
+          * SUPPORTS
+          * NOT_SUPPORTED
           * MANDATORY – must run within an existing transaction
+          * NEVER          
 
 
 ```
@@ -1272,6 +1381,7 @@ Following these practices ensures consistency, performance, and maintainability.
 
      * Prevent data anomalies by choosing the correct isolation level:
           * READ_COMMITTED – default, prevents dirty reads.
+          * READ_UNCOMMITTED - Can read uncommitted changes
           * REPEATABLE_READ – prevents non-repeatable reads.
           * SERIALIZABLE – strictest, avoids phantom reads but reduces concurrency.
           
@@ -11517,5 +11627,6 @@ ________________________________________________________________________________
           ✔ Performance optimization
 
      
+### Q) How do different transaction isolation levels and propagation behaviors affect the behavior and performance of optimistic and pessimistic locking in Spring-based applications?
 
           
