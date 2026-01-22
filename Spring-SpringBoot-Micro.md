@@ -1,4 +1,5 @@
-<img width="32766" height="59" alt="image" src="https://github.com/user-attachments/assets/0dee8c48-a441-42d4-b21a-3d42aa3af306" />### Q) Interservice communication between Microservices using spring boot 
+          
+### Q) Interservice communication between Microservices using spring boot ?
 
 In Spring Boot, several mechanisms are available to achieve interservice communication,
      depending on the architecture style (synchronous or asynchronous) and reliability needs.
@@ -85,15 +86,15 @@ public class UserServiceApplication {
 
      Producer Service:
         @Service
-public class OrderEventProducer {
-
-    @Autowired
-    private KafkaTemplate<String, String> kafkaTemplate;
-
-    public void publishOrderCreatedEvent(String orderJson) {
-        kafkaTemplate.send("order-topic", orderJson);
-    }
-}
+          public class OrderEventProducer {
+          
+              @Autowired
+              private KafkaTemplate<String, String> kafkaTemplate;
+          
+              public void publishOrderCreatedEvent(String orderJson) {
+                  kafkaTemplate.send("order-topic", orderJson);
+              }
+          }
 
 Consumer Service:
 
@@ -111,6 +112,8 @@ Benefits:
      Loosely coupled microservices.
      Services can continue functioning even if other services are down.
      Better for scalability and eventual consistency.
+
+     note: Evental Consisency : All systems will become consistent over time, but not immediately after a change.
 
   3. Service Discovery   
 
@@ -1025,9 +1028,13 @@ application.yml
      Use **HTTPS** for all Actuator traffic.
      **Integrate with your organization’s centralized monitoring and authentication system (e.g., OAuth2, LDAP).**
 ____________________________________________________________________________________________________________________________ 
+
+
 ### Q) how to create connetion pool in SpringBoot applicaiton.
 
-In Spring Boot, connection pooling is automatically configured when you include a database dependency (like H2, MySQL, PostgreSQL, etc.). However, you can also explicitly configure it for better performance and control.
+In Spring Boot, connection pooling is automatically configured when you include a database dependency (like H2, MySQL, PostgreSQL, etc.).
+
+However, you can also explicitly configure it for better performance and control.
 
 #### 1. Understanding Connection Pooling
 
@@ -1147,6 +1154,8 @@ In Spring Boot, connection pooling is automatically configured when you include 
 | Key Properties      | maxPoolSize, idleTimeout, maxLifetime | spring.datasource.hikari.*     |
 
 _____________________________________________________________________________________________________________________________
+
+
 ### Q) What strategies we use to optimize Spring boot application.
 
 Here are some key strategies to optimize a Spring Boot application for better performance, scalability, and resource efficiency:
@@ -1154,13 +1163,22 @@ Here are some key strategies to optimize a Spring Boot application for better pe
 #### 01. Optimize Application Startup
 
      * **Lazy Initialization:** Enable lazy bean loading (spring.main.lazy-initialization=true) to reduce startup time.
+                    * deferring bean creation until the moment they are actually needed, instead of creating everything eagerly at startup.
+
      * **Exclude Unused Auto-configurations**: Use @SpringBootApplication(exclude = {...}) or spring.autoconfigure.exclude to skip unnecessary modules.
+          Ex:  WebMvcAutoConfiguration,DispatcherServlet are not needed when
+                    * You build only a batch job
+                    * You build Kafka consumers / schedulers
+                    * You expose gRPC only
+                    @SpringBootApplication(exclude = { WebMvcAutoConfiguration.class})
+
      * **Profile-based Configuration**: Load only required beans/configurations using @Profile
      
 #### 02. Tune JVM and Memory
 
      * Configure JVM heap size and garbage collector (GC) for your environment (-Xms, -Xmx, -XX:+UseG1GC, etc.).
-     * Use tools like VisualVM, JConsole, or Micrometer metrics to monitor memory usage
+
+     * Use tools like VisualVM, JConsole, or Micrometer metrics to monitor memory usage.
           
 #### 03. Optimize Database Access
 
@@ -1168,7 +1186,20 @@ Here are some key strategies to optimize a Spring Boot application for better pe
     * Optimize JPA/Hibernate:
          * Enable batch fetching and lazy loading.
          * **Avoid N+1** query problems using **@EntityGraph** or JOIN FETCH.
+                    * One query to load parent entities + N additional queries to load related entities
+                              * SELECT * FROM orders;
+                                        SELECT * FROM order_items WHERE order_id = 1;
+                                        SELECT * FROM order_items WHERE order_id = 2;
+                                        SELECT * FROM order_items WHERE order_id = 3;
+                              Total 1 + N queris
+...
+
          * Use DTO projections for read-heavy queries
+                    *DTO Projection is a technique where you fetch only selected fields from an entity and map them directly                     into a DTO, instead of loading the full entity from the database.
+                   *  Native Query Projection
+                              @Query(value = "SELECT id, name FROM users", nativeQuery = true)
+                              List<Object[]> findUsers()          
+
      * Indexing and query tuning: 
           Ensure DB queries are indexed properly and optimized.
      
@@ -1188,32 +1219,109 @@ Here are some key strategies to optimize a Spring Boot application for better pe
      I/O operations include disk reads/writes, network calls, database queries, and file access. 
      These are typically slower than in-memory operations. Optimization strategies:
 
-#### 07. Profile and Monitor Regularly
+#### 07. Profile and Monitor Regularly.
           
      * Spring Boot Actuator: Monitor metrics, health, and traces.
      * Profiling tools: Use VisualVM, YourKit, or JFR to identify bottlenecks.
+                    A profiler monitors a running application and collects runtime data such as:
+                             * CPU usage
+                             * Memory allocation
+                             * Garbage Collection activity
+                             * Thread behavior
+                             * I/O and lock contention
+
      * Log efficiently: Avoid excessive logging in production; use appropriate log levels.
           
 #### 08. Optimize Deployment
 
     * Spring Boot layered jars: Use layered jars to speed up container builds.
+                    Spring Boot separates the JAR into independent layers:
+                              dependencies/
+                              snapshot-dependencies/
+                              spring-boot-loader/
+                              application/
+
+                    | Layer                   | Contains               |
+                    | ----------------------- | ---------------------- |
+                    | `dependencies`          | Stable 3rd-party libs  |
+                    | `snapshot-dependencies` | Changing SNAPSHOT deps |
+                    | `spring-boot-loader`    | Boot launcher classes  |
+                    | `application`           | Your application code  |
+
+
+                     👉 Your code changes only affect the application layer
+
+
+                    <plugin>
+                      <groupId>org.springframework.boot</groupId>
+                      <artifactId>spring-boot-maven-plugin</artifactId>
+                      <configuration>
+                        <layers>
+                          <enabled>true</enabled>
+                        </layers>
+                      </configuration>
+                    </plugin>
+
+                    Dockerfile Using Layered JAR
+
+                     FROM eclipse-temurin:17-jre
+                    
+                    WORKDIR /app
+                    
+                    COPY target/app.jar app.jar
+                    RUN java -Djarmode=layertools -jar app.jar extract
+                    
+                    COPY dependencies/ ./
+                    COPY snapshot-dependencies/ ./
+                    COPY spring-boot-loader/ ./
+                    COPY application/ ./
+                    
+                    ENTRYPOINT ["java","org.springframework.boot.loader.JarLauncher"]
+
+                    Each COPY → separate Docker layer ✅
+
+                    Note : Layered JARs split a Spring Boot fat JAR into cacheable layers
+                              so Docker rebuilds only what changed, dramatically speeding up container builds
+
     * Remove unused dependencies: Reduce application size and startup time.
     * Ahead-of-Time (AOT) compilation: With GraalVM native images for fast startup
+                    What Spring Boot AOT does
+                              During build time, Spring:
+                                        * Analyzes your application context
+                                        * Pre-computes bean definitions
+                                        * Generates Java source code for:
+                                                  Bean wiring
+                                                  Dependency injection
+                                                  Configuration properties binding
+                                        * Replaces reflection with direct method calls
 
+                                         ➡️ At runtime, Spring just loads pre-generated code.         
+                                        
 
 #### 09. Implement Asynchronous and Non-blocking Processing 
 
     * @Async methods: For tasks that don’t need to block the main thread.
     * Messaging queues: Offload heavy processing to Kafka, RabbitMQ, or similar.    
-    
+
+          1️⃣ Asynchronous vs Non-blocking (Quick clarity)
+
+  
+| Concept                  | Meaning                                                         | Example                       |
+| ------------------------ | --------------------------------------------------------------- | ----------------------------- |
+| **Asynchronous**         | Work runs on a **different thread** so the caller isn’t blocked | `@Async`, `CompletableFuture` |
+| **Non-blocking**         | Thread is **not waiting** at all; uses event-loop style         | WebFlux (`Mono`, `Flux`)      |
+| **Async but blocking**   | Separate thread still blocks (DB, REST call)                    | `@Async + RestTemplate`       |
+| **Async & non-blocking** | No thread waits                                                 | WebFlux + Reactive DB         |
+                
       
 #### 10. Use Proper Data Serialization
-
 
      * Messaging (Kafka, RabbitMQ): Use Protobuf or Avro for better performance than JSON.
      * Combine serialization with compression (GZIP) for large payloads sent over network.
      * Don’t serialize heavy objects like database connections, file handles, or large in-memory caches.
+
 _____________________________________________________________________________________________________________________________
+
 ### Q) What are the best practices for managing transactions in a Spring Boot application?
 
 Spring Boot leverages Spring’s powerful transaction management framework, which can be declarative or programmatic.
@@ -1222,7 +1330,7 @@ Following these practices ensures consistency, performance, and maintainability.
 #### 01. Prefer Declarative Transaction Management
 
 
-     * Use <b>@Transactional</b> annotations on service layer methods rather than managing transactions manually.
+     * Use @Transactional annotations on service layer methods rather than managing transactions manually.
      * Advantages
           * Less boilerplate code.
           * Easier to maintain and test.
@@ -1237,7 +1345,7 @@ Following these practices ensures consistency, performance, and maintainability.
                   userRepository.save(user);
                   // Additional logic
               }
-          }
+          
 ```
 
 
@@ -1253,7 +1361,11 @@ Following these practices ensures consistency, performance, and maintainability.
      * Understand and use transaction propagation wisely:
           * REQUIRED (default) – join existing transaction or create new one.
           * REQUIRES_NEW – always start a new transaction, suspending any existing one.
+          * NESTED
+          * SUPPORTS
+          * NOT_SUPPORTED
           * MANDATORY – must run within an existing transaction
+          * NEVER          
 
 
 ```
@@ -1269,6 +1381,7 @@ Following these practices ensures consistency, performance, and maintainability.
 
      * Prevent data anomalies by choosing the correct isolation level:
           * READ_COMMITTED – default, prevents dirty reads.
+          * READ_UNCOMMITTED - Can read uncommitted changes
           * REPEATABLE_READ – prevents non-repeatable reads.
           * SERIALIZABLE – strictest, avoids phantom reads but reduces concurrency.
           
@@ -1346,14 +1459,14 @@ Following these practices ensures consistency, performance, and maintainability.
 
 ✅ Summary
 
+          * Prefer declarative transactions (@Transactional) at service layer.
+          * Use proper propagation, isolation, and rollback settings.
+          * Keep transactions short and read-only where possible.
+          * Avoid transactions on private methods.
+          * Integrate with a connection pool for efficiency.
 
-* Prefer declarative transactions (@Transactional) at service layer.
-* Use proper propagation, isolation, and rollback settings.
-* Keep transactions short and read-only where possible.
-* Avoid transactions on private methods.
-* Integrate with a connection pool for efficiency.
-  
 _____________________________________________________________________________________________________________________________
+
 
 ### Q) How do you approach testing in springboot application ?
 
@@ -1677,76 +1790,87 @@ _______________________________________________________________________
 
      2. Use Spring Security for Authentication & Authorization
 
-     ``import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
-@Configuration
-public class ActuatorSecurityConfig {
-
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-            .authorizeHttpRequests(requests -> requests
-                .requestMatchers(EndpointRequest.to("health", "info")).permitAll()
-                .requestMatchers(EndpointRequest.toAnyEndpoint()).hasRole("ADMIN")
-                .anyRequest().authenticated()
-            )
-            .httpBasic(); // or .formLogin() if needed
-        return http.build();
-    }
-}
+     ``
+     
+          import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
+          import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+          import org.springframework.security.web.SecurityFilterChain;
+          import org.springframework.context.annotation.Bean;
+          import org.springframework.context.annotation.Configuration;
+          
+          @Configuration
+          public class ActuatorSecurityConfig {
+          
+              @Bean
+              public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+                           http.
+                           authorizeHttpRequests(requests -> requests
+                          .requestMatchers(EndpointRequest.to("health", "info")).permitAll()
+                          .requestMatchers(EndpointRequest.toAnyEndpoint()).hasRole("ADMIN")
+                          .anyRequest().authenticated()
+                      )
+                      .httpBasic(); // or .formLogin() if needed
+                  return http.build();
+              }
+          }
 ``
 
      3. Customize the Actuator Base Path
 
      You can change the default /actuator path to make endpoints less predictable:
 
-     ``management:
-  endpoints:
-    web:
-      base-path: /manage
+     ``
+          management:
+                    endpoints
+                              web:
+                                        base-path: /manage
+
 ``
 
      4. Secure Actuator Over HTTPS
      Always use HTTPS for sensitive actuator endpoints to ensure encrypted communication.
 
+
      ``server:
-  ssl:
-    enabled: true
-    key-store: classpath:keystore.p12
-    key-store-password: secret
-    key-store-type: PKCS12
+            ssl:
+              enabled: true
+              key-store: classpath:keystore.p12
+              key-store-password: secret
+              key-store-type: PKCS12
 ``
+
 
 5. Limit Network Access
      You can restrict actuator endpoints to be accessible only from specific IPs or internal networks using a reverse proxy or firewall rules.
 
 6. Use Management Port Separation
+
  
-   ``management:
-  server:
-    port: 9001
+   ``
+   management:
+            server:
+              port: 9001
 ``
 
-7. Hide Sensitive Details
+8. Hide Sensitive Details
 
-        ``management:
-  endpoint:
-    health:
-      show-details: when_authorized
+
+        ``
+   management:
+            endpoint:
+              health:
+                show-details: when_authorized
 ``
 
 
-| Practice                           | Description                         |
-| ---------------------------------- | ----------------------------------- |
-| **Expose only required endpoints** | Avoid `*` exposure                  |
-| **Use Spring Security**            | Protect with roles & authentication |
-| **Use HTTPS**                      | Encrypt communication               |
-| **Limit access by network**        | Allow only trusted hosts            |
-| **Separate management port**       | Isolate operational endpoints       |
+          |           Practice                 | Description                         |
+          | ---------------------------------- | ----------------------------------- |
+          | **Expose only required endpoints** | Avoid `*` exposure                  |
+          | **Use Spring Security**            | Protect with roles & authentication |
+          | **Use HTTPS**                      | Encrypt communication               |
+          | **Limit access by network**        | Allow only trusted hosts            |
+          | **Separate management port**       | Isolate operational endpoints       |
 
 
 
@@ -1754,76 +1878,80 @@ public class ActuatorSecurityConfig {
 
    🧩 1. YAML Configuration (application.yml)
 
-        ``server:
-  port: 8080
-
-management:
-  server:
-    port: 9001              # Run actuator endpoints on a separate management port
-  endpoints:
-    web:
-      base-path: /manage    # Custom base path instead of /actuator
-      exposure:
-        include: health, info, metrics, prometheus  # Expose only selected endpoints
-  endpoint:
-    health:
-      show-details: when_authorized   # Show detailed health info only to authorized users
-  security:
-    enabled: true
-
-spring:
-  security:
-    user:
-      name: admin           # Default admin username
-      password: Admin@123   # Strong password (should be encrypted in production)
-      roles: ADMIN
-``
+        ``
+   server:
+            port: 8080
+          
+          management:
+            server:
+              port: 9001              # Run actuator endpoints on a separate management port
+            endpoints:
+              web:
+                base-path: /manage    # Custom base path instead of /actuator
+                exposure:
+                  include: health, info, metrics, prometheus  # Expose only selected endpoints
+            endpoint:
+              health:
+                show-details: when_authorized   # Show detailed health info only to authorized users
+            security:
+              enabled: true
+          
+          spring:
+            security:
+              user:
+                name: admin           # Default admin username
+                password: Admin@123   # Strong password (should be encrypted in production)
+                roles: ADMIN
+   ``
 
 🛡️ 2. Java Security Configuration (ActuatorSecurityConfig.java)
 
+
+``         
+          package com.example.config;          
+          import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
+          import org.springframework.context.annotation.Bean;
+          import org.springframework.context.annotation.Configuration;
+          import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+          import org.springframework.security.web.SecurityFilterChain;
+          
+          @Configuration
+          public class ActuatorSecurityConfig {
+          
+              @Bean
+              public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+                  http
+                      .authorizeHttpRequests(auth -> auth
+                          // Allow health and info without authentication
+                          .requestMatchers(EndpointRequest.to("health", "info")).permitAll()
+                          // Restrict all other actuator endpoints to ADMIN role
+                          .requestMatchers(EndpointRequest.toAnyEndpoint()).hasRole("ADMIN")
+                          // Require authentication for other app endpoints if needed
+                          .anyRequest().authenticated()
+                      )
+                      .httpBasic()   // Use HTTP Basic Auth for simplicity
+                      .and()
+                      .csrf().disable();  // Disable CSRF for actuator API access (safe if using HTTPS)
+          
+                  return http.build();
+              }
+          }
 ``
-package com.example.config;
 
-import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.web.SecurityFilterChain;
-
-@Configuration
-public class ActuatorSecurityConfig {
-
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-            .authorizeHttpRequests(auth -> auth
-                // Allow health and info without authentication
-                .requestMatchers(EndpointRequest.to("health", "info")).permitAll()
-                // Restrict all other actuator endpoints to ADMIN role
-                .requestMatchers(EndpointRequest.toAnyEndpoint()).hasRole("ADMIN")
-                // Require authentication for other app endpoints if needed
-                .anyRequest().authenticated()
-            )
-            .httpBasic()   // Use HTTP Basic Auth for simplicity
-            .and()
-            .csrf().disable();  // Disable CSRF for actuator API access (safe if using HTTPS)
-
-        return http.build();
-    }
-}
-``
 _____________________________________________________________________________
+
+
 ### Q) What strategies would you use to optimize the performance of a spring boot application ? 
 
      1. Optimize Application Startup and Memory Usage
           * **Lazy Initialization**: Enable spring.main.lazy-initialization=true to delay bean creation until required.
           * **Remove Unused Auto-Configuration**: Use @SpringBootApplication(exclude = { ... }) to disable unused components.
-          * **Profile-Based Configuration**: Define environment-specific configurations using @Profile (e.g., dev, prod) to load only necessary beans.
+          * **Profile-Based Configuration**: Define environment-specific configurations using @Profile (e.g., dev, prod) to                     load only necessary beans.
           
      2. Improve Database Performance
           * **Connection Pooling**: Use efficient pools like HikariCP (default in Spring Boot). 
                Tune properties such as maximumPoolSize, connectionTimeout, etc.
-          * **Batch Operations**: Use batch inserts/updates for large datasets (spring.jpa.properties.hibernate.jdbc.batch_size).
+          * **Batch Operations**: Use batch inserts/updates for large datasets                                                                       (spring.jpa.properties.hibernate.jdbc.batch_size).
           * **Pagination**: Use pagination and projections for large data queries instead of fetching all records.
           * **Caching**: Leverage Hibernate 2nd-level cache and query cache with providers like Ehcache or Redis
           * **Indexing**: Add appropriate DB indexes to reduce query execution time.
@@ -1885,7 +2013,7 @@ ____________________________________________________________________________
            * Prefer declarative over programmatic transaction managemen
            * Apply @Transactional at the service layer, not at the controller or repository level.
 
-           ``@Service
+           `` @Service
                public class OrderService {
                
                    @Transactional
@@ -1901,7 +2029,7 @@ ____________________________________________________________________________
           
           Example (❌ Bad):
 
-          ``@Transactional
+          `` @Transactional
                public void updateOrder() {
                    callExternalAPI();  // Slow call
                    orderRepository.save(order);
@@ -1934,7 +2062,7 @@ ____________________________________________________________________________
          * By default, only unchecked (Runtime) exceptions trigger rollbacks.
          * To rollback for checked exceptions, specify explicitly:
 
-         ``@Transactional(rollbackFor = Exception.class)
+         `` @Transactional(rollbackFor = Exception.class)
           public void processOrder() throws Exception {
               // logic
           }
@@ -1953,7 +2081,7 @@ ____________________________________________________________________________
 
      Example:
      
-          ``@Transactional(isolation = Isolation.REPEATABLE_READ)
+          `` @Transactional(isolation = Isolation.REPEATABLE_READ)
                public void getAccountDetails() {
                    // ensures repeatable reads
                }
@@ -1966,7 +2094,7 @@ ____________________________________________________________________________
    7. Use Read-Only Transactions for Queries
        * For queries that don’t modify data, use:
        * 
-              ``@Transactional(readOnly = true)
+              `` @Transactional(readOnly = true)
                     public List<Customer> findAll() {
                         return customerRepository.findAll();
                     }
@@ -1981,8 +2109,8 @@ ____________________________________________________________________________
   9. Monitor and Debug Transactions
        * Enable SQL logging and transaction traces for debugging:
 
-               ``spring.jpa.show-sql=true
-                 logging.level.org.springframework.transaction=DEBUG
+               `` spring.jpa.show-sql=true
+                  logging.level.org.springframework.transaction=DEBUG
 ``
 
    Use tools like Actuator, Micrometer, or p6spy to track transaction metrics.
@@ -9180,7 +9308,7 @@ client.sendEmail(request);
           * Need to request production access from AWS Support.     
           
 _________________________________________________________________________________________________________________________________________
-### Q) What is API API orchestration
+### Q) What is API orchestration
 
      API orchestration refers to coordinating multiple API calls across different services and combining their outputs to produce a single, meaningful response or complete a business workflow.
 
@@ -9308,9 +9436,291 @@ ________________________________________________________________________________
          Properties:
            BucketName: my-sample-bucket-cloudformation-demo
 __________________________________________________________________________________________________________________________________________________________
-### Q) Automic variable , parallel process and current  process Difference
+### Q) Atomic Variable (java.util.concurrent.atomic), parallel process and current  process Difference.
+     
+     Atomic Variable :  Java is a variable that supports lock-free, thread-safe operations on a single value, And are designed to handle concurrent updates without using synchronized or explicit locks.
+
+               Why Atomic variable :  In a multithreaded environment, operations like count++ are not atomic:
+                    count++; // read → increment → write (3 steps)
+                    Multiple threads can interleave these steps and cause race conditions.
+
+                    Atomic variables solve this problem by performing operations atomically using CPU-level CAS (Compare-And-Swap) instructions.
+
+                         | Class                | Description                            |
+                         | -------------------- | -------------------------------------- |
+                         | `AtomicInteger`      | Atomic operations on `int`             |
+                         | `AtomicLong`         | Atomic operations on `long`            |
+                         | `AtomicBoolean`      | Atomic operations on `boolean`         |
+                         | `AtomicReference<T>` | Atomic operations on object references |
+                         | `AtomicIntegerArray` | Atomic array of integers               |
+                         | `AtomicLongArray`    | Atomic array of longs                  |
+
+
+                         //Not thread safe
+                         
+                         ' class Counter {
+                                  int count = 0;
+                              
+                                  void increment() {
+                                      count++; // NOT atomic
+                                  }
+                              }
+
+                         '
+
+
+                         thread safe atomic variable
+
+                         ' import java.util.concurrent.atomic.AtomicInteger;
+
+                              class Counter {
+                                  AtomicInteger count = new AtomicInteger(0);
+                              
+                                  void increment() {
+                                      count.incrementAndGet(); // atomic
+                                  }
+                              }
+
+                         '
+
+                         Common operations on Atomic variable
+
+                         ' AtomicInteger ai = new AtomicInteger(10);
+
+                              ai.get();                     // 10
+                              ai.set(20);                   // set value
+                              ai.incrementAndGet();         // ++value
+                              ai.getAndIncrement();         // value++
+                              ai.decrementAndGet();         // --value
+                              ai.compareAndSet(20, 30);     // CAS operation
+
+                         '
+
+
+                         Atomic Variable vs synchronized
+
+                         ' 
+                              | Aspect        | Atomic Variable | synchronized              |
+                              | ------------- | --------------- | ------------------------- |
+                              | Blocking      | ❌ No            | ✅ Yes                     |
+                              | Performance   | Faster          | Slower                    |
+                              | Deadlock risk | ❌ No            | ✅ Possible                |
+                              | Best for      | Single variable | Complex critical sections |
+
+                         '
+
+
+                         ' class RequestMetrics {
+                             private final AtomicLong totalRequests = new AtomicLong();
+                         
+                             public void recordRequest() {
+                                 totalRequests.incrementAndGet();
+                             }
+                         
+                             public long getTotalRequests() {
+                                 return totalRequests.get();
+                             }
+                         }
+
+                         '
+
+
+
+                           '  | Feature            | volatile  | Atomic              | synchronized |
+                              | ------------------ | --------- | --------------      | ------------ |
+                              | Visibility         | ✅         | ✅              | ✅            |
+                              | Atomicity          | ❌         | ✅ (single var) | ✅            |
+                              | Lock-free          | ✅         | ✅              | ❌            |
+                              | Blocking           | ❌         | ❌              | ✅            |
+                              | Deadlock risk      | ❌         | ❌              | ✅            |
+                              | Performance        | Very fast  | Fast             | Slower        |
+                              | Multiple variables | ❌         | ❌              | ✅            |
+     '
+
+                         Note : When an atomic operation is running, no other thread can see a half-done state. (They prevent race conditions without locks)
+                         
+               
+               What problem does an atomic variable solve in multithreaded programming?
+                    Atomic variables solve race conditions for single-variable updates by providing lock-free, atomic, and visible operations in multithreaded                     environments.
+                    
+               What are the commonly used atomic classes in Java?
+
+               '    
+                         | Category          | Common Classes                                 |
+                         | ----------------- | ---------------------------------------------- |
+                         | Primitive atomics | `AtomicInteger`, `AtomicLong`, `AtomicBoolean` |
+                         | Reference atomics | `AtomicReference`, `AtomicStampedReference`    |
+                         | Arrays            | `AtomicIntegerArray`, `AtomicLongArray`        |
+                         | High-throughput   | `LongAdder`, `DoubleAdder`                     |
+                         | Accumulators      | `LongAccumulator`, `DoubleAccumulator`         |
+                         | Field updaters    | `AtomicIntegerFieldUpdater`                    |
+
+               '
+                    
+                            
+               Are atomic variables blocking or non-blocking?
+                    Atomic variables are non-blocking.
+                    
+               Can atomic variables be used safely in distributed systems
+                    Atomic variables (like AtomicInteger, AtomicLong, AtomicReference, etc.) use lock-free algorithms under the hood. 
+                    Instead of acquiring a lock, they rely on CPU-level atomic instructions, most commonly Compare-And-Swap (CAS).
+                    
+                    ➡️ No thread ever blocks or waits for a lock.
+
+
+                    note :
+                         Volatile guarantees visibility of changes across threads, while atomic variables guarantee visibility and atomic (lock-free) read–modify–write operations.
+
+                         A volatile variable is used when multiple threads need to read the latest value of a variable, but no compound (read–modify–write) operations are required,
+                         such as for status flags, configuration updates, or stop signals between threads.
+                    
 __________________________________________________________________________________________________________________________________________________________
 ### Q) What is S.O.L.I.D Principles
+
+          They help you write clean, maintainable, scalable, and testable code—especially important in Java, Spring Boot, and microservices architectures.
+          
+
+          | Letter | Principle                       | Meaning                                        |
+          | ------ | ------------------------------- | ---------------------------------------------- |
+          | **S**  | Single Responsibility Principle | One class = one reason to change               |
+          | **O**  | Open/Closed Principle           | Open for extension, closed for modification    |
+          | **L**  | Liskov Substitution Principle   | Subtypes must be replaceable for base types    |
+          | **I**  | Interface Segregation Principle | Many small interfaces over one large interface |
+          | **D**  | Dependency Inversion Principle  | Depend on abstractions, not concrete classes   |
+
+     
+          1️⃣ S — Single Responsibility Principle (SRP)
+                    A class should have only one reason to change.
+                    ❌ Bad Example
+                         class UserService {
+                             void saveUser() {}
+                             void sendEmail() {}
+                             void generateReport() {}
+                         }
+                   ✔ Good Example
+                        class UserService {
+                             void saveUser() {}
+                         }
+                         
+                         class EmailService {
+                             void sendEmail() {}
+                         }
+                         
+                         class ReportService {
+                             void generateReport() {}
+                         }
+
+
+                    📌 Why it matters
+
+                         Easier maintenance                         
+                         Less impact when requirements change                         
+                         Better testability
+
+          2️⃣ O — Open/Closed Principle (OCP)
+               Software entities should be open for extension but closed for modification.
+               
+                    ❌ Bad Example
+                         class DiscountService {
+                             double getDiscount(String type) {
+                                 if (type.equals("PREMIUM")) return 20;
+                                 if (type.equals("BASIC")) return 10;
+                                 return 0;
+                             }
+                         }
+
+
+                    ✔ Good Example
+                         interface DiscountStrategy {
+                             double getDiscount();
+                         }
+                         
+                         class PremiumDiscount implements DiscountStrategy {
+                             public double getDiscount() { return 20; }
+                         }
+                         
+                         class BasicDiscount implements DiscountStrategy {
+                             public double getDiscount() { return 10; }
+                         }
+
+                         📌 Add new discounts without modifying existing code
+
+          3️⃣ L — Liskov Substitution Principle (LSP)
+                    Objects of a superclass should be replaceable with objects of its subclasses without breaking the application.
+                    
+                         ❌ Bad Example
+                         
+                              class Bird {
+                                  void fly() {}
+                              }
+                              
+                              class Penguin extends Bird {
+                                  void fly() {
+                                      throw new UnsupportedOperationException();
+                                  }
+                              }
+
+                         ✔ Good Example
+                              interface Bird {}
+
+                              interface FlyingBird extends Bird {
+                                  void fly();
+                              }
+                              
+                              class Sparrow implements FlyingBird {
+                                  public void fly() {}
+                              }
+                              
+                              class Penguin implements Bird {}
+
+                              📌 Prevents runtime surprises
+
+          4️⃣ I — Interface Segregation Principle (ISP)
+               Clients should not be forced to depend on methods they do not use.
+                    ❌ Bad Example
+                         interface Worker {
+                             void work();
+                             void eat();
+                         }
+
+                     ✔ Good Example
+                          interface Workable {
+                             void work();
+                         }
+                         
+                         interface Eatable {
+                             void eat();
+                         }
+
+                    📌 Leads to cleaner APIs
+
+
+     5️⃣ D — Dependency Inversion Principle (DIP)
+          High-level modules should not depend on low-level modules. Both should depend on abstractions.
+          
+          ❌ Bad Example
+               class OrderService {
+                   private MySQLDatabase db = new MySQLDatabase();
+               }
+               
+          ✔ Good Example
+               interface Database {
+                   void save();
+               }
+               
+               class MySQLDatabase implements Database {
+                   public void save() {}
+               }
+               
+               class OrderService {
+                   private Database db;
+               
+                   OrderService(Database db) {
+                       this.db = db;
+                   }
+               }
+
+               📌 This is the foundation of Spring’s Dependency Injection
 __________________________________________________________________________________________________________________________________________________________
 
 ### Q) Design patterns in java
@@ -9630,8 +10040,79 @@ ________________________________________________________________________________
 
 ___________________________________________________________________________________________________________________________________________________________
 ### Q) What is the process to switch the default JPA persistence provider in Spring Boot ? 
+
+     Exclude Hibernate from Spring Boot Starter
+
+          <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <exclusions>
+              <exclusion>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-core</artifactId>
+              </exclusion>
+            </exclusions>
+          </dependency>
+
+     3️⃣ Add the Desired JPA Provider
+          <dependency>
+            <groupId>org.eclipse.persistence</groupId>
+            <artifactId>eclipselink</artifactId>
+            <version>4.0.2</version>
+          </dependency>
+
+     4️⃣ Configure JPA Provider in application.yml / properties
+
+          ' spring:
+                 jpa:
+                   database-platform: org.eclipse.persistence.platform.database.PostgreSQLPlatform
+                   properties:
+                     jakarta.persistence.provider: org.eclipse.persistence.jpa.PersistenceProvider
+'
+
+     🔑 Summary
+          Steps to switch JPA provider in Spring Boot:          
+               1) Exclude Hibernate          
+               2) Add alternative JPA provider dependency          
+               3) Set jakarta.persistence.provider          
+               4) Configure provider-specific properties          
+               5) Verify at startup
 ___________________________________________________________________________________________________________________________________________________________
-### Q) How do I migrate a Java application from a lower version to a higher version, and what tests are involved in the process
+### Q) How do I migrate a Java application from a lower version to a higher version, and what tests are involved in the process.
+     1️⃣ Migration Strategy (High-Level)
+          Incremental Upgrade
+     2️⃣ Pre-Migration Assessment  
+          2.1 Identify Current State
+          2.2 Check Compatibility
+     3️⃣ Upgrade the Build Configuration
+     4️⃣ Handle Breaking Changes
+          4.2 javax → jakarta (Major Change)
+          4.3 JVM Argument Changes
+     5️⃣ Update Frameworks & Libraries
+     6️⃣ Refactor Code (If Needed)
+     7️⃣ Testing Strategy (CRITICAL PART)
+          7.1 Unit Tests
+          7.2 Integration Tests
+          7.3 Regression Testing
+          7.4 Performance Testing
+          7.5 Security Testing
+          7.6 UAT (User Acceptance Testing)
+     8️⃣ Production Readiness Checks
+     9️⃣ Deployment & Rollback Plan
+
+
+          11️⃣ Migration Checklist (Quick Summary)
+
+          ✅ Upgrade JDK
+          ✅ Update build tools
+          ✅ Upgrade frameworks
+          ✅ Fix breaking APIs
+          ✅ Run unit tests
+          ✅ Run integration tests
+          ✅ Run regression tests
+          ✅ Performance benchmark
+          ✅ UAT
+          ✅ Production rollout
 __________________________________________________________________________________________________________________________________________________________
 ### Q) What steps and considerations are involved in migrating from an RDBMS to a NoSQL database?
      
@@ -9902,10 +10383,85 @@ ________________________________________________________________________________
           ✔ Media queries only when needed
           ✔ Responsive images
           ✔ Tested on real devices    
-___________________________________________________________________________________________________________________________________________________________
-### Q) Please explain the concept of federated identity, including SAML, OAuth2, Keycloak, and Okta.
-___________________________________________________________________________________________________________________________________________________________
-### Q) What is cloud-native design principles ?_________________________________________________________________________________________________________________________________________________________
+          
+_________________________________________________________________________________________________________________________________
+### Q) Please explain the concept of Federated identity, including SAML, OAuth2, Keycloak, and Okta.
+     
+     Federated Identity → One identity, many systems.
+               Gmail → then access → YouTube, Google Drive, Google Cloud Console without logging in again.
+               
+     Authentication is centralized, access is distributed.
+
+     Federated Identity allows a user to authenticate once with a trusted Identity Provider (IdP) and then access 
+     multiple independent systems without creating separate accounts for each one.
+
+
+          ' | Role                        | Description                                             |
+          | --------------------------- | ------------------------------------------------------- |
+          | **User**                    | Person or system trying to access a resource            |
+          | **Identity Provider (IdP)** | Authenticates the user (Okta, Keycloak, Azure AD)       |
+          | **Service Provider (SP)**   | Application that trusts the IdP                         |
+          | **Federation Protocol**     | Rules for exchanging identity data (SAML, OAuth2, OIDC) |'
+
+
+
+     SAML (Security Assertion Markup Language)
+          SAML is an XML-based standard used mainly for enterprise SSO.
+          
+          How SAML works (high-level)
+
+                    1) User tries to access an application (Service Provider)                    
+                    2) SP redirects user to IdP                    
+                    3) User authenticates with IdP                    
+                    4) IdP sends a SAML Assertion (signed XML) to SP                    
+                    5) SP grants acces
+
+          OAuth 2.0
+
+
+                    Core OAuth2 components
+
+                         '    | Component            | Role          |
+                              | -------------------- | ------------- |
+                              | Resource Owner       | User          |
+                              | Client               | Application   |
+                              | Authorization Server | Issues tokens |
+                              | Resource Server      | API           |
+ 
+                         '
+               OAuth2 Tokens
+                    Access Token → Used to call APIs               
+                    Refresh Token → Get new access tokens
+                    
+
+          OpenID Connect (OIDC) – OAuth2 + Identity
+                    OIDC = Authentication layer on top of OAuth2
+                    OIDC introduces:
+                         ID Token (JWT) → contains user identity
+                         Standard scopes (openid, profile, email )
+
+          Keycloak is an open-source Identity and Access Management (IAM) platform.
+
+          Okta
+               Okta is a cloud-based Identity-as-a-Service (IDaaS) platform.
+_________________________________________________________________________________________________________________________________
+### Q) What is cloud-native design principles ?
+
+     Cloud-native design principles are a set of architectural and engineering practices used to build applications that fully leverage cloud platforms (AWS, Azure, GCP) for scalability, resilience, agility, and cost efficiency.
+     1️⃣ Designed for the Cloud (Not Lift-and-Shift)
+     2️⃣ Microservices Architecture
+     3️⃣ Stateless Services
+     4️⃣ Horizontal Scalability (Scale Out, Not Up)
+     5️⃣ Resilience & Fault Tolerance
+     6️⃣ Loose Coupling via APIs & Events
+     7️⃣ Infrastructure as Code (IaC)
+     8️⃣ Automated CI/CD Pipelines
+     9️⃣ Observability Built-In
+     🔟 Security by Design (Shift-Left Security)
+     1️⃣1️⃣ Managed Services First
+     1️⃣2️⃣ Cost Awareness & Optimization
+     
+________________________________________________________________________________________________________________________________
 ### Q) what is CI/CD pipeline development ?
 
 👍 Example CI/CD Flow (Simple)
@@ -10711,10 +11267,381 @@ ________________________________________________________________________________
 
 https://www.youtube.com/watch?v=OqCK95AS-YE
 
+__________________________________________________________________________________________________________________________________
+
+### Q) What is EAGLE Architecture  ? 
+
+     something like but not standard
+          Event-driven
+          API-first
+          Global scalability
+          Loosely coupled services
+          Edge + Cloud processing 
+
+
+          '      Clients / Edge
+                    ↓
+               API Gateway
+                    ↓
+               Event Bus (Kafka / Pulsar)
+                    ↓
+               Microservices
+                    ↓
+               Datastores + Analytics
+               '
+
+#### Q) Optimistic Locking and Pessimistic Locking.
+
+     Both are concurrency control mechanisms used to prevent data inconsistency when multiple transactions access the same data.
+     
+     🔓 Optimistic Locking          
+          Assumption: Conflicts are rare
+
+          How it works
+               * No lock is placed when reading data
+               * Before updating, the system checks if data was modified by another transaction
+               * If modified → update fails → retry or abort
+
+        Implementation     
+             * Uses version number / timestamp
+             * Common in JPA/Hibernate
+
+             @Version
+             private Long version;
+
+             Example
+                  1) User A reads record (version = 1)
+                  2) User B reads same record (version = 1)
+                  3) User A updates → version becomes 2
+                  4) User B updates → fails (version mismatch)
+
+          ✅ Pros
+               * High performance
+               * No blocking
+               * Best for read-heavy systems
+          ❌ Cons
+               * Update failures possible
+               * Retry logic needed
+          🔥 Use when
+               * Low contention
+               * REST APIs, microservices
+               * High scalability required
+
+               
+     🔒 Pessimistic Locking
+          Assumption: Conflicts are common
+               How it works
+                    * Locks data as soon as it is read
+                    * Other transactions must wait until lock is released
+               Implementation
+                    * Uses database locks
+                    * JPA example:
+                         @Lock(LockModeType.PESSIMISTIC_WRITE)
+               Example
+                    1) User A reads record → lock acquired
+                    2) User B tries to read/update → blocked
+                    3) User A commits → lock released
+                    4) User B proceeds
+                    
+               ✅ Pros
+                    * Strong consistency
+                    * No update conflicts
+               ❌ Cons
+                    * Blocking
+                    * Deadlock risk
+                    * Lower performance
+                    
+               🔥 Use when
+                    * High contention
+                    * Financial systems
+                    * Inventory / seat booking
 
 
 
+               | Feature           | Optimistic          | Pessimistic      |
+               | ----------------- | ------------------- | ---------------- |
+               | Lock timing       | At update           | At read          |
+               | Blocking          | ❌ No              | ✅ Yes           |
+               | Performance       | High                | Lower            |
+               | Conflict handling | Detect & retry      | Prevent          |
+               | Scalability       | Excellent           | Limited          |
+               | Typical usage     | APIs, microservices | Banking, booking |
 
 
+          🎯 One-line Summary (Interview-ready)
+
+              * Optimistic locking detects conflicts at commit time using versioning.               
+              * Pessimistic locking prevents conflicts by locking data upfront.
+
+              'Contention' means competition for the same limited resource.
+              
+
+#### Q) How you will design payment Microservices.
+
+          Architectural view defines how services are structured and interact, while design view defines how a specific service is internally implemented.
+
+
+          Payment Microservice – Architectural View Example
+                    Components
+                    API Gateway                    
+                    Payment Service                    
+                    Order Service                    
+                    Fraud Detection Service                    
+                    Notification Service                    
+                    Payment Gateway (external: Stripe/PayPal)                    
+                    Message Broker (Kafka)                    
+                    Database per service
+
+
+                              Client
+                                ↓
+                              API Gateway
+                                ↓
+                              Payment Service ──→ Fraud Service
+                                ↓                    ↓
+                              Order Service      Kafka Events
+                                ↓
+                              External Payment Gateway
+
+
+                              Key Architectural Decisions
+                                        Microservices over monolith                                        
+                                        REST + async events (Kafka)                                        
+                                        Database-per-service                                        
+                                        Circuit breakers & retries                                        
+                                        Idempotency for payment APIs                                        
+                                        PCI-DSS compliance boundaries
+                                        
+                              Non-functional concerns
+                                        Scalability (horizontal scaling)                                        
+                                        High availability                                        
+                                        Security (OAuth2, mTLS)                                        
+                                        Observability (logs, metrics, tracing)
+
+          Payment Microservice – Design View Example
+                                        
+               Inside Payment Servic
+                    Modules
+                    Controller Layer                    
+                    Service Layer                    
+                    Domain Layer                    
+                    Repository Layer                    
+                    Integration Layer
+
+
+                Class-Level Design
+
+                    PaymentController
+                     └── PaymentService
+                          ├── PaymentValidator
+                          ├── FraudClient
+                          ├── PaymentGatewayClient
+                          ├── PaymentRepository
+                          └── PaymentEventPublisher  
+          Key Design Decisions
+
+                    Saga pattern for payment workflow                    
+                    Idempotency key stored in DB                    
+                    State machine for payment states:                    
+                    INITIATED → AUTHORIZED → CAPTURED → FAILED                    
+                    Retry with exponential backoff                    
+                    Domain-driven design (Aggregates, Value Objects)
+
+
+          4️⃣ Simple Analogy 💡
+
+                    * Architectural View = City map 🏙️
+                      (Roads, zones, connections)
+                    
+                    * Design View = House blueprint 🏠
+                    (Rooms, wiring, plumbing)
+                    
+                          
+#### Q) what is CompletableFuture.
+
+   ##### java.util.concurrent
+      CompletableFuture is a Java concurrency API (java.util.concurrent) used to write asynchronous, non-blocking code and to compose multiple async tasks easily.
+
+      CompletableFuture enables asynchronous, non-blocking programming with powerful composition and error handling support.
+
+      CompletableFuture does not create threads by itself — it uses a thread pool to execute async tasks.
+      Understanding this is critical for production systems.
+      
+      
+      1️⃣ Why CompletableFuture?
+           Before Java 8:
+                * Future → blocking (get() blocks)
+                * No easy way to chain or combine async tasks
+
+                CompletableFuture solves this by
+
+                * Running tasks asynchronously
+                * Supporting callbacks
+                * Allowing chaining, combining, and error handling
+                
+      2️⃣ Basic Example – Run async task
+
+      
+
+           ' CompletableFuture<Void> future =
+                   CompletableFuture.runAsync(() -> {
+                       System.out.println("Running async task");
+                   });
+               
+               future.join(); // wait for completion
+'
+
+     ✔ No return value
+     ✔ Runs in ForkJoinPool.commonPool
+
+
+     3️⃣ Async task with return value
+
+
+     ' CompletableFuture<String> future =
+               CompletableFuture.supplyAsync(() -> {
+                    return "Hello CompletableFuture";
+               });
+               
+     String result = future.join();
+     System.out.println(result);
+     '
+
+     ✔ supplyAsync() → returns value
+     ✔ join() → waits (unchecked exception)
+     ✔ uses ForkJoinPool.commonPool()
+
+
+     4️⃣ Transform result (thenApply)
+
+    
+          ' CompletableFuture<String> future =
+              CompletableFuture.supplyAsync(() -> "Java")
+                  .thenApply(result -> result + " CompletableFuture");
+          
+          System.out.println(future.join());
+          '
+
+     ✔ Used when output of one step feeds next
+          
+     5️⃣ Chain async calls (thenCompose)
+
+          ' CompletableFuture<String> future =
+              CompletableFuture.supplyAsync(() -> "OrderId-123")
+                  .thenCompose(orderId ->
+                      CompletableFuture.supplyAsync(() -> "Payment done for " + orderId)
+                  );
+          
+          System.out.println(future.join());
+          '
+
+     ✔ Used when next step returns another CompletableFuture
+
+  6️⃣ Run independent tasks in parallel (thenCombine)
+
+            ' CompletableFuture<Integer> price =
+                   CompletableFuture.supplyAsync(() -> 100);
+               
+               CompletableFuture<Integer> tax =
+                   CompletableFuture.supplyAsync(() -> 20);
+               
+               CompletableFuture<Integer> total =
+                   price.thenCombine(tax, Integer::sum);
+               
+               System.out.println(total.join()); // 120
+               '
+
+               ✔ Parallel execution
+               ✔ Combine results
+
+     7️⃣ Run after completion (thenAccept / thenRun)
+
+          ' CompletableFuture
+              .supplyAsync(() -> "Email Sent")
+              .thenAccept(result -> System.out.println(result));
+          '
+
+          * thenAccept() → consumes result
+          * thenRun() → no access to result
+
+     8️⃣ Exception handling
+
+
+          ' CompletableFuture<Integer> future =
+              CompletableFuture.supplyAsync(() -> {
+                  if (true) throw new RuntimeException("Error");
+                  return 10;
+              }).exceptionally(ex -> {
+                  System.out.println(ex.getMessage());
+                  return 0;
+              });
+          
+          System.out.println(future.join());
+
+          '
+     9️⃣ Handle success + failure (handle)
+
+          ' CompletableFuture<Integer> future =
+              CompletableFuture.supplyAsync(() -> 10)
+                  .handle((result, ex) -> {
+                      if (ex != null) return 0;
+                      return result * 2;
+                  });
+          
+          System.out.println(future.join());
+          '
+
+          ✔ Handles both success and failure
+
+     🔟 Wait for multiple tasks (allOf / anyOf)
+
+          'CompletableFuture<Void> all =
+              CompletableFuture.allOf(f1, f2, f3);
+
+          all.join(); // wait for all
+
+
+          CompletableFuture<Object> any =
+         CompletableFuture.anyOf(f1, f2);
+
+          System.out.println(any.join());
+
+     '
+
+     11 Providing Your Own Thread Pool (BEST PRACTICE)
+          ExecutorService executor =  Executors.newFixedThreadPool(10);
+
+          
+          Use it with CompletableFuture
+               '  CompletableFuture<String> future =
+                        CompletableFuture.supplyAsync(() -> {
+                            return "Running in custom pool";
+                        }, executor);
+                    
+                    System.out.println(future.join());
+                    executor.shutdown();
+               '
+
+     12. Different pools for different stages
+          ' ExecutorService dbPool = Executors.newFixedThreadPool(20);
+               ExecutorService cpuPool = Executors.newWorkStealingPool();
+               
+               CompletableFuture<String> future =
+                   CompletableFuture.supplyAsync(() -> fetchFromDB(), dbPool)
+                       .thenApplyAsync(data -> processData(data), cpuPool)
+                       .thenApply(result -> result.toUpperCase());
+               
+               System.out.println(future.join());
+'
+
+     🧠 Real-world Use Cases
+          ✔ Parallel API calls
+          ✔ Async DB + REST calls
+          ✔ Microservices orchestration
+          ✔ Non-blocking background jobs
+          ✔ Performance optimization
 
      
+### Q) How do different transaction isolation levels and propagation behaviors affect the behavior and performance of optimistic and pessimistic locking in Spring-based applications?
+
+          
