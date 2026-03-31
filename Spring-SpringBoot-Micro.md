@@ -11644,4 +11644,7 @@ ________________________________________________________________________________
      
 ### Q) How do different transaction isolation levels and propagation behaviors affect the behavior and performance of optimistic and pessimistic locking in Spring-based applications?
 
+### Q) Are code changes required when migrating Spring Cloud applications to AWS?
+
+### Q)
           
