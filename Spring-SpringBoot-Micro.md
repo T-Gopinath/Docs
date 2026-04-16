@@ -535,7 +535,7 @@ ________________________________________________________________________________
           3 YAML/properties-based customization.
 
 __________________________________________________________________________________________________________________________________
-#### configuring Spring Boot to connect to and use two different database servers? ####
+#### Configuring Spring Boot to connect to and use two different database servers? ####
 
 Let’s assume we have:
      Database 1: MySQL
