@@ -1358,6 +1358,8 @@ Following these practices ensures consistency, performance, and maintainability.
 
 #### 03. Use Proper Propagation Settings
 
+       Propagation defines how transactions behave when one transactional method calls another.
+
      * Understand and use transaction propagation wisely:
           * REQUIRED (default) – join existing transaction or create new one.
           * REQUIRES_NEW – always start a new transaction, suspending any existing one.
@@ -1378,6 +1380,9 @@ Following these practices ensures consistency, performance, and maintainability.
 
 
 #### 04. Set Appropriate Isolation Levels
+
+         Isolation determines how much one transaction is isolated from other concurrent transactions.
+         It controls the visibility of data changes between transactions. 
 
      * Prevent data anomalies by choosing the correct isolation level:
           * READ_COMMITTED – default, prevents dirty reads.
