@@ -1408,12 +1408,12 @@ Following these practices ensures consistency, performance, and maintainability.
      * For checked exceptions, explicitly configure rollback:
 
 
-```
-@Transactional(rollbackFor = Exception.class)
-               public void processPayment(Payment payment) throws PaymentException {
-                   // business logic
-}
-```
+``` @Transactional(
+    rollbackFor = Exception.class,           // Rollback on any Exception
+    noRollbackFor = {IllegalArgumentException.class, BusinessException.class},
+    propagation = Propagation.REQUIRED,
+    isolation = Isolation.READ_COMMITTED
+)```
           
         
 #### 06. Keep Transactions Short
