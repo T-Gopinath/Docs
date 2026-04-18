@@ -2317,8 +2317,7 @@ ____________________________________________________________________________
  ### Q) What is aspect-oriented programming in the spring framework ? 
  
       Aspect-Oriented Programming (AOP) in the Spring Framework is a programming paradigm that allows you to separate cross-cutting concerns — logic that is common across multiple parts of an application but not central to the business logic.
-
-
+          
           What - Aspect
           When - advice  - when to execut the aspect, i.e befor the metod or after the method.
           Which - pointcut
