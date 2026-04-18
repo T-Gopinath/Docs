@@ -2336,7 +2336,7 @@ ____________________________________________________________________________
                     
                     | Term           | Description                                                                                                 |
                     | -------------- | ----------------------------------------------------------------------------------------------------------- |
-                    |<b>Aspect</b>   | A module that encapsulates a cross-cutting concern (e.g., logging, transaction).                            |
+                    |  **Aspect**    | A module that encapsulates a cross-cutting concern (e.g., logging, transaction).                            |
                     | **Join Point** | A point during program execution, such as a method call or exception throw, where an aspect can be applied. |
                     | **Advice**     | The action taken by an aspect at a particular join point (e.g., before a method executes).                  |
                     | **Pointcut**   | An expression that matches join points; determines where advice should be applied.                          |
