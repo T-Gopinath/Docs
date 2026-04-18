@@ -2333,7 +2333,7 @@ ____________________________________________________________________________
 
 
       ⚙️ Core AOP Concepts in Spring
-
+                    `` 
                     | Term           | Description                                                                                                 |
                     | -------------- | ----------------------------------------------------------------------------------------------------------- |
                     | **Aspect**     | A module that encapsulates a cross-cutting concern (e.g., logging, transaction).                            |
@@ -2341,11 +2341,11 @@ ____________________________________________________________________________
                     | **Advice**     | The action taken by an aspect at a particular join point (e.g., before a method executes).                  |
                     | **Pointcut**   | An expression that matches join points; determines where advice should be applied.                          |
                     | **Weaving**    | The process of linking aspects with other application types or objects — done at runtime in Spring.         |
-
+``
 
      🔧 Types of Advice in Spring AOP
 
-
+          ``
           | Advice Type         | Description                                                                            |
           | ------------------- | -------------------------------------------------------------------------------------- |
           | **@Before**         | Runs before the method execution.                                                      |
@@ -2353,6 +2353,7 @@ ____________________________________________________________________________
           | **@AfterReturning** | Runs only if the method returns successfully.                                          |
           | **@AfterThrowing**  | Runs if the method throws an exception.                                                |
           | **@Around**         | Runs before and after the method execution; allows custom control of method execution. |
+ ``
 
 
 
