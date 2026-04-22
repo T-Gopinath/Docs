@@ -3648,7 +3648,8 @@ ____________________________________________________________________________
 ____________________________________________________________________________
  ### Q) HOW IS SPRING Security Implemented In a Spring Boot Application ? 
 
-     Spring Security is implemented in a Spring Boot application to handle authentication, authorization, and protection against common security threats (like CSRF, XSS, session fixation, etc.).
+     Spring Security is implemented in a Spring Boot application to handle authentication, authorization, and protection against common security threats
+     (like CSRF, XSS, session fixation, etc.).
 
      🧩 1. Add Spring Security Dependency
 
@@ -3804,7 +3805,8 @@ ____________________________________________________________________________
 ____________________________________________________________________________
  ### Q) how to disable a specific Auto-Configuration ? 
  
-          In Spring Boot, auto-configuration is a key feature that automatically configures beans based on the classpath and environment. However, sometimes you may need to disable a specific auto-configuration because it conflicts with your setup or you want to manually configure something.
+          In Spring Boot, auto-configuration is a key feature that automatically configures beans based on the classpath and environment.
+          However, sometimes you may need to disable a specific auto-configuration because it conflicts with your setup or you want to manually configure something.
 
           Here are 4 common ways to disable specific auto-configurations:
           
@@ -3895,7 +3897,8 @@ ____________________________________________________________________________
  ### Q) Explain the difference between cache eviction and cache expiration.
 
      
-      In a Spring Boot application (or any caching system), cache eviction and cache expiration both deal with removing entries from the cache — but they happen for different reasons and are triggered differently.
+      In a Spring Boot application (or any caching system), cache eviction and cache expiration both deal with removing entries from the cache — 
+      but they happen for different reasons and are triggered differently.
 
       🧩 1. Cache Expiration
                    Definition:
@@ -4392,7 +4395,8 @@ ____________________________________________________________________________
 ____________________________________________________________________________
  ### Q) Imagine you are designing a Spring Boot application that interfaces with multiple external APIs. How would you handle API rate limits and failures ?
  
-      Here’s how you can systematically design a Spring Boot application that interacts with multiple external APIs while handling rate limits and failures effectively — both from an architectural and implementation perspective.
+      Here’s how you can systematically design a Spring Boot application that interacts with multiple external APIs while handling rate limits and failures 
+      effectively — both from an architectural and implementation perspective.
 
       
      1. Understanding the Problem
@@ -4692,7 +4696,8 @@ ____________________________________________________________________________
 
 ### Q) how does spring boot support internationalization (i18n) ? 
 
-     Spring Boot provides built-in support for internationalization (i18n) — the process of making your application adaptable to different languages and regions without changing the code. Here’s a clear explanation of how it works and how you can implement it.
+     Spring Boot provides built-in support for internationalization (i18n) — the process of making your application adaptable to different languages
+     and regions without changing the code. Here’s a clear explanation of how it works and how you can implement it.
 
      🌍 1. Core Concept
 
@@ -5844,7 +5849,8 @@ ____________________________________________________________________________
 ____________________________________________________________________________
  ### Q) How can spring cloud gateway be configured for routing, security and monitoring ? 
 
-      Spring Cloud Gateway (SCG) is a powerful, lightweight API Gateway built on Spring Boot and Project Reactor. It provides routing, security, and observability (monitoring) features out of the box — ideal for microservices architectures. Let’s break down how to configure each of these aspects.
+      Spring Cloud Gateway (SCG) is a powerful, lightweight API Gateway built on Spring Boot and Project Reactor. It provides routing, security,
+      and observability (monitoring) features out of the box — ideal for microservices architectures. Let’s break down how to configure each of these aspects.
 
         ⚙️ 1. Routing Configuration
                Routing is the core function of Spring Cloud Gateway — directing incoming requests to downstream microservices.
@@ -6207,9 +6213,14 @@ ________________________________________________________________________________
 
      
 ________________________________________________________________________________________________________________________________
-### Q) You application needs to process notifications asynchronously using a message queue. Explain how you would setup integration and send message from your spring boot application
+### Q) You application needs to process notifications asynchronously using a message queue. Explain how you would setup integration and send 
 
-      To process notifications asynchronously in a Spring Boot application using a message queue, you can integrate a messaging system like RabbitMQ, Kafka, or AWS SQS. Below is a step-by-step explanation using RabbitMQ (the same principles apply to other brokers).
+
+
+message from your spring boot application
+
+      To process notifications asynchronously in a Spring Boot application using a message queue, you can integrate a messaging system like
+      RabbitMQ, Kafka, or AWS SQS. Below is a step-by-step explanation using RabbitMQ (the same principles apply to other brokers).
 
      🧩 1. Objective
                We want to:
@@ -6371,9 +6382,11 @@ ________________________________________________________________________________
      
 
 ____________________________________________________________________________
- ### Q) You need to secure a spring boot app, to ensure that only authenticated users can access certain endpoints. Describe how you would configure spring security to set up a basic for-based authentication.
+ ### Q) You need to secure a spring boot app, to ensure that only authenticated users can access certain endpoints. Describe how you would configure
+ spring security to set up a basic for-based authentication.
 
-     To secure a Spring Boot application using form-based authentication with Spring Security, you need to configure how users authenticate (login), how credentials are stored or verified, and which endpoints require authentication. Here’s how you would set it up step by step:
+     To secure a Spring Boot application using form-based authentication with Spring Security, you need to configure how users authenticate (login), 
+     how credentials are stored or verified, and which endpoints require authentication. Here’s how you would set it up step by step:
      
         1. Add Spring Security dependency 
              In your pom.xml:
@@ -7034,7 +7047,8 @@ server.error.whitelabel.enabled=false
 ____________________________________________________________________________
  ### Q) how can we implement pagination in springboot application ?
 
-Implementing pagination in a Spring Boot application helps efficiently fetch and display large datasets in smaller chunks instead of loading everything at once. Spring Data JPA provides excellent built-in support for this via the Pageable and Page interfaces.
+Implementing pagination in a Spring Boot application helps efficiently fetch and display large datasets in smaller chunks instead of loading everything at once.
+Spring Data JPA provides excellent built-in support for this via the Pageable and Page interfaces.
 
  1. Use Pageable in Your Repository
       Spring Data JPA supports pagination through the PagingAndSortingRepository or JpaRepository.
@@ -7684,7 +7698,8 @@ ________________________________________________________________________________
 
 ### Q) To protect ur application from abuse and ensure fair usage, you decide to implement rate limiting on ur API endpoints. Describe a simple approach to achieve this in Spring Boot.
 
-     To implement rate limiting in a Spring Boot application and protect APIs from abuse, you can use several approaches — from in-memory counters to distributed solutions like Redis or API gateways. Here's a simple, effective in-application approach using the Bucket4j library.
+     To implement rate limiting in a Spring Boot application and protect APIs from abuse, you can use several
+     approaches — from in-memory counters to distributed solutions like Redis or API gateways. Here's a simple, effective in-application approach using the Bucket4j library.
 
           
 ✅ Approach: Using Bucket4j (Token Bucket Algorithm) 
@@ -8024,7 +8039,8 @@ ________________________________________________________________________________
 
 ### Q) How do you optimize memory management when designing Java application ? 
 
-Optimizing memory management in a Java application is crucial for performance, scalability, and stability — especially in high-throughput or long-running systems. Below is a structured approach covering design-time, runtime, and JVM-level strategies
+Optimizing memory management in a Java application is crucial for performance, scalability, and stability — especially in high-throughput or long-running systems. 
+Below is a structured approach covering design-time, runtime, and JVM-level strategies
 
 🧩 1. Design-Level Strategies
      a. Choose Appropriate Data Structures
@@ -8124,7 +8140,8 @@ Optimizing memory management in a Java application is crucial for performance, s
 ___________________________________________________________________________________________________________________________
 ### Q)  What are the ways to adjust JVM memory settings during runtime in a Java application?
 
-     Good question — JVM memory settings are usually configured at startup, but there are some ways to adjust or manage memory behavior during runtime, though not all parameters can be changed dynamically. Let’s go over this carefully.
+     Good question — JVM memory settings are usually configured at startup, but there are some ways to adjust or manage memory behavior during runtime,
+     though not all parameters can be changed dynamically. Let’s go over this carefully.
 
           
 🧠 1. Using jcmd, jconsole, or JMX for live tuning
@@ -8381,9 +8398,11 @@ ____________________________________________________________________________
 ____________________________________________________________________________
  ### Q) What is Event-Driven Architecture ?
  
-      Envent Driven Arichitecture (EDA) is a software design pattern in which components communicate by producing and consuming events, rather than by directly calling each other's method or APIs.
+      Envent Driven Arichitecture (EDA) is a software design pattern in which components communicate by producing and consuming events, rather than by 
+      directly calling each other's method or APIs.
 
-     In simple terms, EDA is about building systems that react to events ( changes in state or actions) as they occur enabling loose coupling, asynchronous communication and hegh scalability.
+     In simple terms, EDA is about building systems that react to events ( changes in state or actions) as they occur enabling loose coupling,
+     asynchronous communication and hegh scalability.
 
      1) Event
           An event represents a significant change in state or an action that has occurred.
@@ -8623,7 +8642,8 @@ ________________________________________________________________________________
 _________________________________________________________________________________________________________________________________
 ### Q) AWS Lambda Functions for a serverless architecture ?
 
-     AWS Lambda Functions are the backbone of serverless architectures on AWS. They allow you to run backend code without provisioning or managing servers — you simply write your function logic, and AWS handles the rest: provisioning, scaling, and high availability.
+     AWS Lambda Functions are the backbone of serverless architectures on AWS. They allow you to run backend code without provisioning or managing servers —
+     you simply write your function logic, and AWS handles the rest: provisioning, scaling, and high availability.
      
 
      🔹 1. What is AWS Lambda?
@@ -9317,7 +9337,8 @@ client.sendEmail(request);
 _________________________________________________________________________________________________________________________________________
 ### Q) What is API orchestration
 
-     API orchestration refers to coordinating multiple API calls across different services and combining their outputs to produce a single, meaningful response or complete a business workflow.
+     API orchestration refers to coordinating multiple API calls across different services and combining their outputs to produce a single, meaningful response or
+     complete a business workflow.
 
 Think of it as a central conductor that manages how different microservices or external APIs work together
 
@@ -9445,7 +9466,8 @@ ________________________________________________________________________________
 __________________________________________________________________________________________________________________________________________________________
 ### Q) Atomic Variable (java.util.concurrent.atomic), parallel process and current  process Difference.
      
-     Atomic Variable :  Java is a variable that supports lock-free, thread-safe operations on a single value, And are designed to handle concurrent updates without using synchronized or explicit locks.
+     Atomic Variable :  Java is a variable that supports lock-free, thread-safe operations on a single value, And are designed to handle concurrent updates without
+     using synchronized or explicit locks.
 
                Why Atomic variable :  In a multithreaded environment, operations like count++ are not atomic:
                     count++; // read → increment → write (3 steps)
@@ -9878,7 +9900,8 @@ https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
           Game engines reusing sprite textures across multiple objects.
             
   ##### Proxy Pattern : 
-          Use Proxy when controlling access to an object is essential: security, lazy loading, caching, or remote invocation.                                        Useful when working with large or remote objects.
+          Use Proxy when controlling access to an object is essential: security, lazy loading, caching, or remote invocation.
+          Useful when working with large or remote objects.
           Proxy acts as a gateway that adds extra behavior before delegating to the real object.
           
           Ex
@@ -9931,7 +9954,8 @@ https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
                                    Customer complaints passed through various support tiers (L1 → L2 → L3).  
                                    In Spring Boot and microservices, this pattern is very common for filters, validations, security, workflows, and request processing pipelines.
                                    
-         #####  State : Use State when an object’s behavior varies based on internal state transitions. Avoids large conditional blocks by encapsulating                          state-specific logic.
+         #####  State : Use State when an object’s behavior varies based on internal state transitions. Avoids large conditional blocks by encapsulating  
+         state-specific logic.
                         Provides cleaner modeling of lifecycle-driven behavior.
                          Changing behaviour at runtime describes the Strategy Pattern. 
                          Ex
@@ -9946,7 +9970,8 @@ https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
                                  Data parsing templates: CSV vs JSON vs XML parsing.
                                  Document approval workflows across departments.                    
                                  
-        ##### Iterator : Use Iterator when you need a standard mechanism to traverse a collection without exposing its internal structure. Perfect                               when collections change but traversal logic should remain consistent.
+        ##### Iterator : Use Iterator when you need a standard mechanism to traverse a collection without exposing its internal structure. Perfect     
+        when collections change but traversal logic should remain consistent.
                        Iterator simplifies looping and enables multiple traversal strategies independently.                      
                     Ex
                          Java iterators on lists, sets, maps.
@@ -10065,8 +10090,8 @@ ________________________________________________________________________________
           <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>eclipselink</artifactId>
-            <version>4.0.2</version>
           </dependency>
+            <version>4.0.2</version>
 
      4️⃣ Configure JPA Provider in application.yml / properties
 
