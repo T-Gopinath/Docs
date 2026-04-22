@@ -3632,7 +3632,8 @@ ____________________________________________________________________________
              🧩 What is Spring Boot CLI?
                  Spring Boot CLI (Command Line Interface) is a lightweight tool that allows you to:
                       * Quickly create, run, and test Spring Boot applications using simple Groovy scripts or Maven/Gradle projects.
-                      * Avoid writing boilerplate Java code — you can write concise Groovy-based Spring Boot apps that auto-configure                               themselves.
+                      * Avoid writing boilerplate Java code — you can write concise Groovy-based Spring Boot apps that auto-configure   
+                      themselves.
                       * Run and manage Spring Boot projects directly from the terminal, without needing an IDE.
 
            🧱 Option 2: Manual installation
@@ -3648,8 +3649,8 @@ ____________________________________________________________________________
 ____________________________________________________________________________
  ### Q) HOW IS SPRING Security Implemented In a Spring Boot Application ? 
 
-     Spring Security is implemented in a Spring Boot application to handle authentication, authorization, and protection against common security threats
-     (like CSRF, XSS, session fixation, etc.).
+     Spring Security is implemented in a Spring Boot application to handle authentication, authorization, and protection
+     against common security threats (like CSRF, XSS, session fixation, etc.).
 
      🧩 1. Add Spring Security Dependency
 
@@ -3806,7 +3807,8 @@ ____________________________________________________________________________
  ### Q) how to disable a specific Auto-Configuration ? 
  
           In Spring Boot, auto-configuration is a key feature that automatically configures beans based on the classpath and environment.
-          However, sometimes you may need to disable a specific auto-configuration because it conflicts with your setup or you want to manually configure something.
+          However, sometimes you may need to disable a specific auto-configuration because it conflicts with your setup or you want to manually
+          configure something.
 
           Here are 4 common ways to disable specific auto-configurations:
           
@@ -4332,7 +4334,8 @@ ____________________________________________________________________________
 
 ### Q) Imagine you are designing a spring boot application that interfaces with multiple external APIs . How would you handle API rate limits and failures ? 
      
-      When designing a Spring Boot application that integrates with multiple external APIs, handling rate limits and failures is crucial for reliability and scalability.
+      When designing a Spring Boot application that integrates with multiple external APIs, handling rate limits and failures is 
+      crucial for reliability and scalability.
 
       1. Handling API Rate Limits
            a. Implement Client-Side Rate Limiting:
@@ -4395,8 +4398,8 @@ ____________________________________________________________________________
 ____________________________________________________________________________
  ### Q) Imagine you are designing a Spring Boot application that interfaces with multiple external APIs. How would you handle API rate limits and failures ?
  
-      Here’s how you can systematically design a Spring Boot application that interacts with multiple external APIs while handling rate limits and failures 
-      effectively — both from an architectural and implementation perspective.
+      Here’s how you can systematically design a Spring Boot application that interacts with multiple external APIs
+      while handling rate limits and failures effectively — both from an architectural and implementation perspective.
 
       
      1. Understanding the Problem
