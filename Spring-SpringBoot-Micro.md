@@ -3806,8 +3806,8 @@ ____________________________________________________________________________
 ____________________________________________________________________________
  ### Q) how to disable a specific Auto-Configuration ? 
  
-          In Spring Boot, auto-configuration is a key feature that automatically configures beans based on the classpath and environment.
-          However, sometimes you may need to disable a specific auto-configuration because it conflicts with your setup or you want to manually
+          In Spring Boot, auto-configuration is a key feature that automatically configures beans based on the classpath
+          and environment.  However, sometimes you may need to disable a specific auto-configuration because it conflicts with your setup or you want to manually
           configure something.
 
           Here are 4 common ways to disable specific auto-configurations:
