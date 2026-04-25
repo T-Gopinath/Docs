@@ -5129,7 +5129,8 @@ ____________________________________________________________________________
       
                
           B. Mocking at the Code Level (Unit Tests)
-               When testing service or controller layers, mock the API client or Feign client that communicates with the external service
+               When testing service or controller layers, mock the API client or Feign client that communicates
+               with the external service 
                Example with Mockito (Spring Boot + JUnit 5):
 
 
