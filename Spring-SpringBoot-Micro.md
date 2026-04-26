@@ -5853,8 +5853,10 @@ ____________________________________________________________________________
 ____________________________________________________________________________
  ### Q) How can spring cloud gateway be configured for routing, security and monitoring ? 
 
-      Spring Cloud Gateway (SCG) is a powerful, lightweight API Gateway built on Spring Boot and Project Reactor. It provides routing, security,
-      and observability (monitoring) features out of the box — ideal for microservices architectures. Let’s break down how to configure each of these aspects.
+      Spring Cloud Gateway (SCG) is a powerful, lightweight API Gateway built on Spring Boot and Project Reactor.
+      It provides routing, security,
+      and observability (monitoring) features out of the box — ideal for microservices architectures.
+      Let’s break down how to configure each of these aspects.
 
         ⚙️ 1. Routing Configuration
                Routing is the core function of Spring Cloud Gateway — directing incoming requests to downstream microservices.
@@ -6028,7 +6030,8 @@ ____________________________________________________________________________
                
              
 ___________________________________________________________________________________________________________________________________
-### Q) how would you manage and monitor asynchronous tasks in spring boot application, ensuring that you can track task progress and handle failures ?
+### Q) how would you manage and monitor asynchronous tasks in spring boot application, ensuring that you can track task progress
+and handle failures ?
 
 1. Managing Asynchronous Tasks
      a. Enable and Use Async Execution
@@ -6217,14 +6220,17 @@ ________________________________________________________________________________
 
      
 ________________________________________________________________________________________________________________________________
-### Q) You application needs to process notifications asynchronously using a message queue. Explain how you would setup integration and send 
+### Q) You application needs to process notifications asynchronously using a message queue. Explain how you would setup 
+integration and send 
 
 
 
 message from your spring boot application
 
-      To process notifications asynchronously in a Spring Boot application using a message queue, you can integrate a messaging system like
-      RabbitMQ, Kafka, or AWS SQS. Below is a step-by-step explanation using RabbitMQ (the same principles apply to other brokers).
+      To process notifications asynchronously in a Spring Boot application using a message queue, you can integrate 
+      a messaging system like
+      RabbitMQ, Kafka, or AWS SQS. Below is a step-by-step explanation using RabbitMQ (the same principles apply 
+      to other brokers).
 
      🧩 1. Objective
                We want to:
@@ -6386,11 +6392,14 @@ message from your spring boot application
      
 
 ____________________________________________________________________________
- ### Q) You need to secure a spring boot app, to ensure that only authenticated users can access certain endpoints. Describe how you would configure
+ ### Q) You need to secure a spring boot app, to ensure that only authenticated users can access certain endpoints. 
+ Describe how you would configure
  spring security to set up a basic for-based authentication.
 
-     To secure a Spring Boot application using form-based authentication with Spring Security, you need to configure how users authenticate (login), 
-     how credentials are stored or verified, and which endpoints require authentication. Here’s how you would set it up step by step:
+     To secure a Spring Boot application using form-based authentication with Spring Security, you need to 
+     configure how users authenticate (login), 
+     how credentials are stored or verified, and which endpoints require authentication. 
+     Here’s how you would set it up step by step:
      
         1. Add Spring Security dependency 
              In your pom.xml:
@@ -6516,7 +6525,8 @@ ____________________________________________________________________________
 ____________________________________________________________________________
 ### Q) How to tell an Auto-Configuration to Back Away When a Bean Exists ? 
 
-     In Spring Boot, you can tell an Auto-Configuration class to back off (i.e., not apply its configuration) when a specific bean already exists by using one of Spring Boot’s conditional annotations.
+     In Spring Boot, you can tell an Auto-Configuration class to back off (i.e., not apply its configuration)
+     when a specific bean already exists by using one of Spring Boot’s conditional annotations.
 
    ✅ 1. Use @ConditionalOnMissingBean  
              This is the most common approach.     
