@@ -7823,7 +7823,8 @@ ________________________________________________________________________________
 ____________________________________________________________________________
  ### Q) Your are tasked with building a non-blocking , reactive REST API that can handle a high volume of concurrent requests efficiently. Describe how would use spring webFlux to achieve this ?
 
-          To build a non-blocking, reactive REST API capable of handling a high volume of concurrent requests efficiently, you would use Spring WebFlux, which is Spring’s reactive web framework built on Project Reactor.
+To build a non-blocking, reactive REST API capable of handling a high volume of concurrent requests efficiently,
+you would use Spring WebFlux, which is Spring’s reactive web framework built on Project Reactor.
 
      Here’s how you can design and implement it:
 
