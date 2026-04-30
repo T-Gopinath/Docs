@@ -6030,8 +6030,8 @@ ____________________________________________________________________________
                
              
 ___________________________________________________________________________________________________________________________________
-### Q) how would you manage and monitor asynchronous tasks in spring boot application, ensuring that you can track task progress
-and handle failures ?
+### Q) How would you manage and monitor asynchronous tasks in spring boot application, ensuring that you can track task progress
+### and handle failures ?
 
 1. Managing Asynchronous Tasks
      a. Enable and Use Async Execution
