@@ -6221,8 +6221,7 @@ ________________________________________________________________________________
 
      
 ________________________________________________________________________________________________________________________________
-### Q) You application needs to process notifications asynchronously using a message queue. Explain how you would setup 
-integration and send message from your spring boot application
+### Q) You application needs to process notifications asynchronously using a message queue. Explain how you would setup integration and send message from your spring boot application.
 
       To process notifications asynchronously in a Spring Boot application using a message queue, you can integrate 
       a messaging system like
