@@ -6034,11 +6034,12 @@ ________________________________________________________________________________
 ### and handle failures ?
 
 1. Managing Asynchronous Tasks
+   
      a. Enable and Use Async Execution
         Use Spring’s built-in @Async mechanism to run tasks asynchronously.
 
 
-        ` @Configuration
+` @Configuration
           @EnableAsync
           public class AsyncConfig implements AsyncConfigurer {
           
@@ -6052,13 +6053,13 @@ ________________________________________________________________________________
                   executor.initialize();
                   return executor;
               }
-          }
-   '
+          }`
 
+  
    Then, annotate methods with @Async:
 
 
-          `` @Service
+          ` @Service
                public class NotificationService {
                
                    @Async
@@ -6067,10 +6068,10 @@ ________________________________________________________________________________
                        Thread.sleep(5000);
                        return CompletableFuture.completedFuture("Notification sent to " + userId);
                    }
-               }
-   `
+               }`
+               
    
-2. Tracking Task Progress
+3. Tracking Task Progress
         Since @Async methods return a Future or CompletableFuture, you can:
         Poll for completion.
         Chain dependent tasks.
@@ -6093,12 +6094,11 @@ ________________________________________________________________________________
               public String getTaskStatus(String taskId) {
                   return taskStatus.getOrDefault(taskId, "NOT_FOUND");
               }
-          }
-   `
+          }`
    
      You can expose this through a REST API to monitor task progress.
    
-3. Handling Failures and Retries
+4. Handling Failures and Retries
     a. Exception Handling in Async Tasks
              Implement a global async exception handler:
 
@@ -6185,6 +6185,7 @@ ________________________________________________________________________________
           }
 `    
 
+
  5. Persistent Task Tracking
          For long-running or distributed async jobs
               Store task metadata (id, status, start/end time, error message) in a database.
@@ -6220,12 +6221,8 @@ ________________________________________________________________________________
 
      
 ________________________________________________________________________________________________________________________________
-### Q) You application needs to process notifications asynchronously using a message queue. Explain how you would setup 
-integration and send 
-
-
-
-message from your spring boot application
+### Q) You application needs to process notifications asynchronously using a message queue. Explain how you would setup\ 
+integration and send message from your spring boot application
 
       To process notifications asynchronously in a Spring Boot application using a message queue, you can integrate 
       a messaging system like
