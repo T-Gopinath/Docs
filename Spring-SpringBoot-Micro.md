@@ -8776,8 +8776,8 @@ ________________________________________________________________________________
 
 ### AWS Step Functions ?
 
-          AWS Step Functions is a serverless orchestration service that helps you coordinate multiple AWS services and microservices 
-     into automated workflows using visual state machines.
+          AWS Step Functions is a serverless orchestration service that helps you coordinate multiple AWS services and 
+          microservices into automated workflows using visual state machines.
 
           It lets you design, run, and monitor complex workflows as a series of steps, where each step 
      performs a specific task (like invoking a Lambda function, calling an API, or waiting for input).
@@ -9469,10 +9469,11 @@ ________________________________________________________________________________
          Type: AWS::S3::Bucket
          Properties:
            BucketName: my-sample-bucket-cloudformation-demo
-__________________________________________________________________________________________________________________________________________________________
+__________________________________________________________________________________________________________________________________________
+
 ### Q) Atomic Variable (java.util.concurrent.atomic), parallel process and current  process Difference.
      
-     Atomic Variable :  Java is a variable that supports lock-free, thread-safe operations on a single value, And are designed to handle concurrent updates without
+     Atomic Variable :   is a variable that supports lock-free, thread-safe operations on a single value, And are designed to handle concurrent updates without
      using synchronized or explicit locks.
 
                Why Atomic variable :  In a multithreaded environment, operations like count++ are not atomic:
@@ -9572,25 +9573,24 @@ ________________________________________________________________________________
                               | Multiple variables | ❌         | ❌              | ✅            |
      '
 
-                         Note : When an atomic operation is running, no other thread can see a half-done state. (They prevent race conditions without locks)
+          Note : When an atomic operation is running, no other thread can see a half-done state. (They prevent race conditions without locks)
                          
                
-               What problem does an atomic variable solve in multithreaded programming?
-                    Atomic variables solve race conditions for single-variable updates by providing lock-free, atomic, and visible operations in multithreaded                     environments.
+### Q) What problem does an atomic variable solve in multithreaded programming?
+
+   Atomic variables solve race conditions for single-variable updates by providing lock-free, atomic, and visible operations in multithreaded                     environments.
                     
                What are the commonly used atomic classes in Java?
 
-               '    
-                         | Category          | Common Classes                                 |
+                         
+                       ' | Category          | Common Classes                                 |
                          | ----------------- | ---------------------------------------------- |
                          | Primitive atomics | `AtomicInteger`, `AtomicLong`, `AtomicBoolean` |
                          | Reference atomics | `AtomicReference`, `AtomicStampedReference`    |
                          | Arrays            | `AtomicIntegerArray`, `AtomicLongArray`        |
                          | High-throughput   | `LongAdder`, `DoubleAdder`                     |
                          | Accumulators      | `LongAccumulator`, `DoubleAccumulator`         |
-                         | Field updaters    | `AtomicIntegerFieldUpdater`                    |
-
-               '
+                         | Field updaters    | `AtomicIntegerFieldUpdater`                    |'
                     
                             
                Are atomic variables blocking or non-blocking?
@@ -9601,15 +9601,13 @@ ________________________________________________________________________________
                     Instead of acquiring a lock, they rely on CPU-level atomic instructions, most commonly Compare-And-Swap (CAS).
                     
                     ➡️ No thread ever blocks or waits for a lock.
-
-
-                    note :
-                         Volatile guarantees visibility of changes across threads, while atomic variables guarantee visibility and atomic (lock-free) read–modify–write operations.
-
-                         A volatile variable is used when multiple threads need to read the latest value of a variable, but no compound (read–modify–write) operations are required,
-                         such as for status flags, configuration updates, or stop signals between threads.
                     
-__________________________________________________________________________________________________________________________________________________________
+ NOTE : Volatile guarantees visibility of changes across threads, while atomic variables guarantee visibility and atomic (lock-free) read–modify–write operations.
+           A volatile variable is used when multiple threads need to read the latest value of a variable, but no compound (read–modify–write) operations are required,
+          such as for status flags, configuration updates, or stop signals between threads.
+                    
+__________________________________________________________________________________________________________________________________
+
 ### Q) What is S.O.L.I.D Principles
 
           They help you write clean, maintainable, scalable, and testable code—especially important in Java, Spring Boot, and microservices architectures.
@@ -9756,7 +9754,7 @@ ________________________________________________________________________________
                }
 
                📌 This is the foundation of Spring’s Dependency Injection
-__________________________________________________________________________________________________________________________________________________________
+________________________________________________________________________________________________________________________________________________
 
 ### Q) Design patterns in java
 
