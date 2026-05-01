@@ -10435,7 +10435,7 @@ ________________________________________________________________________________
      multiple independent systems without creating separate accounts for each one.
 
 
-          ' | Role                        | Description                                             |
+        ' | Role                        | Description                                             |
           | --------------------------- | ------------------------------------------------------- |
           | **User**                    | Person or system trying to access a resource            |
           | **Identity Provider (IdP)** | Authenticates the user (Okta, Keycloak, Azure AD)       |
@@ -10472,7 +10472,6 @@ ________________________________________________________________________________
                     Access Token → Used to call APIs               
                     Refresh Token → Get new access tokens
                     
-
           OpenID Connect (OIDC) – OAuth2 + Identity
                     OIDC = Authentication layer on top of OAuth2
                     OIDC introduces:
@@ -10484,6 +10483,8 @@ ________________________________________________________________________________
           Okta
                Okta is a cloud-based Identity-as-a-Service (IDaaS) platform.
 _________________________________________________________________________________________________________________________________
+
+
 ### Q) What is cloud-native design principles ?
 
      Cloud-native design principles are a set of architectural and engineering practices used to build applications that fully leverage cloud platforms (AWS, Azure, GCP) for scalability, resilience, agility, and cost efficiency.
@@ -10514,7 +10515,8 @@ ________________________________________________________________________________
  * Deployment to Kubernetes cluster
  * Health checks
  * Monitoring & alerts
-__________________________________________________________________________________________________________________________________________________________
+__________________________________________________________________________________________________________________________________________________
+
 ### Q) what is cloud-native design principles ?
 
 Here are the key cloud-native design principles explained simply:
@@ -10588,6 +10590,7 @@ Here are the key cloud-native design principles explained simply:
      Encryption at rest and in transit
 
 _________________________________________________________________________________________________________________________________
+
 ### Q)  Using external jar in springboot project ?
 
 https://thyanmol.medium.com/using-external-jar-in-springboot-project-7efcf53975b0
