@@ -10049,7 +10049,8 @@ client.
            Abstract Factory Pattern 
     8)   A graphical application allows users to create shapes, groups of shapes, and nested groups of shapes. Which design pattern would best suit this 
 scenario?   Composite pattern.
-_________________________________________________________________________________________________________________________________________________________
+_______________________________________________________________________________________________________________________________
+
 ### Q) How junit handles static methods.
 
      import static org.mockito.Mockito.*;
@@ -10074,7 +10075,9 @@ ________________________________________________________________________________
               }
           }
 
-___________________________________________________________________________________________________________________________________________________________
+________________________________________________________________________________________________________________________________________________
+
+
 ### Q) What is the process to switch the default JPA persistence provider in Spring Boot ? 
 
      Exclude Hibernate from Spring Boot Starter
@@ -10113,8 +10116,10 @@ ________________________________________________________________________________
                3) Set jakarta.persistence.provider          
                4) Configure provider-specific properties          
                5) Verify at startup
-___________________________________________________________________________________________________________________________________________________________
+___________________________________________________________________________________________________________________________________________________
+
 ### Q) How do I migrate a Java application from a lower version to a higher version, and what tests are involved in the process.
+
      1️⃣ Migration Strategy (High-Level)
           Incremental Upgrade
      2️⃣ Pre-Migration Assessment  
@@ -10149,7 +10154,8 @@ ________________________________________________________________________________
           ✅ Performance benchmark
           ✅ UAT
           ✅ Production rollout
-__________________________________________________________________________________________________________________________________________________________
+______________________________________________________________________________________________________________________________________________
+
 ### Q) What steps and considerations are involved in migrating from an RDBMS to a NoSQL database?
      
      👉 Mapping RDBMS → NoSQL
@@ -10241,11 +10247,10 @@ ________________________________________________________________________________
                ✔ Performance tested
                ✔ Monitoring ready
 
+   hot partitio Simple Definition
+   A hot partition occurs when a single partition (or shard) becomes overloaded because too many requests target the same partition key or range of keys.
+__________________________________________________________________________________________________________________________________________________
 
-               hot partitio Simple Definition
-
-                    A hot partition occurs when a single partition (or shard) becomes overloaded because too many requests target the same partition key or range of keys.
-__________________________________________________________________________________________________________________________________________________________
 ### Q) What is the process for upgrading a React application from a lower React version to a higher version?
 
                1. Identify Your Current State
@@ -10270,11 +10275,8 @@ ________________________________________________________________________________
                10. Rollout Strategy (Production-Safe)
                11. Recommended Upgrade Order (Best Practice)
                     Libraries → React → React DOM → Entry Point → Fix Warnings → Fix Tests → Enable Features
-               
-
-
-          
-___________________________________________________________________________________________________________________________________________________________
+                     
+_______________________________________________________________________________________________________________________________________________
 ### Q)  Respose UI Questions.
 
      To build a responsive web page that works well on mobile, tablet, laptop, and desktop, you need to combine layout techniques, flexible units, and adaptive styling.
@@ -10421,10 +10423,11 @@ ________________________________________________________________________________
           ✔ Tested on real devices    
           
 _________________________________________________________________________________________________________________________________
+
 ### Q) Please explain the concept of Federated identity, including SAML, OAuth2, Keycloak, and Okta.
      
      Federated Identity → One identity, many systems.
-               Gmail → then access → YouTube, Google Drive, Google Cloud Console without logging in again.
+     Gmail → then access → YouTube, Google Drive, Google Cloud Console without logging in again.
                
      Authentication is centralized, access is distributed.
 
