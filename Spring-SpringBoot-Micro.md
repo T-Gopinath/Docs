@@ -7702,10 +7702,10 @@ ____________________________________________________________________________
           | 7    | Secure and monitor usage                         |
           | 8    | Test using mocks or local emulators              |
 
-               
-     
-     
+
+
 _______________________________________________________________________________________________________________________________
+
 
 ### Q) To protect ur application from abuse and ensure fair usage, you decide to implement rate limiting on ur API endpoints. Describe a simple approach to achieve this in Spring Boot.
 
@@ -7722,13 +7722,12 @@ ________________________________________________________________________________
               <groupId>com.github.vladimir-bukhtoyarov</groupId>
               <artifactId>bucket4j-core</artifactId>
               <version>8.4.0</version>
-          </dependency>
-          `
+          </dependency>`
 
           For Gradle:
 
           ` implementation 'com.github.vladimir-bukhtoyarov:bucket4j-core:8.4.0'
-`
+
    2. Create a Rate Limiting Filter
    
           `import io.github.bucket4j.*;
@@ -7790,8 +7789,7 @@ ________________________________________________________________________________
                   registrationBean.addUrlPatterns("/api/*"); // apply to API endpoints
                   return registrationBean;
               }
-          }
-`
+          }`
 
 ⚙️ How It Works
      Each client (identified by IP or token) gets its own bucket.
@@ -7923,8 +7921,9 @@ you would use Spring WebFlux, which is Spring’s reactive web framework built o
 
                         ` spring.r2dbc.url=r2dbc:postgresql://localhost:5432/usersdb
                          spring.r2dbc.username=postgres
-                         spring.r2dbc.password=secret
-                         ` 
+                         spring.r2dbc.password=secret`
+
+                         
                
      🔁 7. WebClient for Non-blocking External Calls
                    Use WebClient instead of RestTemplate:
@@ -7955,8 +7954,7 @@ you would use Spring WebFlux, which is Spring’s reactive web framework built o
 
 
                ` flux.onBackpressureDrop()
-                   .limitRate(100);
-`
+                   .limitRate(100);`
 
 
      🧮 10. Example Reactive Flow
@@ -7990,7 +7988,7 @@ ____________________________________________________________________________
 
      🔵 What is Blue-Green Deployment?
      
-                In a Blue-Green deployment, you maintain two identical environments:
+               In a Blue-Green deployment, you maintain two identical environments:
                Blue environment → The currently live/production environment serving users.
                Green environment → The new version of the application you want to deploy.
 
@@ -8017,7 +8015,7 @@ ____________________________________________________________________________
                Once Green is stable, the Blue environment can be updated for the next deployment cycle.
                
      ✅ Benefits
-               Zero (or near-zero) downtime
+                Zero (or near-zero) downtime
                Instant rollback capability
                Safe testing in production-like environment
                Reduced deployment risk
@@ -8064,8 +8062,7 @@ Below is a structured approach covering design-time, runtime, and JVM-level stra
           Avoid oversized collections — initialize with an estimated capacity:
 
                
-               `Map<String, Object> map = new HashMap<>(expectedSize);
-`
+               ` Map<String, Object> map = new HashMap<>(expectedSize);`
               
      b. Minimize Object Creation
           Reuse immutable objects and constants.
@@ -8152,7 +8149,7 @@ Below is a structured approach covering design-time, runtime, and JVM-level stra
 ___________________________________________________________________________________________________________________________
 ### Q)  What are the ways to adjust JVM memory settings during runtime in a Java application?
 
-     Good question — JVM memory settings are usually configured at startup, but there are some ways to adjust or manage memory behavior during runtime,
+     JVM memory settings are usually configured at startup, but there are some ways to adjust or manage memory behavior during runtime,
      though not all parameters can be changed dynamically. Let’s go over this carefully.
 
           
@@ -8171,8 +8168,7 @@ ________________________________________________________________________________
             These commands allow adjusting some flags marked as manageable (i.e., those that support dynamic changes).
             You can find which flags are manageable with:
 
-               `java -XX:+PrintFlagsFinal | grep manageable
-`
+               ` java -XX:+PrintFlagsFinal | grep manageable`
           
          Use cases:
               Tuning GC thresholds
@@ -8188,8 +8184,7 @@ ________________________________________________________________________________
           Example:
 
           ` MemoryMXBean memoryMXBean = ManagementFactory.getMemoryMXBean();
-memoryMXBean.gc(); // Trigger GC manually
-`
+          memoryMXBean.gc(); // Trigger GC manually`
 
    You can’t increase heap size via JMX, but you can programmatically monitor and react (e.g., freeing caches or throttling threads) when memory gets tight.
 
@@ -8201,15 +8196,14 @@ memoryMXBean.gc(); // Trigger GC manually
      Adaptive data loading (load fewer objects when memory is low)
      Use Runtime.getRuntime() to observe available memory:
 
-          `long freeMem = Runtime.getRuntime().freeMemory();
+          ` long freeMem = Runtime.getRuntime().freeMemory();
           long totalMem = Runtime.getRuntime().totalMemory();
-          long maxMem = Runtime.getRuntime().maxMemory();
-`
+          long maxMem = Runtime.getRuntime().maxMemory();`
 
-       These techniques don’t change JVM settings but let your app self-regulate.   
+          These techniques don’t change JVM settings but let your app self-regulate.   
      
-🧩 4. Using tools like VisualVM or JConsole
-     These GUI tools connect to a running JVM and let you:
+🧩 4.     Using tools like VisualVM or JConsole
+          These GUI tools connect to a running JVM and let you:
           Inspect heap and GC behavior
           Change manageable JVM options dynamically
           Run jcmd operations from a graphical interface
