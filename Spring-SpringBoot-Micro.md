@@ -11687,7 +11687,44 @@ ________________________________________________________________________________
      
 ### Q) How do different transaction isolation levels and propagation behaviors affect the behavior and performance of optimistic and pessimistic locking in Spring-based applications?
 
+          (1) database isolation level
+          (2) Spring transaction propagation
+          (3) locking strategy (optimistic vs pessimistic).
+                    
+          
+          Common problems isolation tries to prevent:
+                    Dirty Read → reading uncommitted data
+                    Non-repeatable Read → same query gives different result
+                    Phantom Read → new rows appear in repeated queries
+                    
+          isolation levels control what anomalies are allowed
+          propagation controls transaction boundaries  
+          
+          
 ### Q) Are code changes required when migrating Spring Cloud applications to AWS?
+
+
+| Spring Cloud Component | AWS Equivalent                                            | Code Change Impact           |
+| ---------------------- | --------------------------------------------------------- | ---------------------------- |
+| Spring Cloud Config    | AWS Systems Manager Parameter Store / AWS Secrets Manager | Minor (config loading logic) |
+| Eureka                 | AWS Cloud Map                                             | Medium                       |
+| Feign                  | Amazon API Gateway                                        | Medium                       |
+| Hystrix                | Resilience4j                                              | Minor                        |
+
+          
+          ⚠️ Configuration changes
+                    application.yml → environment variables / Parameter Store
+          
+          ⚠️ Security changes
+                    IAM roles replace hardcoded credentials
+                    Integration with:
+                          AWS Identity and Access Management    
+          ⚠️ Observability
+                Replace:
+                    Spring Cloud Sleuth
+                    with:
+                    AWS X-Ray    
+
 
 ### Q)
           
