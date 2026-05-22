@@ -4,7 +4,7 @@ Architected federated identity and secure authentication systems leveraging SAML
 
 TDD/BDD using JUnit 5, Mockito
 
-Testcontainers
+Test containers
 
 •	Extensive experience in federated identity (SAML, OAuth2, KEYCLOCK, and OKTA) and web services (SOAP, REST, and JMS).
 
@@ -17,7 +17,7 @@ Testcontainers
 	
 	
 	Project
-		•	Provided technical guidance on Kubernetes-native deployments, observability (logging, tracing, metrics), and performance optimization.
+		Provided technical guidance on Kubernetes-native deployments, observability (logging, tracing, metrics), and performance optimization.
 		clusters
 		
 		AWS(IAM, RDS, EC2, SQS, SES, Lambda, Step Functions, Cloud Formation)
