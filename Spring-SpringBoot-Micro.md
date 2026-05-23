@@ -9761,13 +9761,13 @@ ________________________________________________________________________________
 https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
 
 
- ***Singleton Pattern.***
- ***Factory Method Pattern.***
- ***Abstract Factory Pattern.***
- ***Builder Pattern.***
- ***Prototype Pattern.***
+ ***Singleton Pattern.***<br/>
+ ***Factory Method Pattern.***<br/>
+ ***Abstract Factory Pattern.***<br/>
+ ***Builder Pattern.***<br/>
+ ***Prototype Pattern.***<br/>
 
-#### 1. Creational Design Patterns ####  
+#### 1. Creational Design Patterns ####  <br/>
 
 
            ***Singleton Pattern.***
