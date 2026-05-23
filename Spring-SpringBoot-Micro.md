@@ -9766,13 +9766,14 @@ https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
 1.Singleton Pattern <br/>
           
             - Use Singleton when you need exactly one instance of a class throughout your system, and this 
-       instance must coordinate shared resources.<br/>
+       instance must coordinate shared resources.
           - It is ideal when multiple instances can cause data inconsistency, performance overhead,
-       or unexpected behaviour.<br/>
-          - This pattern ensures all parts of your application rely on a single, centralized object.<br/>
-          - Singleton provides controlled global access and ensures resource sharing is consistent across threads and modules.<br/> 
-          - It avoids unnecessary memory consumption and helps maintain a standard configuration or behaviour throughout the application.<br/> 
-          - A thread pool manager providing a centralized pool of threads to avoid excessive thread creation.<br/>
+       or unexpected behaviour.
+          - This pattern ensures all parts of your application rely on a single, centralized object.
+          - Singleton provides controlled global access and ensures resource sharing is consistent across threads and modules.
+          - It avoids unnecessary memory consumption and helps maintain a standard configuration or behaviour 
+       throughout the application.
+          - A thread pool manager providing a centralized pool of threads to avoid excessive thread creation.
 
 
 #### 2. Structural Design Pattern
