@@ -9761,30 +9761,31 @@ ________________________________________________________________________________
 https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
 
 #### Creational Design Patterns
-  ##### Singleton Pattern
-       Use Singleton <ins>when</ins> you need exactly one instance of a class throughout your system, and this 
-       instance must coordinate shared resources.
-       It is ideal when multiple instances can cause data inconsistency, performance overhead,
-       or unexpected behavior.
-       This pattern ensures all parts of your application rely on a single, centralized object.
 
-       Singleton provides controlled global access and ensures resource sharing is consistent across threads and modules. 
-       It avoids unnecessary memory consumption and helps maintain a standard configuration or behavior throughout the application. 
-       A thread pool manager providing a centralized pool of threads to avoid excessive thread creation.
+                                         ##### Singleton Pattern
+          Use Singleton <ins>when</ins> you need exactly one instance of a class throughout your system, and this 
+          instance must coordinate shared resources.
+          It is ideal when multiple instances can cause data inconsistency, performance overhead,
+          or unexpected behavior.
+          This pattern ensures all parts of your application rely on a single, centralized object.
+          
+          Singleton provides controlled global access and ensures resource sharing is consistent across threads and modules. 
+          It avoids unnecessary memory consumption and helps maintain a standard configuration or behavior throughout the application. 
+          A thread pool manager providing a centralized pool of threads to avoid excessive thread creation.
                  
                  
-   Factory Method Pattern : 
-     Use this pattern when object creation must be delegated to subclasses or logic rather than calling constructors directly.
-     It is useful when object types are determined at runtime based on external or dynamic input. 
-     This is beneficial when adding new object types without modifying existing client code.
-     Factory Method promotes loose coupling by ensuring the creator class delegates object construction to                                                      subclasses. 
-     
-     It supports better scalability, testability, and adherence to open/closed principle.
-     
-     Ex :
-     * A notification system deciding between SMS, Email, or WhatsApp based on user preference.
-     * A database driver loader choosing MySQL, PostgreSQL, or Oracle connection classes based on config.
-     * A shape creator in a graphics editor that generates Circle, Rectangle, or Triangle objects dynamically.
+                                           ##### Factory Method Pattern  
+          Use this pattern when object creation must be delegated to subclasses or logic rather than calling constructors directly.
+          It is useful when object types are determined at runtime based on external or dynamic input. 
+          This is beneficial when adding new object types without modifying existing client code.
+          Factory Method promotes loose coupling by ensuring the creator class delegates object construction to                                                      subclasses. 
+          
+          It supports better scalability, testability, and adherence to open/closed principle.
+          
+          Ex :
+          * A notification system deciding between SMS, Email, or WhatsApp based on user preference.
+          * A database driver loader choosing MySQL, PostgreSQL, or Oracle connection classes based on config.
+          * A shape creator in a graphics editor that generates Circle, Rectangle, or Triangle objects dynamically.
 
   Abstract Factory Pattern : 
      Use Abstract Factory when your application needs to create families of related objects but wants to avoid directly                           instantiating concrete classes. 
