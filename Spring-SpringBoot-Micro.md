@@ -9762,7 +9762,7 @@ https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
 
 #### Creational Design Patterns
 
-                                         ##### Singleton Pattern
+                                         **Singleton Pattern**
           Use Singleton <ins>when</ins> you need exactly one instance of a class throughout your system, and this 
           instance must coordinate shared resources.
           It is ideal when multiple instances can cause data inconsistency, performance overhead,
@@ -9779,7 +9779,7 @@ https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
           Use this pattern when object creation must be delegated to subclasses or logic rather than calling constructors directly.
           It is useful when object types are determined at runtime based on external or dynamic input. 
           This is beneficial when adding new object types without modifying existing client code.
-          Factory Method promotes loose coupling by ensuring the creator class delegates object construction to                                                      subclasses. 
+          Factory Method promotes loose coupling by ensuring the creator class delegates object construction to subclasses. 
           
           It supports better scalability, testability, and adherence to open/closed principle.
           
