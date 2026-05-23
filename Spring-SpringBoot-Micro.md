@@ -9799,9 +9799,407 @@ Triangle objects dynamically.
 
 
 
-#### 2. Structural Design Pattern
-#### 3. Behavioral design pattern
+3) Abstract Factory Pattern : <br>
+     
+Use Abstract Factory when your application needs to create families of related objects
+but wants to avoid directly instantiating concrete classes. It is perfect when enforcing
+product consistency is necessary.
+
+This helps when multiple product variants share a theme (e.g., UI themes, OS-specific widgets).
+
+ It groups related objects under a single factory, ensuring compatibility and preventing mismatched combinations of components.
+
+ It allows for the creation of families of related or dependent objects without specifying their concrete classes.
+
+Example.
+Dark Theme vs Light Theme UI toolkit, ensuring all components match (buttons, checkboxes, menus)
+
+AWS vs Azure cloud resource factories, ensuring consistent resource creation across vendors.
+
+Vehicle part factories—ElectricCarFactory and PetrolCarFactory producing compatible parts only.
+
+
+
+  4) Builder Pattern : 
+    Use Builder for constructing objects that require many optional fields or multi-step configuration.                                                      It helps when constructors become too complex, overloaded, or unclear. This is extremely helpful when building
+     immutable objects.
+               
+     Builder improves readability, enforces step-by-step controlled construction, and avoids telescoping constructors.
+
+     The Builder pattern helps separate object construction from its representation. 
+
+     The Builder pattern enables method chaining. 
+     
+     Ex
+     * Creating complex HTTP requests with headers, params, cookies, and authentication.
+
+     * Building User objects during registration where fields like address and preferences are optional.
+
+     * Creating SQL queries dynamically with multiple conditions and joins.
+
+
+5) Prototype Pattern :
+   
+Use Prototype when object creation is expensive and cloning an existing object is more efficient.
+
+It is ideal when objects involve deep copying or heavy initialization logic
+Perfect when the system needs duplicate instances with minor variations.
+
+ It reduces the overhead of creating objects with complex initialization
+  It supports cloning objects with various configurations 
+
+Prototype bypasses costly creation processes, promoting performance optimization and reusability.
+
+Ex
+Cloning 'document templates' for invoices, pay slips, or certificates
+
+Duplicating 'game characters' with similar abilities but minor customizations.
+
+Copying graphic objects like shapes in design tools without recreating all properties.
+
+
+#### 2. Structural Design Pattern ( 7 )
+
+They focus on how classes and objects are composed to form larger, flexible, and efficient structures.
+
+Structural patterns help you assemble objects and classes while keeping the system loosely coupled and easy to maintain.
+
+            * Reuse existing code without modifying it
+            
+            * Simplify complex class relationships
+            
+            * Decouple abstractions from implementations
+            
+            * Improve flexibility and scalability
+
+
+
+
+ 1) Adapter Pattern : <br/>
+
+   Use Adapter when your system needs to interact with an incompatible interface without modifying existing code.
+
+   It’s useful when integrating legacy systems with modern APIs. Works best when you cannot change the target interface
+
+   Adapter converts one interface into another, enabling smooth collaboration between otherwise incompatible components.
+
+   Adapter: A class that implements the Target interface and adapts the Adaptee to it. 
+
+   Adaptee: An existing class with an incompatible interface that needs adapting.
+
+   Adaptee is an existing class with an incompatible interface that needs adapting.
+
+
+   The Adapter, Target, and Client are essential roles in the Adapter Pattern. 
+            
+  Ex:
+   Integrating an old XML-based API with a new JSON-based REST service.
+
+   Using third-party payment APIs that require format conversion.
+
+   Adapting voltage converters conceptually: 220V → 110V device adapter.     
+   
+                 
+2) Bridge Pattern :  <br/>
+
+  * Use Bridge when abstraction and implementation must evolve independently. 
+
+  * It prevents creating numerous classes when you mix multiple combinations of functionality. 
+
+  * Best suited when your system has multiple dimensions of variation.
+
+  * Bridge reduces class explosion by separating what the object does from how it does it.
+
+  Abstraction : contains a reference to the implementor interface
+  
+(The Abstraction class has a reference to the implementor interface, which allows abstraction 
+to delegate operations to the implementor. )
+            
+  ex:
+  Remote controls controlling different types of devices (TV, AC, Projector).
+
+  Payment system separating payment mode (UPI, Card) from platform (Razorpay, Stripe).
+                 
+3)  Composite Pattern :<br/>
+   
+    Use Composite when you need to represent hierarchies where individual items and groups should be treated uniformly.
+    Perfect when operations must be applied to both leaf and composite objects seamlessly.
+
+    Composite simplifies tree structure management by letting clients treat both single objects and groups the same way.
+  
+  Ex:
+   File Explorer: File and Folder handled through one interface.
+
+   Organizational Hierarchy: CEO → Managers → Employees.
+   UI components: panels containing buttons, text fields, and nested containers.    
+   
+
+4) Decorator Pattern : <br/>  
+   Use Decorator when you want to add new features dynamically without altering 
+the original class. Ideal when inheritance becomes too rigid or leads to too many subclasses.
+
+   Decorator provides flexible runtime extension by wrapping objects with additional behaviour.
+                            
+  EX:
+          Coffee shop system: add milk, chocolate, foam, caramel on top of base coffee
+
+          Spring’s HandlerInterceptor adding logging/authentication layers.
+
+          Adding encryption, compression, or caching to streams dynamically.
+
+
+5) Facade Pattern :<br/>
+
+  Use Facade when you want to provide a simplified interface to a complex subsystem.
+  Ideal when clients must be shielded from heavy initialization and dependencies.
+
+  Facade reduces complexity, improves readability, and creates a single entry point to multiple components.
+
+  Ex
+          Hotel booking hides allocation, payment, and housekeeping APIs.
+
+          Spring Boot starter packages simplify complex library configurations.
+
+          A video conversion utility hiding codec handling and file operations
+          
+                                     
+6) Flyweight Pattern : <br/>
+
+  Use Flyweight when many objects share common internal data, and memory consumption becomes a concern. 
+
+  Perfect when object count may reach thousands or millions.
+
+  Flyweight reduces memory footprint by reusing shared intrinsic state and separating extrinsic state.
+
+  following components are typically part of the Flyweight Pattern
+
+  Flyweight Interface : The Flyweight Interface defines the operations for Flyweight objects.
+
+  Concrete Flyweight :  Concrete Flyweights implement the Flyweight interface and manage shared state.
+
+  Client : The Client uses Flyweights to perform operations. 
+
+  Flyweight Factory : The Flyweight Factory creates and manages Flyweight objects. 
+          
+  Ex
+   Text editors storing formatting styles as shared objects.
+   
+   Browser caching icons, emojis, or fonts as shared reusable resources.
+   
+   Game engines reusing sprite textures across multiple objects.
+   
+            
+7) Proxy Pattern :<br/>
+   
+  Use Proxy when controlling access to an object is essential: security, lazy loading, caching, or remote invocation.
+
+  Useful when working with large or remote objects.
+
+  Proxy acts as a gateway that adds extra behavior before delegating to the real object.
+
+  Ex
+    Hibernate’s lazy-loading proxy for database entities.
+
+    Authentication proxy checking permissions before accessing sensitive resources.
+
+    Remote proxy connecting clients to remote services via RMI or gRPC.
+
+            
+
+
+#### 3. Behavioral design pattern ( 12 )
         
+ Behavioural Design Patterns are a category of software design patterns that focus on how objects interact, communicate,
+  and share responsibilities. They help define clean communication rules between objects, making systems flexible, 
+  loosely coupled, and easy to extend.
+
+     Promote Single Responsibility Principle
+     Enable Open/Closed Principle
+
+
+ 
+1)	Strategy : <br/> 
+    Use Strategy when multiple algorithms can be chosen at runtime. Keep algorithms independent, interchangeable, and easily extendable.                               
+ Ex: 
+  Compression strategies: ZIP, GZIP, RAR.
+
+  Payment algorithms: UPI, NetBanking, Card.
+
+  Sorting strategies: QuickSort, MergeSort, HeapSort. 
+
+  In spring boot : @Qualifier, @Primary, or Map-based injection
+                                                  
+2)	Observer : <br/> 
+   Use Observer when one object must notify many dependents about state changes. Ideal for real-time data updates.
+
+   It enables event-driven systems with decoupled publishers and subscribers.
+          
+  EX:
+   Stock price updates notifying dashboards.
+
+   Weather station broadcasting temperature updates.
+
+   E-commerce order tracking updates.
+                            
+3)	Command : 
+   Use Command when you need to encapsulate actions as objects for flexible execution
+ strategies.  Supports undo/redo operations, command queues, or
+ transaction batching.
+
+   It decouples invoker from receiver, allowing actions to be stored, reused, or reversed
+          
+ EX:
+  Text editors performing undo/redo on formatting operations.
+
+  Queueing commands in task schedulers or job systems.
+
+  Smart home automation defining commands like “Turn on AC,” “Dim Lights,” etc.
+                                    
+4)	Chain of Responsibility : <br/>
+
+          Use this pattern when requests must pass through a series of handlers, 
+
+          each deciding whether to process or pass it onward. Ideal when avoiding nested if-else chains.
+
+          It decouples sender from receivers and makes request processing flexible and maintainable.
+
+   EX:
+     Servlet filters: authentication → authorization → logging → validation.
+
+     Loan approval: clerk → manager → director approvals.
+
+     Customer complaints passed through various support tiers (L1 → L2 → L3).  
+
+     In Spring Boot and microservices, this pattern is very common for filters, validations, security, workflows,
+
+     and request processing pipelines.
+     
+5)	  State : <br/>
+
+   Use State when an object’s behavior varies based on internal state transitions. Avoids large conditional blocks by encapsulating  
+
+state-specific logic.
+
+    Provides cleaner modeling of lifecycle-driven behavior.
+
+               Changing behaviour at runtime describes the Strategy Pattern. 
+
+               Ex
+                 Order lifecycle: Placed → Packed → Shipped → Delivered.
+
+                 ATM behavior: CardInserted, OutOfCash, Idle
+
+                 Media player: Play, Pause, Stop states.
+    
+                    
+6)	Template Method : 
+
+          Use Template Method when your algorithm structure is fixed but specific steps may vary across implementations. This helps enforce consistent workflows.
+
+  Allows common logic reuse while letting subclasses override specific steps.
+
+  Ex
+   Online order processing: validate → pay → ship (different gateways override payment step).
+
+   Data parsing templates: CSV vs JSON vs XML parsing.
+
+   Document approval workflows across departments.                    
+                                 
+7)	Iterator: <br/>
+
+ Use Iterator when you need a standard mechanism to traverse a collection without exposing its internal structure. Perfect     
+
+ when collections change but traversal logic should remain consistent.
+
+  Iterator simplifies looping and enables multiple traversal strategies independently.  
+                    
+          Ex
+               Java iterators on lists, sets, maps.
+               File system iterating over files and directories
+
+               Iterating over database cursor results.
+                       
+8)	 Mediator : <br/>
+
+ Use Mediator when communication between components becomes complex, chaotic, or tightly coupled. The mediator centralizes  interactions and simplifies component relationships.
+
+                       It promotes loose coupling and simplifies system maintenance.
+                       Ex                      
+                            Chatroom controlling interactions among multiple users.
+
+                            Air traffic control tower coordinating airplanes
+
+                            UI dialog box coordinating text fields, buttons, and validation.
+                            
+
+9)	Memento :  <br/>
+
+  Use Memento when you need to store and restore object states without violating encapsulation.
+
+                       Ideal for undo/rollback features.
+
+                       It allows maintaining historical states separately from core objects.
+                  Ex
+                       Code editors storing snapshots for undo operations.
+
+                       Game state checkpoints.
+
+                       Form data recovery after unexpected crashes.
+                       
+
+10)	 Visitor : <br/>
+
+  Use Visitor when new operations must be frequently added to object structures without modifying their classes.
+
+  Ideal for extending behaviour.
+
+   Visitor separates algorithms from object structures, keeping both clean and scalable.
+
+  Ex
+      Compiler visitors: type checking, optimization, code generation.
+
+      PDF generation visiting objects like text, tables, images
+
+      Data export tool generating CSV, XML, JSON using visitors
+      
+                  
+11)	 Interpreter : <br/> 
+
+   Use Interpreter when building grammar-based processing—mini languages, rules engines, or expression evaluators.
+
+   Best for simple grammars, not full-blown programming languages.
+
+   It enables defining rules and interpreting custom expressions systematically
+
+      Ex
+        SQL-like filters for search systems (e.g., price > 100 AND category = ‘books’).
+
+        Chatbot rule definitions like “if user says X then reply Y.
+
+        Regex engines internally interpreting expression patterns.
+
+12)	Composite Pattern : <br/>
+
+    Use Composite when you need to represent hierarchies where individual items and groups should 
+    be treated uniformly. 
+
+Perfect when operations must be applied to both leaf and composite objects seamlessly The Composite Pattern is designed to compose objects into tree structures, representing part-whole hierarchies effectively.
+
+ Composite simplifies tree structure management
+
+by letting clients treat both single objects and groups the same way.
+
+Both leaf and composite can implement the same interface ( Both leaf and composite components
+typically implement the same interface, allowing clients to interact with them uniformly. )
+
+Only composite nodes are responsible for managing child nodes.
+
+          Real-Time Scenarios
+                    File Explorer: File and Folder handled through one interface.  
+
+                    Organizational Hierarchy: CEO → Managers → Employees.
+
+                    UI components: panels containing buttons, text fields, and nested containers.              
 
 
 
