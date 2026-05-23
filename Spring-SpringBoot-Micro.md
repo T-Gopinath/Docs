@@ -9761,18 +9761,19 @@ ________________________________________________________________________________
 https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
 
 
-#### 1. Creational Design Patterns
-
-          Provide flexible object-creation mechanisms that decouple instantiation logic from the rest of your system.
-
-
-          #### 1. Singleton Pattern.
-          #### 2. Factory Method Pattern.
-          #### 3. Abstract Factory Pattern.
-          #### 4. Builder Pattern.
-          #### 5. Prototype Pattern.
-
+#### 1. Creational Design Patterns ( 5 )
           
+1.Singleton Pattern
+            - Use Singleton when you need exactly one instance of a class throughout your system, and this 
+       instance must coordinate shared resources.
+          - It is ideal when multiple instances can cause data inconsistency, performance overhead,
+       or unexpected behaviour.
+          - This pattern ensures all parts of your application rely on a single, centralized object.
+          - Singleton provides controlled global access and ensures resource sharing is consistent across threads and modules. 
+          - It avoids unnecessary memory consumption and helps maintain a standard configuration or behaviour throughout the application. 
+          - A thread pool manager providing a centralized pool of threads to avoid excessive thread creation.
+
+
 #### 2. Structural Design Pattern
 #### 3. Behavioral design pattern
         
