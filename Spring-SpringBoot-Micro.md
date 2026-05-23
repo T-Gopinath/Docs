@@ -9761,18 +9761,16 @@ ________________________________________________________________________________
 https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
 
 
-#### 1. Creational Design Patterns <br/>
+#### 1. Creational Design Patterns
 
-          Provide flexible object-creation mechanisms that decouple instantiation logic from the rest of your system. <br/>
-
-
+          Provide flexible object-creation mechanisms that decouple instantiation logic from the rest of your system.
 
 
-          ***Singleton Pattern.***<br/>
-          ***Factory Method Pattern.***<br/>
-          ***Abstract Factory Pattern.***<br/>
-          ***Builder Pattern.***<br/>
-          ***Prototype Pattern.***<br/>
+          <b>Singleton Pattern.</b><br/>
+          <b>Factory Method Pattern.</b><br/>
+          <b>Abstract Factory Pattern.</b><br/>>
+          <b>Builder Pattern.</b><br/>
+          <b>Prototype Pattern.</b><br/>
 
           
 #### 2. Structural Design Pattern
