@@ -9762,7 +9762,7 @@ https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
 
 #### CREATIONAL DESIGN PATTERNS
   
-    <ins>**Singleton Pattern**</ins> : 
+    **Singleton Pattern :** 
        Use Singleton when you need exactly one instance of a class throughout your system, and this 
        instance must coordinate shared resources.
        It is ideal when multiple instances can cause data inconsistency, performance overhead,
