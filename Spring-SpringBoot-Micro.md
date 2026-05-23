@@ -9766,11 +9766,11 @@ https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
           Provide flexible object-creation mechanisms that decouple instantiation logic from the rest of your system.
 
 
-          <b>Singleton Pattern.</b><br/>
-          <b>Factory Method Pattern.</b><br/>
-          <b>Abstract Factory Pattern.</b><br/>>
-          <b>Builder Pattern.</b><br/>
-          <b>Prototype Pattern.</b><br/>
+          #### 1. Singleton Pattern.
+          #### 2. Factory Method Pattern.
+          #### 3. Abstract Factory Pattern.
+          #### 4. Builder Pattern.
+          #### 5. Prototype Pattern.
 
           
 #### 2. Structural Design Pattern
