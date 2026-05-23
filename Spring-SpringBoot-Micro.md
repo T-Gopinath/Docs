@@ -9760,6 +9760,8 @@ ________________________________________________________________________________
 
 https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
 
+
+ ***Singleton Pattern.***
 #### 1. Creational Design Patterns</br>  
 
 
