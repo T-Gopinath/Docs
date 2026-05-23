@@ -9760,9 +9760,9 @@ ________________________________________________________________________________
 
 https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
 
-CREATIONAL DESIGN PATTERNS
+#### CREATIONAL DESIGN PATTERNS
   
-    Singleton Pattern : 
+    <ins>**Singleton Pattern**</ins> : 
        Use Singleton when you need exactly one instance of a class throughout your system, and this 
        instance must coordinate shared resources.
        It is ideal when multiple instances can cause data inconsistency, performance overhead,
@@ -9788,11 +9788,12 @@ CREATIONAL DESIGN PATTERNS
      * A shape creator in a graphics editor that generates Circle, Rectangle, or Triangle objects dynamically.
 
   Abstract Factory Pattern : 
-     Use Abstract Factory when your application needs to create families of related objects but wants to avoid directly                                         instantiating concrete classes. 
+     Use Abstract Factory when your application needs to create families of related objects but wants to avoid directly                           instantiating concrete classes. 
      
      It is perfect when enforcing product consistency is necessary. 
      This helps when multiple product variants share a theme (e.g., UI themes, OS-specific widgets).
-     It groups related objects under a single factory, ensuring compatibility and preventing mismatched combinations of                                         components.
+     It groups related objects under a single factory, ensuring compatibility and preventing mismatched combinations of 
+     components.
      It allows for the creation of families of related or dependent objects without specifying their concrete classes.
 
      
@@ -9827,7 +9828,7 @@ CREATIONAL DESIGN PATTERNS
           Duplicating 'game characters' with similar abilities but minor customizations.
           Copying graphic objects like shapes in design tools without recreating all properties.
                                              
-  STRUCTURAL DESIGN PATTERNS
+  #### STRUCTURAL DESIGN PATTERNS
        They focus on how classes and objects are composed to form larger, flexible, and efficient structures.
        Structural patterns help you assemble objects and classes while keeping the system loosely coupled and easy to maintain.
             * Reuse existing code without modifying it
@@ -9916,7 +9917,7 @@ CREATIONAL DESIGN PATTERNS
     Authentication proxy checking permissions before accessing sensitive resources.
     Remote proxy connecting clients to remote services via RMI or gRPC.
 
-Behavioral design pattern
+#### Behavioral design pattern
         
   Behavioral Design Patterns are a category of software design patterns that focus on how objects interact, communicate,
   and share responsibilities. They help define clean communication rules between objects, making systems flexible, 
