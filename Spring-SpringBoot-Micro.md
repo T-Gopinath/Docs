@@ -9767,6 +9767,14 @@ https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
  ***Builder Pattern.***<br/>
  ***Prototype Pattern.***<br/>
 
+
+ * Singleton Pattern.
+ * Factory Method Pattern.
+ * Abstract Factory Pattern.
+ * Builder Pattern.
+ * Prototype Pattern.
+
+
 #### 1. Creational Design Patterns ####  
 
 <br/>
