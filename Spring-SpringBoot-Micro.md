@@ -9760,9 +9760,9 @@ ________________________________________________________________________________
 
 https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
 
-#### Creational Design Patterns                                          
-#### Structural Design Pattern
-#### Behavioral design pattern
+#### 1.Creational Design Patterns                                          
+#### 2.Structural Design Pattern
+#### 3.Behavioral design pattern
         
 
 
