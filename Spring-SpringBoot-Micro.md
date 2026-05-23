@@ -9773,6 +9773,7 @@ https://javatechonline.com/when-to-use-which-design-pattern-23-gof-pattern/
           It avoids unnecessary memory consumption and helps maintain a standard configuration or behavior throughout the application. 
           A thread pool manager providing a centralized pool of threads to avoid excessive thread creation.
                  
+
                  
                                            ##### Factory Method Pattern  
           Use this pattern when object creation must be delegated to subclasses or logic rather than calling constructors directly.
